@@ -46,7 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors[] = "Username or email already exists";
             }
         } catch (PDOException $e) {
-            $errors[] = "Database error occurred";
+            // Log the actual error for debugging
+            error_log("Database error: " . $e->getMessage());
+            // For debugging, show more specific error
+            $errors[] = "Database error: " . $e->getMessage();
+            // In production, use this instead:
+            // $errors[] = "Database error occurred";
         }
     }
 
@@ -78,7 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: profile.php');
             exit;
         } catch (PDOException $e) {
-            $errors[] = "Registration failed. Please try again.";
+            // Log the actual error for debugging (in production, you might want to log this to a file instead)
+            error_log("Registration error: " . $e->getMessage());
+            // For debugging, you can temporarily show the actual error (remove this in production)
+            $errors[] = "Registration failed: " . $e->getMessage();
+            // In production, use this instead:
+            // $errors[] = "Registration failed. Please try again.";
         }
     }
 }
