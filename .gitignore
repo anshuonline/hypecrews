@@ -3,7 +3,6 @@ config/db.php
 
 # Ignore upload directories
 uploads/
-graphics/
 
 # Ignore other sensitive files
 .env
