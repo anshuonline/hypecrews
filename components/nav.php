@@ -69,6 +69,10 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
                         <i class="fas fa-music text-primary"></i>
                         <span>Music/Video Distribution</span>
                     </a>
+                    <a href="services.php#artist-management" class="dropdown-item">
+                        <i class="fas fa-microphone text-primary"></i>
+                        <span>Artist Management</span>
+                    </a>
                 </div>
             </div>
             <a href="about.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">About</a>
@@ -142,6 +146,9 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
                     </a>
                     <a href="services.php#distribution" class="block px-6 py-3 text-white hover:bg-light/10 hover:text-primary transition-all duration-300 rounded-lg">
                         <i class="fas fa-music text-primary mr-2"></i>Music/Video Distribution
+                    </a>
+                    <a href="services.php#artist-management" class="block px-6 py-3 text-white hover:bg-light/10 hover:text-primary transition-all duration-300 rounded-lg">
+                        <i class="fas fa-microphone text-primary mr-2"></i>Artist Management
                     </a>
                 </div>
             </div>

@@ -477,6 +477,40 @@ $pageTitle = "Our Services - Hypecrews";
                         <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
+                <!-- Artist Management -->
+                <div id="artist-management" class="service-detail-card bg-dark rounded-xl shadow-lg overflow-hidden transition duration-300">
+                    <div class="p-8">
+                        <div class="flex items-start mb-6">
+                            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mr-6">
+                                <i class="fas fa-microphone text-primary text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">Artist Management</h3>
+                                <p class="text-gray-400 mt-2">Professional artist representation and career development</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-6">Our comprehensive artist management services provide professional representation and strategic career development for musicians, actors, and other creative talents. We handle contracts, negotiations, bookings, and promotional activities to maximize your artistic potential.</p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Contract negotiation and legal representation</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Booking and tour management</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Public relations and media coordination</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Career development and strategic planning</span>
+                            </li>
+                        </ul>
+                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

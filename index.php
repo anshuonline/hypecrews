@@ -275,6 +275,19 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                         <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
+                
+                <!-- Service 13 -->
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
+                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                        <i class="fas fa-microphone text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Artist Management</h3>
+                    <p class="text-gray-400 mb-4">Professional representation and career development for creative talents.</p>
+                    <a href="services.php#artist-management" class="text-primary font-medium flex items-center group">
+                        Learn more
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
