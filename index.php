@@ -78,7 +78,7 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                     <!-- Main hero image -->
                     <div class="relative z-10 transform rotate-3 transition-all duration-500 hover:rotate-6">
                         <div class="bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/10">
-                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Digital Marketing" class="rounded-2xl w-full shadow-lg">
+                            <img src="graphics/login.jpg" alt="Digital Marketing" class="rounded-2xl w-full shadow-lg">
                         </div>
                     </div>
                     
