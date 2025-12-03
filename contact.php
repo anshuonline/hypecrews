@@ -59,7 +59,7 @@ $pageTitle = "Contact Us - Hypecrews";
                             </div>
                             <div>
                                 <label for="phone" class="block text-gray-300 font-medium mb-2">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-light border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="+1 (555) 123-4567">
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-light border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="+913613243276">
                             </div>
                             <div>
                                 <label for="subject" class="block text-gray-300 font-medium mb-2">Subject</label>
@@ -103,7 +103,7 @@ $pageTitle = "Contact Us - Hypecrews";
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold mb-2">Our Office</h3>
-                                    <p class="text-gray-400">123 Business Avenue, Suite 100<br>San Francisco, CA 94107</p>
+                                    <p class="text-gray-400">Golaghat, Assam, 785621, India</p>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +116,7 @@ $pageTitle = "Contact Us - Hypecrews";
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold mb-2">Call Us</h3>
-                                    <p class="text-gray-400">Main: +1 (555) 123-4567<br>Fax: +1 (555) 123-4568</p>
+                                    <p class="text-gray-400">Main: +913613243276<br>Fax: +1 (555) 123-4568</p>
                                 </div>
                             </div>
                         </div>

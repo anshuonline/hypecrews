@@ -297,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         
                                         <div>
                                             <label for="phone" class="block text-gray-300 font-medium mb-2">Phone Number <span class="text-red-500">*</span></label>
-                                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white backdrop-blur-sm" placeholder="+1 (555) 123-4567" required>
+                                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white backdrop-blur-sm" placeholder="+913613243276" required>
                                         </div>
                                         
                                         <div>

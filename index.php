@@ -406,7 +406,7 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                                 </div>
                                 <div class="ml-4">
                                     <h4 class="font-bold text-lg mb-1">Our Location</h4>
-                                    <p class="text-gray-400">123 Business Avenue, Suite 100<br>San Francisco, CA 94107</p>
+                                    <p class="text-gray-400">Golaghat, Assam, 785621, India</p>
                                 </div>
                             </div>
                             
@@ -416,7 +416,7 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                                 </div>
                                 <div class="ml-4">
                                     <h4 class="font-bold text-lg mb-1">Phone Number</h4>
-                                    <p class="text-gray-400">+1 (555) 123-4567</p>
+                                    <p class="text-gray-400">+913613243276</p>
                                 </div>
                             </div>
                             
