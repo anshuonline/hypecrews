@@ -142,7 +142,7 @@ $pageTitle = "Contact Us - Hypecrews";
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold mb-2">Working Hours</h3>
-                                    <p class="text-gray-400">Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 10:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                                    <p class="text-gray-400">Monday To Sunday 24x7</p>
                                 </div>
                             </div>
                         </div>

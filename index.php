@@ -436,7 +436,7 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                                 </div>
                                 <div class="ml-4">
                                     <h4 class="font-bold text-lg mb-1">Working Hours</h4>
-                                    <p class="text-gray-400">Monday - Friday: 9AM - 6PM<br>Saturday: 10AM - 4PM</p>
+                                    <p class="text-gray-400">Monday To Sunday 24x7</p>
                                 </div>
                             </div>
                         </div>
