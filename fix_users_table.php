@@ -12,28 +12,54 @@ try {
     print_r($columns);
     echo "</pre>";
     
-    // Check if mobile column exists
-    $hasMobile = false;
+    // Check if all required columns exist
+    $requiredColumns = ['mobile_number', 'country', 'age', 'company_name', 'company_website'];
+    $missingColumns = [];
+    
+    // Create a map of existing column names
+    $existingColumns = [];
     foreach ($columns as $column) {
-        if ($column['Field'] === 'mobile') {
-            $hasMobile = true;
-            break;
+        $existingColumns[] = $column['Field'];
+    }
+    
+    // Check which required columns are missing
+    foreach ($requiredColumns as $requiredColumn) {
+        if (!in_array($requiredColumn, $existingColumns)) {
+            $missingColumns[] = $requiredColumn;
         }
     }
     
-    if (!$hasMobile) {
-        echo "<p>Mobile column is missing. Adding it now...</p>\n";
+    if (count($missingColumns) > 0) {
+        echo "<p>Missing columns: " . implode(', ', $missingColumns) . ". Adding them now...</p>\n";
         
-        // Add the missing columns
-        $alterSql = "ALTER TABLE users 
-                     ADD COLUMN mobile VARCHAR(20) NOT NULL AFTER email,
-                     ADD COLUMN country VARCHAR(50) NOT NULL AFTER mobile,
-                     ADD COLUMN age INT NOT NULL AFTER country,
-                     ADD COLUMN company_name VARCHAR(100) AFTER age,
-                     ADD COLUMN company_website VARCHAR(200) AFTER company_name";
-        
-        $pdo->exec($alterSql);
-        echo "<p>Successfully added missing columns to users table.</p>\n";
+        // Add the missing columns one by one to avoid conflicts
+        foreach ($missingColumns as $column) {
+            try {
+                switch ($column) {
+                    case 'mobile_number':
+                        $sql = "ALTER TABLE users ADD COLUMN mobile_number VARCHAR(20) NOT NULL AFTER email";
+                        break;
+                    case 'country':
+                        $sql = "ALTER TABLE users ADD COLUMN country VARCHAR(50) NOT NULL AFTER mobile_number";
+                        break;
+                    case 'age':
+                        $sql = "ALTER TABLE users ADD COLUMN age INT NOT NULL AFTER country";
+                        break;
+                    case 'company_name':
+                        $sql = "ALTER TABLE users ADD COLUMN company_name VARCHAR(100) AFTER age";
+                        break;
+                    case 'company_website':
+                        $sql = "ALTER TABLE users ADD COLUMN company_website VARCHAR(200) AFTER company_name";
+                        break;
+                    default:
+                        continue 2; // Skip unknown columns
+                }
+                $pdo->exec($sql);
+                echo "<p>Successfully added column '$column' to users table.</p>\n";
+            } catch (PDOException $e) {
+                echo "<p>Warning: Could not add column '$column': " . $e->getMessage() . "</p>\n";
+            }
+        }
     } else {
         echo "<p>All required columns are present.</p>\n";
     }
@@ -54,13 +80,14 @@ try {
                 first_name VARCHAR(50) NOT NULL,
                 last_name VARCHAR(50) NOT NULL,
                 email VARCHAR(100) UNIQUE NOT NULL,
-                mobile VARCHAR(20) NOT NULL,
+                mobile_number VARCHAR(20) NOT NULL,
                 country VARCHAR(50) NOT NULL,
                 age INT NOT NULL,
                 company_name VARCHAR(100),
                 company_website VARCHAR(200),
                 password VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )";
             
             $pdo->exec($createSql);

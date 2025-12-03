@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
-            $stmt = $pdo->prepare("INSERT INTO users (username, first_name, last_name, email, mobile, country, age, company_name, company_website, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, first_name, last_name, email, mobile_number, country, age, company_name, company_website, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $username,
                 $first_name,

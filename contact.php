@@ -116,7 +116,7 @@ $pageTitle = "Contact Us - Hypecrews";
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold mb-2">Call Us</h3>
-                                    <p class="text-gray-400">Main: +913613243276<br>Fax: +1 (555) 123-4568</p>
+                                    <p class="text-gray-400">Main: +913613243276</p>
                                 </div>
                             </div>
                         </div>
