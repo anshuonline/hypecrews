@@ -33,76 +33,87 @@ $pageTitle = "Hypecrews - Professional Digital Services";
     <?php include 'components/nav.php'; ?>
 
     <!-- Hero Section -->
-    <section id="home" class="pt-20 pb-16 bg-gradient-to-r from-dark to-[#0f172a] text-white relative overflow-hidden">
-        <!-- Animated background elements -->
+    <section id="home" class="pt-20 pb-16 bg-gradient-to-br from-dark via-[#0f172a] to-secondary/10 text-white relative overflow-hidden">
+        <!-- Enhanced animated background elements -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+            <div class="absolute top-1/4 right-1/4 w-48 h-48 bg-yellow-300/10 rounded-full blur-2xl"></div>
         </div>
         
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center relative z-10">
             <div class="md:w-1/2 mb-10 md:mb-0 animate-on-scroll">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
-                    <span class="ml-3 text-primary font-bold">INNOVATION DRIVEN</span>
+                <div class="inline-flex items-center mb-6 px-4 py-2 bg-primary/10 rounded-full border border-primary/30">
+                    <span class="w-2 h-2 bg-primary rounded-full mr-2 animate-ping"></span>
+                    <span class="text-primary font-bold text-sm">INNOVATION DRIVEN • DIGITAL TRANSFORMATION</span>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                    Elevate Your <span class="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Digital Presence</span>
+                <h1 class="text-4xl md:text-7xl font-extrabold mb-6 leading-tight">
+                    Transform Your <span class="block bg-gradient-to-r from-yellow-300 via-primary to-secondary bg-clip-text text-transparent">Digital Future</span>
                 </h1>
-                <p class="text-xl mb-8 text-gray-300 max-w-lg">Professional services tailored to grow your business in the digital world with cutting-edge solutions.</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#services" class="bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-xl hover:from-indigo-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">Explore Services</a>
-                    <a href="#contact" class="border-2 border-white text-white font-bold py-4 px-8 rounded-xl hover:bg-white hover:text-dark transition-all duration-300 transform hover:-translate-y-1">Get In Touch</a>
+                <p class="text-xl mb-8 text-gray-300 max-w-lg">Professional services tailored to elevate your business in the digital world with cutting-edge, award-winning solutions.</p>
+                <div class="flex flex-wrap gap-4 mb-12">
+                    <a href="#services" class="bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-xl hover:from-indigo-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:shadow-primary/30">Explore Services</a>
+                    <a href="#contact" class="border-2 border-white text-white font-bold py-4 px-8 rounded-xl hover:bg-white hover:text-dark transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">Get In Touch</a>
                 </div>
                 
-                <!-- Stats bar -->
-                <div class="mt-12 flex flex-wrap gap-8">
-                    <div>
-                        <p class="text-3xl font-bold text-primary">250+</p>
-                        <p class="text-gray-400">Projects</p>
+                <!-- Enhanced Stats bar -->
+                <div class="grid grid-cols-3 gap-6 p-6 bg-dark/50 backdrop-blur-sm rounded-2xl border border-primary/20 shadow-lg">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-3">
+                            <i class="fas fa-project-diagram text-primary text-2xl"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-primary">1000+</p>
+                        <p class="text-gray-400 text-sm">Projects</p>
                     </div>
-                    <div>
-                        <p class="text-3xl font-bold text-primary">50+</p>
-                        <p class="text-gray-400">Clients</p>
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-3">
+                            <i class="fas fa-users text-primary text-2xl"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-primary">754</p>
+                        <p class="text-gray-400 text-sm">Clients</p>
                     </div>
-                    <div>
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-3">
+                            <i class="fas fa-award text-primary text-2xl"></i>
+                        </div>
                         <p class="text-3xl font-bold text-primary">98%</p>
-                        <p class="text-gray-400">Satisfaction</p>
+                        <p class="text-gray-400 text-sm">Satisfaction</p>
                     </div>
                 </div>
             </div>
             
             <div class="md:w-1/2 flex justify-center animate-on-scroll">
                 <div class="relative">
-                    <!-- Main hero image -->
-                    <div class="relative z-10 transform rotate-3 transition-all duration-500 hover:rotate-6">
-                        <div class="bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/10">
-                            <img src="graphics/516as4d8a16s5d64as.jpg" alt="Digital Marketing" class="rounded-2xl w-full shadow-lg">
+                    <!-- Enhanced hero image with floating elements -->
+                    <div class="relative z-10 transform transition-all duration-700 hover:scale-105">
+                        <div class="bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/10 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgLz48L3N2Zz4=')] opacity-20"></div>
+                            <img src="graphics/516as4d8a16s5d64as.jpg" alt="Digital Marketing" class="rounded-2xl w-full shadow-lg transition-transform duration-700 hover:scale-105">
                         </div>
                     </div>
                     
                     <!-- Floating elements -->
-                    <div class="absolute -top-6 -right-6 bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-xl p-4 z-20 transform transition-all duration-300 hover:scale-110">
+                    <div class="absolute -top-6 -right-6 bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-xl p-4 z-20 transform transition-all duration-300 hover:scale-110 animate-bounce">
                         <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
-                                <i class="fas fa-award text-primary text-xl"></i>
+                            <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center">
+                                <i class="fas fa-rocket text-primary text-xl"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="font-bold text-white">Award</p>
-                                <p class="text-white/80 text-sm">Winning</p>
+                                <p class="font-bold text-white text-sm">Fast</p>
+                                <p class="text-white/80 text-xs">Delivery</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="absolute -bottom-6 -left-6 bg-white text-dark rounded-2xl shadow-xl p-4 z-20 transform transition-all duration-300 hover:scale-110">
+                    <div class="absolute -bottom-6 -left-6 bg-white text-dark rounded-2xl shadow-xl p-4 z-20 transform transition-all duration-300 hover:scale-110 animate-pulse">
                         <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                                <i class="fas fa-lightbulb text-white text-xl"></i>
+                            <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
+                                <i class="fas fa-star text-white text-xl"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="font-bold">Creative</p>
-                                <p class="text-gray-600 text-sm">Solutions</p>
+                                <p class="font-bold text-sm">Top</p>
+                                <p class="text-gray-600 text-xs">Rated</p>
                             </div>
                         </div>
                     </div>
@@ -112,17 +123,31 @@ $pageTitle = "Hypecrews - Professional Digital Services";
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-16 bg-light">
-        <div class="container mx-auto px-4">
+    <section id="services" class="py-20 bg-gradient-to-br from-light to-dark relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/5 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
             <div class="text-center mb-16 animate-on-scroll">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="gradient-text">Services</span></h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Comprehensive digital solutions to boost your brand and business growth</p>
+                <div class="inline-flex items-center justify-center mb-6 w-16 h-16 bg-primary/10 rounded-2xl mx-auto border border-primary/20">
+                    <i class="fas fa-concierge-bell text-primary text-2xl"></i>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Our <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Services</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">Comprehensive digital solutions to boost your brand and business growth with cutting-edge innovation</p>
+                
+                <!-- Animated underline -->
+                <div class="mt-6 flex justify-center">
+                    <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse"></div>
+                </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Service 1 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-copyright text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Copyright Protection & Removal</h3>
@@ -134,8 +159,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 2 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-hashtag text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Social Media Management</h3>
@@ -147,8 +172,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 3 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-bullhorn text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Digital Marketing</h3>
@@ -160,8 +185,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 4 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-laptop-code text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Web & Development</h3>
@@ -173,8 +198,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 5 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-sync-alt text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Recovery & Support</h3>
@@ -186,8 +211,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 6 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-video text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Video Production</h3>
@@ -199,8 +224,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 7 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-chart-line text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Marketing & SEO</h3>
@@ -212,8 +237,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 8 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll md:col-span-2 lg:col-span-1 lg:col-start-2">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30 md:col-span-2 lg:col-span-1 lg:col-start-2">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-paint-brush text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Creative & Production</h3>
@@ -225,8 +250,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 9 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-briefcase text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Business Support Services</h3>
@@ -238,8 +263,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 10 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-file-contract text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Company Registration</h3>
@@ -251,8 +276,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 11 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-film text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Movie PR</h3>
@@ -264,8 +289,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 12 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-music text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Music/Video Distribution</h3>
@@ -277,8 +302,8 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                 </div>
                 
                 <!-- Service 13 -->
-                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition duration-300 hover:shadow-xl animate-on-scroll">
-                    <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                <div class="service-card bg-dark rounded-2xl p-6 shadow-lg transition-all duration-500 hover:shadow-2xl animate-on-scroll transform hover:-translate-y-2 border border-gray-800 hover:border-primary/30">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 transition-all duration-300 hover:from-primary/30 hover:to-secondary/30 border border-primary/10">
                         <i class="fas fa-microphone text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Artist Management</h3>
@@ -303,13 +328,15 @@ $pageTitle = "Hypecrews - Professional Digital Services";
                             <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="About Hypecrews" class="w-full h-auto object-cover">
                         </div>
                         <div class="absolute -bottom-6 -right-6 bg-dark rounded-xl shadow-lg p-4 z-20 border border-gray-800">
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                                     <i class="fas fa-award text-primary"></i>
                                 </div>
-                                <div class="ml-3">
-                                    <p class="font-bold text-lg">250+</p>
-                                    <p class="text-gray-400 text-sm">Projects</p>
+                                <div class="text-center">
+                                    <p class="font-bold text-lg">1000+</p>
+                                    <p class="text-gray-400 text-xs">Projects</p>
+                                    <p class="font-bold text-lg mt-1">700+</p>
+                                    <p class="text-gray-400 text-xs">Clients</p>
                                 </div>
                             </div>
                         </div>
