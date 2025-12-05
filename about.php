@@ -33,43 +33,144 @@ $pageTitle = "About Us - Hypecrews";
     <?php include 'components/nav.php'; ?>
 
     <!-- About Hero Section -->
-    <section class="pt-24 pb-12 bg-gradient-to-r from-dark to-[#0f172a] text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-6">About <span class="text-yellow-300">Hypecrews</span></h1>
-            <p class="text-xl max-w-3xl mx-auto">We're a passionate team of digital experts dedicated to helping businesses thrive in the online world.</p>
+    <section class="pt-24 pb-16 bg-gradient-to-br from-dark via-[#0f172a] to-secondary/20 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgLz48L3N2Zz4=')] opacity-20"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="inline-block mb-6 px-4 py-2 bg-primary/10 rounded-full border border-primary/30">
+                <span class="text-primary font-medium">Welcome to Hypecrews</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                Transforming Ideas Into <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-primary">Digital Reality</span>
+            </h1>
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto text-gray-300 mb-10">
+                We're a passionate team of digital innovators, creators, and strategists dedicated to helping businesses thrive in the ever-evolving online landscape.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#story" class="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-primary/30">
+                    Discover Our Story
+                </a>
+                <a href="services.php" class="px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-dark text-white font-bold rounded-lg transition-all duration-300 transform hover:-translate-y-1">
+                    Explore Services
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Company Story -->
-    <section class="py-16 bg-light">
+    <section class="py-16 bg-gradient-to-br from-light to-dark/90" id="story">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2">
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Our Team" class="rounded-xl w-full">
+            <!-- Image moved to top -->
+            <div class="relative mb-16">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
+                    <img src="graphics/516as4d8a16s5d64as.jpg" alt="Our Team" class="w-full h-auto object-cover transition-transform duration-700 hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <h3 class="text-2xl font-bold">Our Journey</h3>
+                        <p class="text-gray-200">From Local Roots to National Impact</p>
+                    </div>
                 </div>
-                <div class="lg:w-1/2">
-                    <h2 class="text-3xl font-bold mb-6">Our <span class="text-primary">Story</span></h2>
-                    <p class="text-gray-400 mb-6">Founded in 2015, Hypecrews began with a simple mission: to bridge the gap between creative vision and digital execution. What started as a small team of passionate developers and designers has grown into a full-service digital agency.</p>
-                    <p class="text-gray-400 mb-6">Over the years, we've had the privilege of working with startups, established enterprises, and everything in between. Each project has taught us something new and helped refine our approach to digital solutions.</p>
-                    <p class="text-gray-400 mb-8">Today, we continue to push boundaries and explore new technologies while staying true to our core values of innovation, integrity, and excellence.</p>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
-                                <i class="fas fa-project-diagram text-primary"></i>
+                <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/20 rounded-full blur-xl"></div>
+            </div>
+            
+            <!-- Content below image -->
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-12 text-center">
+                    <span class="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">OUR STORY</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">From <span class="text-yellow-300">Guwahati</span> to Pan-India: Your Complete <span class="text-primary">Digital Partner</span></h2>
+                    <p class="text-gray-300 mb-6 text-lg max-w-3xl mx-auto">Established in 2022 in the vibrant city of Guwahati, Assam, we have quickly evolved into a comprehensive digital solutions provider serving clients across the entire nation. We believe in bridging the gap between creativity, technology, and security.</p>
+                    <p class="text-gray-300 mb-8 text-lg max-w-3xl mx-auto">Whether you are an artist looking for a spotlight, a business seeking a digital footprint, or a brand needing protection, our expert team is dedicated to delivering excellence with a personal touch.</p>
+                </div>
+                
+                <div class="space-y-12">
+                    <div class="border-l-4 border-primary pl-6 py-2">
+                        <h3 class="text-xl font-bold text-white mb-3">What We Do</h3>
+                        <p class="text-gray-300 mb-4">We operate at the intersection of entertainment and technology. Our 360-degree approach includes:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-start">
+                                <div class="mt-1 mr-3 text-primary">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                                <p class="text-gray-300"><strong>Digital Growth:</strong> Expert Digital Marketing and Social Media Management</p>
                             </div>
-                            <div>
-                                <p class="text-2xl font-bold">250+</p>
-                                <p class="text-gray-400">Projects Completed</p>
+                            <div class="flex items-start">
+                                <div class="mt-1 mr-3 text-primary">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                                <p class="text-gray-300"><strong>Creative Services:</strong> Music & Video Production, PR & Artist Management</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="mt-1 mr-3 text-primary">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                                <p class="text-gray-300"><strong>Development:</strong> Custom Web & App Development</p>
                             </div>
                         </div>
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
-                                <i class="fas fa-users text-primary"></i>
+                    </div>
+                    
+                    <div class="border-l-4 border-yellow-300 pl-6 py-2">
+                        <h3 class="text-xl font-bold text-white mb-3">Security & Protection</h3>
+                        <p class="text-gray-300 mb-4">In the digital age, your assets are vulnerable. We stand apart by offering specialized security services:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-start">
+                                <div class="mt-1 mr-3 text-yellow-300">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <p class="text-gray-300"><strong>Content Protection:</strong> Robust Anti-Piracy measures</p>
                             </div>
-                            <div>
-                                <p class="text-2xl font-bold">50+</p>
-                                <p class="text-gray-400">Happy Clients</p>
+                            <div class="flex items-start">
+                                <div class="mt-1 mr-3 text-yellow-300">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <p class="text-gray-300"><strong>Account Recovery:</strong> Restore your digital identity</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 p-8 bg-gradient-to-r from-dark/80 to-primary/5 rounded-2xl border border-primary/30 shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div class="absolute bottom-0 left-0 w-24 h-24 bg-yellow-300/10 rounded-full translate-y-12 -translate-x-12"></div>
+                    <div class="relative z-10 text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-6">
+                            <i class="fas fa-crown text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Core Philosophy</h3>
+                        <div class="space-y-3">
+                            <p class="text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 via-primary to-secondary">
+                                We are Hypecrews IT Solutions Private Limited
+                            </p>
+                            <div class="flex flex-col sm:flex-row justify-center gap-2 mt-6">
+                                <span class="px-6 py-3 bg-dark/80 backdrop-blur-sm border border-primary/30 rounded-full text-lg font-bold text-primary shadow-lg">
+                                    <i class="fas fa-paint-brush mr-2"></i>We Create
+                                </span>
+                                <span class="px-6 py-3 bg-dark/80 backdrop-blur-sm border border-primary/30 rounded-full text-lg font-bold text-yellow-300 shadow-lg">
+                                    <i class="fas fa-code mr-2"></i>We Develop
+                                </span>
+                                <span class="px-6 py-3 bg-dark/80 backdrop-blur-sm border border-primary/30 rounded-full text-lg font-bold text-secondary shadow-lg">
+                                    <i class="fas fa-shield-alt mr-2"></i>We Protect
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-6 justify-center mt-12">
+                    <div class="flex items-center bg-dark/50 p-4 rounded-xl border border-primary/20">
+                        <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                            <i class="fas fa-project-diagram text-primary text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-white">1000+</p>
+                            <p class="text-gray-400">Projects Completed</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center bg-dark/50 p-4 rounded-xl border border-primary/20">
+                        <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                            <i class="fas fa-users text-primary text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-white">754</p>
+                            <p class="text-gray-400">Happy Clients</p>
                         </div>
                     </div>
                 </div>
