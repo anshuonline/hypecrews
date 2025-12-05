@@ -179,7 +179,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Dheeraj Jyoti Saikia - CEO & Founder -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/co-founder.png" alt="Dheeraj Jyoti Saikia" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/co-founder.png" alt="Dheeraj Jyoti Saikia" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Dheeraj Jyoti Saikia</h3>
                     <p class="text-primary mb-3">CEO & Founder</p>
@@ -197,7 +197,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Jitu Moni Hazarika - Co Founder -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/co-founder.png" alt="Jitu Moni Hazarika" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/co-founder.png" alt="Jitu Moni Hazarika" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Jitu Moni Hazarika</h3>
                     <p class="text-primary mb-3">Co Founder</p>
@@ -215,7 +215,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Rajdeep Pandit - COO & CTO -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/co-founder.png" alt="Rajdeep Pandit" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/co-founder.png" alt="Rajdeep Pandit" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Rajdeep Pandit</h3>
                     <p class="text-primary mb-3">COO & CTO</p>
@@ -233,7 +233,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Aruhan Gogoi - Head of Production -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/co-founder.png" alt="Aruhan Gogoi" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/co-founder.png" alt="Aruhan Gogoi" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Aruhan Gogoi</h3>
                     <p class="text-primary mb-3">Head of Production</p>
@@ -251,7 +251,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Shreya Kumar - Marketing Director -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/female2.png" alt="Shreya Kumar" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/female2.png" alt="Shreya Kumar" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Shreya Kumar</h3>
                     <p class="text-primary mb-3">Marketing Director</p>
@@ -269,7 +269,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Raghu Agarwal - Manager -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/male.png" alt="Raghu Agarwal" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/male.png" alt="Raghu Agarwal" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Raghu Agarwal</h3>
                     <p class="text-primary mb-3">Manager</p>
@@ -287,7 +287,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Harshit - Executor -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/male.png" alt="Harshit" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/male.png" alt="Harshit" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Harshit</h3>
                     <p class="text-primary mb-3">Executor</p>
@@ -305,7 +305,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Kavya Singh - HR Executive -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/female1.png" alt="Kavya Singh" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/female1.png" alt="Kavya Singh" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Kavya Singh</h3>
                     <p class="text-primary mb-3">HR Executive</p>
@@ -323,7 +323,7 @@ $pageTitle = "About Us - Hypecrews";
                 <!-- Aadhya Patel - Sales Manager -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/Our-Team/female2.png" alt="Aadhya Patel" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/our-team/female2.png" alt="Aadhya Patel" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Aadhya Patel</h3>
                     <p class="text-primary mb-3">Sales Manager</p>
