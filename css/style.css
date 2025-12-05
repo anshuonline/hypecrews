@@ -494,3 +494,20 @@ input:focus, textarea:focus, select:focus {
   cursor: grabbing;
 }
 
+/* Cursor Highlight Effect */
+.cursor-highlight {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 0, 0.3);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    transition: width 0.2s, height 0.2s;
+    opacity: 0;
+}
+
+.cursor-highlight.visible {
+    opacity: 1;
+}

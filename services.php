@@ -53,29 +53,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Copyright Protection & Removal</h3>
-                                <p class="text-gray-400 mt-2">Safeguard your intellectual property</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Protect your creative works and brand assets with our comprehensive copyright protection services. Our experts help you register copyrights, monitor for infringements, and take legal action when necessary.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Copyright registration assistance</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Infringement monitoring</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Takedown notices and legal support</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Licensing agreement guidance</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">We specialize in protecting your intellectual property across all digital platforms. Our service includes proactive monitoring for unauthorized use of your copyrighted content (music, videos, images, text), swift issuance of DMCA takedown notices, and persistent follow-up to ensure permanent removal from websites, social media, and file-sharing platforms. We safeguard your work and revenue stream.</p>
+                        <a href="service_query.php?service=Copyright Protection & Removal" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -88,29 +69,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Social Media Management</h3>
-                                <p class="text-gray-400 mt-2">Build your brand presence online</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Engage your audience and grow your community with our strategic social media management services. We create compelling content and manage your social profiles to maximize engagement.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Content creation and scheduling</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Community management</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Analytics and reporting</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Paid social advertising</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our expert team handles all aspects of your social media presence, from strategic content planning and creation to daily posting, audience engagement, and performance analysis. We focus on building a strong brand voice, increasing follower count, driving traffic, and fostering a loyal community across platforms like Instagram, Facebook, Twitter, and TikTok, ensuring your brand stays relevant and connected.</p>
+                        <a href="service_query.php?service=Social Media Management" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -123,29 +85,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Digital Marketing</h3>
-                                <p class="text-gray-400 mt-2">Drive targeted traffic and conversions</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Reach your ideal customers with our data-driven digital marketing strategies. We combine SEO, PPC, content marketing, and analytics to deliver measurable results for your business.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Search engine marketing (SEM)</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Email marketing campaigns</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Conversion rate optimization</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Marketing automation</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our Digital Marketing services are designed to maximize your online visibility and drive measurable results. We employ a data-driven approach encompassing search engine optimization (SEO), pay-per-click (PPC) advertising, content marketing, and email campaigns. We analyze market trends and audience behavior to craft targeted, high-converting strategies that increase leads, sales, and overall ROI.</p>
+                        <a href="service_query.php?service=Digital Marketing" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -158,29 +101,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Web & Development</h3>
-                                <p class="text-gray-400 mt-2">Create stunning digital experiences</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Build powerful, responsive websites and web applications that engage users and drive business results. Our development team creates custom solutions tailored to your specific needs.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Custom website development</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>E-commerce solutions</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Mobile-responsive design</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Ongoing maintenance and support</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">We offer comprehensive web and application development services, covering everything from simple informational websites to complex e-commerce platforms and custom web applications. Our team of skilled developers utilizes the latest technologies and best practices to deliver visually stunning, highly functional, responsive, and secure digital solutions tailored to your specific business needs and user experience goals.</p>
+                        <a href="service_query.php?service=Web & Development" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
             </div>
@@ -195,29 +119,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Recovery & Support</h3>
-                                <p class="text-gray-400 mt-2">Keep your systems running smoothly</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Ensure your digital assets remain secure and operational with our comprehensive recovery and support services. We provide rapid response solutions for technical issues and data recovery.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Data backup and recovery</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Technical troubleshooting</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>System maintenance</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>24/7 support options</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our Recovery & Support service provides essential assistance for digital crises, focusing on regaining control of compromised accounts and repairing online reputation damage. Whether dealing with platform suspensions, hacked accounts, content removal disputes, or negative press, our dedicated team works swiftly to assess the situation, implement strategic recovery protocols, and provide ongoing support to restore your digital assets and professional standing.</p>
+                        <a href="service_query.php?service=Recovery & Support" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -230,29 +135,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Video Production</h3>
-                                <p class="text-gray-400 mt-2">Tell your story visually</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Create compelling video content that captures attention and communicates your message effectively. From concept to delivery, we produce high-quality videos for all platforms.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Concept development and scripting</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Professional filming and editing</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Animation and motion graphics</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Video marketing strategy</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our Video Production service covers the entire creative process, from initial concept development and scriptwriting to filming, post-production editing, and final delivery. We specialize in producing high-quality, engaging visual content, including promotional videos, music videos, short films, corporate explainers, and social media clips, tailored to captivate your audience and effectively convey your brand's message.</p>
+                        <a href="service_query.php?service=Video Production" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -265,29 +151,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Marketing & SEO</h3>
-                                <p class="text-gray-400 mt-2">Boost your online visibility</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Improve your search engine rankings and drive organic traffic with our comprehensive SEO and marketing services. We optimize your digital presence to attract more qualified visitors.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Keyword research and optimization</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>On-page and technical SEO</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Link building strategies</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Performance analytics</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our Marketing & SEO services are designed to boost your online visibility and drive targeted traffic to your website. We combine proven search engine optimization techniques with strategic digital marketing campaigns to improve your search rankings, increase organic traffic, and generate qualified leads. Our data-driven approach ensures measurable results that contribute to your business growth and revenue objectives.</p>
+                        <a href="service_query.php?service=Marketing & SEO" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -300,29 +167,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Creative & Production</h3>
-                                <p class="text-gray-400 mt-2">Design that makes an impact</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Transform your brand vision into stunning visual assets with our creative production services. Our designers craft memorable experiences that resonate with your audience.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Branding and identity design</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Print and digital graphics</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>User interface design</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Creative consulting</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our Creative & Production service is the hub for turning ideas into stunning realities. We provide end-to-end creative solutions, including graphic design (logos, branding assets, digital media), high-quality photography, and visual content strategy. Our focus is on delivering compelling, aesthetically refined content that aligns with your brand identity and resonates powerfully with your target audience across all digital and print mediums.</p>
+                        <a href="service_query.php?service=Creative & Production" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
             </div>
@@ -334,7 +182,6 @@ $pageTitle = "Our Services - Hypecrews";
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Additional <span class="text-yellow-300">Services</span></h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Specialized offerings to support your business growth and creative projects</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -347,29 +194,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Professional Business Support Services</h3>
-                                <p class="text-gray-400 mt-2">Comprehensive business assistance solutions</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Our professional business support services provide comprehensive assistance to help streamline your operations, enhance productivity, and achieve your business objectives efficiently.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Administrative support and organization</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Business process optimization</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Financial and accounting assistance</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Strategic planning consultation</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">Our comprehensive suite of Professional Business Support Services is designed to streamline your operations and foster sustainable growth. We offer specialized administrative, financial, and strategic support, including virtual assistant services, documentation and compliance management, human resources consulting, and process optimization. Our goal is to handle your essential back-office functions efficiently, allowing you to focus your time and resources on core business activities and strategic expansion.</p>
+                        <a href="service_query.php?service=Professional Business Support Services" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -382,29 +210,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Company Registration Assistance</h3>
-                                <p class="text-gray-400 mt-2">Seamless business incorporation services</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">We simplify the company registration process by guiding you through all legal requirements, documentation, and compliance procedures to establish your business entity efficiently.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Business structure selection advice</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Registration documentation preparation</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Legal compliance guidance</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Ongoing corporate compliance support</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">This service assists entrepreneurs and businesses with the necessary steps to formally establish their company. We guide you through the entire registration process, including choosing the appropriate legal structure (e.g., sole proprietorship, LLC, corporation), preparing and filing required documentation with relevant government authorities, securing necessary licenses and permits, and advising on initial compliance requirements. Our goal is to ensure a seamless, legally sound, and efficient setup for your new venture.</p>
+                        <a href="service_query.php?service=Company Registration Assistance" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -417,29 +226,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">PR for Movie</h3>
-                                <p class="text-gray-400 mt-2">Strategic movie promotion and publicity</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Our specialized public relations services for movies help generate buzz, secure media coverage, and build anticipation for your film release through targeted campaigns.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Media outreach and press kit development</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Film festival submission strategy</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Celebrity and influencer engagement</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Social media campaign management</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">This service focuses on crafting and executing strategic Public Relations campaigns specifically for films and cinematic projects. We handle media outreach, press release distribution, red carpet event coordination, junket scheduling, and crisis communication. Our goal is to generate positive buzz, secure high-impact reviews and interviews, and increase visibility across traditional media, film festivals, and digital platforms to drive audience attendance and critical acclaim.</p>
+                        <a href="service_query.php?service=PR for Movie" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
 
@@ -452,29 +242,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Music/Video Distribution Service</h3>
-                                <p class="text-gray-400 mt-2">Global distribution for your creative content</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">We help artists and creators distribute their music and video content across major platforms worldwide, ensuring maximum reach and revenue generation for your creative works.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Multi-platform distribution (Spotify, Apple Music, YouTube, etc.)</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Royalty collection and management</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Digital rights management</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Analytics and performance reporting</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">This service is dedicated to efficiently delivering your music and video content to a global audience. We manage the entire distribution pipeline, ensuring your work is properly formatted and delivered to major streaming platforms (e.g., Spotify, Apple Music, YouTube, Amazon Prime Video), digital stores, and international networks. We handle metadata, ISRC/UPC registration, royalty collection, and detailed performance analytics, maximizing your content's reach and revenue potential while maintaining full ownership and control.</p>
+                        <a href="service_query.php?service=Music/Video Distribution Service" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
                 <!-- Artist Management -->
@@ -486,29 +257,10 @@ $pageTitle = "Our Services - Hypecrews";
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Artist Management</h3>
-                                <p class="text-gray-400 mt-2">Professional artist representation and career development</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-6">Our comprehensive artist management services provide professional representation and strategic career development for musicians, actors, and other creative talents. We handle contracts, negotiations, bookings, and promotional activities to maximize your artistic potential.</p>
-                        <ul class="space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Contract negotiation and legal representation</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Booking and tour management</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Public relations and media coordination</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                                <span>Career development and strategic planning</span>
-                            </li>
-                        </ul>
-                        <a href="index.php#contact" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
+                        <p class="text-gray-400 mb-6">We provide dedicated, 360-degree career guidance and logistical support for artists, musicians, and performers. Our service encompasses contract negotiation, booking management (gigs, tours, appearances), brand development, strategic career planning, financial oversight, and day-to-day administrative tasks. We act as your primary liaison, ensuring your professional endeavors are optimized for maximum success, creative fulfillment, and long-term sustainability while allowing you to focus purely on your artistry.</p>
+                        <a href="service_query.php?service=Artist Management" class="inline-block bg-primary hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition">Learn More</a>
                     </div>
                 </div>
             </div>
@@ -525,6 +277,8 @@ $pageTitle = "Our Services - Hypecrews";
     </section>
 
     <?php include 'components/footer.php'; ?>
+    
+    <?php include 'components/cursor_highlight.php'; ?>
     
     <script src="js/main.js"></script>
 </body>

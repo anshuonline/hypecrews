@@ -218,6 +218,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // Start auto sliding initially
         startAutoSlide();
     }
+    
+    // Create cursor highlight element
+    const cursorHighlight = document.createElement('div');
+    cursorHighlight.className = 'cursor-highlight';
+    document.body.appendChild(cursorHighlight);
+    
+    // Mouse move event to move the highlight
+    document.addEventListener('mousemove', function(e) {
+        cursorHighlight.style.left = e.clientX + 'px';
+        cursorHighlight.style.top = e.clientY + 'px';
+        cursorHighlight.classList.add('visible');
+    });
+    
+    // Mouse leave event to hide the highlight
+    document.addEventListener('mouseleave', function() {
+        cursorHighlight.classList.remove('visible');
+    });
+    
+    // Click events to animate the highlight
+    document.addEventListener('mousedown', function() {
+        cursorHighlight.style.width = '30px';
+        cursorHighlight.style.height = '30px';
+    });
+    
+    document.addEventListener('mouseup', function() {
+        cursorHighlight.style.width = '20px';
+        cursorHighlight.style.height = '20px';
+    });
 });
 
 // Function to show message

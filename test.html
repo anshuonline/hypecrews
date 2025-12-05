@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assamica - Unlock the Spirit of Assam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-gold': '#D4AF37',
+                        'brand-red': '#B91C4F', /* Matches the Book Now button */
+                        'overlay-dark': 'rgba(0, 0, 0, 0.4)',
+                    },
+                    fontFamily: {
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['"Poppins"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+
+        // Data for the modal popup features
+        const categoryData = {
+            'wildlife': {
+                title: "Wildlife Safaris",
+                text: "Experience the thrill of the wild in the heart of Assam. Kaziranga National Park holds two-thirds of the world's great one-horned rhinoceros population. Our guided jeep and elephant safaris offer intimate encounters with these majestic creatures, alongside tigers, swamp deer, and wild buffalo.",
+                image: "https://images.unsplash.com/photo-1564663308-54c337482565?q=80&w=2574&auto=format&fit=crop", // Specific Rhino image
+                details: {
+                    season: "Nov - April",
+                    duration: "3-4 Hours",
+                    location: "Kaziranga & Manas"
+                },
+                highlights: ["One-Horned Rhinos", "Royal Bengal Tigers", "Jeep & Elephant Safari"]
+            },
+            'cultural': {
+                title: "Cultural Tours",
+                text: "Assam's culture is a tapestry woven with colorful festivals and ancient traditions. Witness the energetic Bihu dance, visit the silk-weaving village of Sualkuchi to see how Muga silk is made, and explore the spiritual ambiance of the Kamakhya Temple atop the Nilachal Hill.",
+                image: "https://images.unsplash.com/photo-1598425237654-52d8ec489c49?q=80&w=2574&auto=format&fit=crop", // Cultural/Dance vibe
+                details: {
+                    season: "Year Round",
+                    duration: "Full Day",
+                    location: "Guwahati & Sualkuchi"
+                },
+                highlights: ["Bihu Festival", "Kamakhya Temple", "Silk Weaving Workshops"]
+            },
+            'tea': {
+                title: "Tea Experiences",
+                text: "Step into the colonial era with a stay at a heritage tea bungalow. Wake up to the aroma of fresh tea leaves, take a guided walk through the manicured estates of Jorhat (the Tea Capital), and learn the delicate art of tea tasting from expert sommeliers.",
+                image: "https://images.unsplash.com/photo-1565193566173-0922d5a92637?q=80&w=2574&auto=format&fit=crop", // Tea garden closeup
+                details: {
+                    season: "Oct - March",
+                    duration: "2 Days",
+                    location: "Jorhat & Dibrugarh"
+                },
+                highlights: ["Tea Tasting Session", "Factory Tour", "Colonial Bungalow Stay"]
+            },
+            'adventure': {
+                title: "Adventure Treks",
+                text: "Beyond the plains lie the mysterious blue hills. Trek through the pristine forests of Haflong, go river rafting in the turbulent waters of Nameri, or camp under the stars on the river island of Majuli. Perfect for adrenaline junkies and nature lovers alike.",
+                image: "https://images.unsplash.com/photo-1516738901171-8eb4fc2ab50b?q=80&w=2574&auto=format&fit=crop", // Misty hills
+                details: {
+                    season: "Nov - March",
+                    duration: "Variable",
+                    location: "Nameri & Haflong"
+                },
+                highlights: ["River Rafting", "Jungle Trekking", "Eco-Camping"]
+            },
+            'river': {
+                title: "River Cruises",
+                text: "The Brahmaputra is not just a river; it's the lifeline of Assam. Embark on a luxury sunset cruise or a multi-day expedition. Spot the endangered Gangetic River Dolphin, enjoy sundowners on sandbars, and dine on deck while the horizon turns gold.",
+                image: "https://images.unsplash.com/photo-1605628610547-0e695d758652?q=80&w=2574&auto=format&fit=crop", // River sunset boat
+                details: {
+                    season: "Oct - April",
+                    duration: "2-3 Hours",
+                    location: "Brahmaputra River"
+                },
+                highlights: ["Sunset Views", "Dolphin Spotting", "Dinner on Deck"]
+            }
+        };
+
+        function openModal(type) {
+            const modal = document.getElementById('infoModal');
+            const content = categoryData[type];
+            if(content) {
+                document.getElementById('modalTitle').innerText = content.title;
+                document.getElementById('modalText').innerText = content.text;
+                document.getElementById('modalImage').src = content.image;
+                
+                // Populate Details
+                document.getElementById('detailSeason').innerText = content.details.season;
+                document.getElementById('detailDuration').innerText = content.details.duration;
+                document.getElementById('detailLocation').innerText = content.details.location;
+
+                // Populate Highlights
+                const highlightsContainer = document.getElementById('modalHighlights');
+                highlightsContainer.innerHTML = ''; // Clear previous
+                content.highlights.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = "flex items-center gap-2 text-gray-300 text-sm";
+                    li.innerHTML = `<i class="fas fa-check-circle text-brand-gold text-xs"></i> ${item}`;
+                    highlightsContainer.appendChild(li);
+                });
+
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1595842880948-6a3f019f864e?q=80&w=2574&auto=format&fit=crop'); /* River sunset vibe */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .icon-circle {
+            transition: all 0.3s ease;
+        }
+        
+        .icon-circle:hover {
+            transform: translateY(-5px);
+            background-color: rgba(212, 175, 55, 0.2);
+            border-color: #fff;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #D4AF37;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 5px;
+        }
+        
+        /* Tour Card Hover Effect */
+        .tour-card:hover .tour-img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="font-sans text-white bg-gray-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 p-6" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 cursor-pointer">
+                <!-- Simple Rhino SVG Icon for Logo -->
+                <svg class="w-10 h-10 text-white fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M21.5,10.5L20.5,6.5L16.5,5.5C16.5,5.5 14.5,4.5 12.5,5.5C10.5,6.5 9.5,8.5 9.5,8.5L5.5,9.5L2.5,12.5L3.5,16.5L7.5,18.5C7.5,18.5 9.5,19.5 11.5,18.5C13.5,17.5 14.5,15.5 14.5,15.5L18.5,14.5L21.5,11.5L21.5,10.5Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                   <path d="M16 6l-2-2m4 6l2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-3xl font-serif font-bold tracking-wide">Assamica</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-300">Unlock the Spirit of Assam</span>
+                </div>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+                <a href="#" class="nav-link hover:text-brand-gold transition-colors">Home</a>
+                <a href="#destinations" class="nav-link hover:text-brand-gold transition-colors">Destinations</a>
+                <a href="#tours" class="nav-link hover:text-brand-gold transition-colors">Tours</a>
+                <a href="#blog" class="nav-link hover:text-brand-gold transition-colors">Blog</a>
+                <a href="#contact" class="nav-link hover:text-brand-gold transition-colors">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-2xl hover:text-brand-gold transition-colors">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen min-h-[600px] w-full hero-bg flex flex-col justify-center items-center text-center px-4">
+        
+        <!-- Main Content -->
+        <div class="relative z-10 max-w-5xl mx-auto mt-20 fade-in-up">
+            <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight drop-shadow-lg">
+                Embark on <br/>
+                <span class="italic text-brand-gold">Unforgettable</span> Journey
+            </h1>
+            <p class="text-xl md:text-2xl font-light mb-10 tracking-wide drop-shadow-md text-gray-100">
+                Explore Wildlife, Culture & Landscapes
+            </p>
+
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+                <button onclick="document.getElementById('tours').scrollIntoView({behavior: 'smooth'})" class="bg-brand-red hover:bg-red-700 text-white px-8 py-3 rounded-md font-medium text-lg transition-all transform hover:scale-105 shadow-lg">
+                    Book Now
+                </button>
+                <button class="group flex items-center gap-3 text-white hover:text-brand-gold transition-colors">
+                    <span class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-white group-hover:border-brand-gold transition-all">
+                        <i class="fas fa-play ml-1"></i>
+                    </span>
+                    <span class="font-medium text-lg">Watch Video</span>
+                </button>
+            </div>
+
+            <!-- Category Icons -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12 justify-center items-start">
+                
+                <!-- Wildlife -->
+                <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="openModal('wildlife')">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-brand-gold flex items-center justify-center icon-circle group-hover:bg-brand-gold/10">
+                        <i class="fas fa-hippo text-2xl text-white"></i> <!-- Hippo as proxy for Rhino -->
+                    </div>
+                    <span class="text-sm font-medium">Wildlife Safaris</span>
+                </div>
+
+                <!-- Cultural -->
+                <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="openModal('cultural')">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-brand-gold flex items-center justify-center icon-circle group-hover:bg-brand-gold/10">
+                        <i class="fas fa-theater-masks text-2xl text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">Cultural Tours</span>
+                </div>
+
+                <!-- Tea -->
+                <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="openModal('tea')">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-brand-gold flex items-center justify-center icon-circle group-hover:bg-brand-gold/10">
+                        <i class="fas fa-mug-hot text-2xl text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">Tea Experiences</span>
+                </div>
+
+                <!-- Adventure -->
+                <div class="flex flex-col items-center gap-3 group cursor-pointer" onclick="openModal('adventure')">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-brand-gold flex items-center justify-center icon-circle group-hover:bg-brand-gold/10">
+                        <i class="fas fa-mountain text-2xl text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">Adventure Treks</span>
+                </div>
+
+                 <!-- River (Added to fill the 5th spot visually suggested or just extra) -->
+                 <div class="hidden md:flex flex-col items-center gap-3 group cursor-pointer" onclick="openModal('river')">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-brand-gold flex items-center justify-center icon-circle group-hover:bg-brand-gold/10">
+                        <i class="fas fa-ship text-2xl text-white"></i>
+                    </div>
+                    <span class="text-sm font-medium">River Cruises</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce cursor-pointer" onclick="document.getElementById('destinations').scrollIntoView({behavior: 'smooth'})">
+            <span class="text-sm mb-2 opacity-80">Discover More</span>
+            <i class="fas fa-chevron-down text-xl"></i>
+        </div>
+    </header>
+
+    <!-- Destinations Section -->
+    <section id="destinations" class="py-20 bg-gray-50 text-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-brand-gold font-bold uppercase tracking-widest mb-2 text-sm">Destinations</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Popular in Assam</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+                <!-- Card 1 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1596558296996-25f0a7112002?q=80&w=2670&auto=format&fit=crop" alt="Kaziranga" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Kaziranga National Park</h4>
+                        <p class="text-sm opacity-80 mb-4">Home of the One-Horned Rhino</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1597816773238-d7b6f3708ba1?q=80&w=2670&auto=format&fit=crop" alt="Majuli" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Majuli Island</h4>
+                        <p class="text-sm opacity-80 mb-4">World's Largest River Island</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1544983056-e970b5618765?q=80&w=2670&auto=format&fit=crop" alt="Tea Gardens" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Jorhat Tea Gardens</h4>
+                        <p class="text-sm opacity-80 mb-4">The Tea Capital of the World</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIKKIM SECTION -->
+            <div class="text-center mb-16 pt-16 border-t border-gray-200">
+                <h2 class="text-brand-gold font-bold uppercase tracking-widest mb-2 text-sm">The Himalayas</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Explore Sikkim</h3>
+                <p class="text-gray-500 mt-4 text-lg">Venture into the mystical land of high peaks, ancient monasteries, and organic living.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+                <!-- Sikkim Card 1 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1578564969248-1250215b4931?q=80&w=2670&auto=format&fit=crop" alt="Tsomgo Lake" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Tsomgo Lake</h4>
+                        <p class="text-sm opacity-80 mb-4">Glacial Beauty at 12,000ft</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Sikkim Card 2 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1544634076-a901606f97d8?q=80&w=2574&auto=format&fit=crop" alt="Gangtok" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Gangtok</h4>
+                        <p class="text-sm opacity-80 mb-4">Monasteries & Mountain Views</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Sikkim Card 3 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1588414845070-5696c4293c68?q=80&w=2574&auto=format&fit=crop" alt="Yumthang" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Yumthang Valley</h4>
+                        <p class="text-sm opacity-80 mb-4">Assam's Neighboring Valley of Flowers</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEGHALAYA SECTION -->
+            <div class="text-center mb-16 pt-16 border-t border-gray-200">
+                <h2 class="text-brand-gold font-bold uppercase tracking-widest mb-2 text-sm">Abode of Clouds</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Discover Meghalaya</h3>
+                <p class="text-gray-500 mt-4 text-lg">Walk on living root bridges, chase waterfalls, and float on crystal clear rivers.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+                <!-- Meghalaya Card 1 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1627914046187-c794354c0e5a?q=80&w=2670&auto=format&fit=crop" alt="Double Decker Bridge" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Living Root Bridges</h4>
+                        <p class="text-sm opacity-80 mb-4">Nongriat's Natural Wonder</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Meghalaya Card 2 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1594818721201-9a9972828b26?q=80&w=2670&auto=format&fit=crop" alt="Dawki River" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Dawki River</h4>
+                        <p class="text-sm opacity-80 mb-4">Crystal Clear Waters</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Meghalaya Card 3 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1522880757751-247d7c181559?q=80&w=2670&auto=format&fit=crop" alt="Cherrapunji Falls" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Cherrapunji</h4>
+                        <p class="text-sm opacity-80 mb-4">Land of Seven Sister Falls</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ARUNACHAL PRADESH SECTION -->
+            <div class="text-center mb-16 pt-16 border-t border-gray-200">
+                <h2 class="text-brand-gold font-bold uppercase tracking-widest mb-2 text-sm">Land of Dawn-Lit Mountains</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Arunachal Pradesh</h3>
+                <p class="text-gray-500 mt-4 text-lg">Experience the serenity of Tawang, the tribal culture of Ziro, and untouched alpine passes.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Arunachal Card 1 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1626621341120-d010729215f9?q=80&w=2670&auto=format&fit=crop" alt="Tawang Monastery" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Tawang Monastery</h4>
+                        <p class="text-sm opacity-80 mb-4">India's Largest Monastery</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Arunachal Card 2 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1614093951167-1721b0696a79?q=80&w=2670&auto=format&fit=crop" alt="Ziro Valley" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Ziro Valley</h4>
+                        <p class="text-sm opacity-80 mb-4">Home of the Apatani Tribe</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Arunachal Card 3 -->
+                <div class="group relative overflow-hidden rounded-xl shadow-lg h-96 cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1627894483216-2138af692e32?q=80&w=2668&auto=format&fit=crop" alt="Sela Pass" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <h4 class="text-2xl font-serif font-bold mb-2">Sela Pass</h4>
+                        <p class="text-sm opacity-80 mb-4">Gateway to Tawang at 13,700ft</p>
+                        <span class="text-brand-gold font-medium group-hover:underline">Explore <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Tours Section (NEW) -->
+    <section id="tours" class="py-20 bg-white text-gray-900 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-brand-gold font-bold uppercase tracking-widest mb-2 text-sm">Packages</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Featured Tours</h3>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Handpicked itineraries designed to give you the most authentic experience of Assam.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                
+                <!-- Tour 1 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 group tour-card flex flex-col">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1598425237654-52d8ec489c49?q=80&w=2574&auto=format&fit=crop" alt="Cultural Tour" class="w-full h-full object-cover transition-transform duration-500 tour-img">
+                        <div class="absolute top-4 right-4 bg-brand-gold text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Bestseller</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-xl font-serif font-bold text-gray-900 mb-1">Tea & Heritage</h4>
+                                <div class="flex items-center gap-1 text-xs text-brand-gold">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    <span class="text-gray-400 ml-1">(42 Reviews)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold text-brand-red">₹45,999</span>
+                                <span class="text-xs text-gray-500">per person</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">
+                            A journey through the colonial history of Assam. Stay in heritage bungalows, visit the Ahom kingdom ruins in Sivasagar, and explore Majuli island.
+                        </p>
+                        <div class="border-t border-gray-100 pt-6 mt-auto">
+                            <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                                <span><i class="far fa-clock text-brand-gold mr-2"></i> 6 Days</span>
+                                <span><i class="fas fa-user-friends text-brand-gold mr-2"></i> Max 10</span>
+                            </div>
+                            <button class="w-full border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-900 hover:text-white transition-colors font-medium">View Itinerary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tour 2 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 group tour-card flex flex-col">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1564663308-54c337482565?q=80&w=2574&auto=format&fit=crop" alt="Rhino Tour" class="w-full h-full object-cover transition-transform duration-500 tour-img">
+                        <div class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Eco-Friendly</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-xl font-serif font-bold text-gray-900 mb-1">The Rhino Trail</h4>
+                                <div class="flex items-center gap-1 text-xs text-brand-gold">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                    <span class="text-gray-400 ml-1">(86 Reviews)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold text-brand-red">₹34,999</span>
+                                <span class="text-xs text-gray-500">per person</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">
+                            Focused on wildlife photography and conservation. Includes 3 jeep safaris in Kaziranga and a boat safari in Manas National Park.
+                        </p>
+                        <div class="border-t border-gray-100 pt-6 mt-auto">
+                            <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                                <span><i class="far fa-clock text-brand-gold mr-2"></i> 5 Days</span>
+                                <span><i class="fas fa-user-friends text-brand-gold mr-2"></i> Max 6</span>
+                            </div>
+                            <button class="w-full border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-900 hover:text-white transition-colors font-medium">View Itinerary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tour 3 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 group tour-card flex flex-col">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1623862145638-5544723049b1?q=80&w=2670&auto=format&fit=crop" alt="River Cruise" class="w-full h-full object-cover transition-transform duration-500 tour-img">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-xl font-serif font-bold text-gray-900 mb-1">Brahmaputra Odyssey</h4>
+                                <div class="flex items-center gap-1 text-xs text-brand-gold">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                    <span class="text-gray-400 ml-1">(28 Reviews)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold text-brand-red">₹24,999</span>
+                                <span class="text-xs text-gray-500">per person</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">
+                            A relaxing getaway on the mighty river. Visit river islands, enjoy traditional Assamese cuisine on deck, and witness spectacular sunsets.
+                        </p>
+                        <div class="border-t border-gray-100 pt-6 mt-auto">
+                            <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                                <span><i class="far fa-clock text-brand-gold mr-2"></i> 3 Days</span>
+                                <span><i class="fas fa-user-friends text-brand-gold mr-2"></i> Max 20</span>
+                            </div>
+                            <button class="w-full border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-900 hover:text-white transition-colors font-medium">View Itinerary</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- HIDDEN TOURS SECTION -->
+            <div id="more-tours" class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10 hidden transition-all duration-500 ease-in-out opacity-0">
+                
+                <!-- Tour 4: Nameri -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 group tour-card flex flex-col">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1516738901171-8eb4fc2ab50b?q=80&w=2574&auto=format&fit=crop" alt="Nameri" class="w-full h-full object-cover transition-transform duration-500 tour-img">
+                        <div class="absolute top-4 right-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Adventure</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-xl font-serif font-bold text-gray-900 mb-1">Nameri Eco-Camp</h4>
+                                <div class="flex items-center gap-1 text-xs text-brand-gold">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                    <span class="text-gray-400 ml-1">(54 Reviews)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold text-brand-red">₹18,500</span>
+                                <span class="text-xs text-gray-500">per person</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">
+                            Stay in eco-camps, go river rafting on the Jia Bhoroli, and spot rare bird species like the White-winged Wood Duck.
+                        </p>
+                        <div class="border-t border-gray-100 pt-6 mt-auto">
+                            <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                                <span><i class="far fa-clock text-brand-gold mr-2"></i> 3 Days</span>
+                                <span><i class="fas fa-user-friends text-brand-gold mr-2"></i> Max 8</span>
+                            </div>
+                            <button class="w-full border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-900 hover:text-white transition-colors font-medium">View Itinerary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tour 5: Tribal -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 group tour-card flex flex-col">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2671&auto=format&fit=crop" alt="Tribal" class="w-full h-full object-cover transition-transform duration-500 tour-img">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-xl font-serif font-bold text-gray-900 mb-1">Tribal Homestay</h4>
+                                <div class="flex items-center gap-1 text-xs text-brand-gold">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    <span class="text-gray-400 ml-1">(12 Reviews)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold text-brand-red">₹12,999</span>
+                                <span class="text-xs text-gray-500">per person</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">
+                            Live with the Mishing community in bamboo stilt houses. Learn their weaving techniques and enjoy traditional rice beer (Apong).
+                        </p>
+                        <div class="border-t border-gray-100 pt-6 mt-auto">
+                            <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                                <span><i class="far fa-clock text-brand-gold mr-2"></i> 2 Days</span>
+                                <span><i class="fas fa-user-friends text-brand-gold mr-2"></i> Max 4</span>
+                            </div>
+                            <button class="w-full border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-900 hover:text-white transition-colors font-medium">View Itinerary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tour 6: Spiritual -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 group tour-card flex flex-col">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1605362932190-272e7a371285?q=80&w=2669&auto=format&fit=crop" alt="Temple" class="w-full h-full object-cover transition-transform duration-500 tour-img">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-xl font-serif font-bold text-gray-900 mb-1">Spiritual Assam</h4>
+                                <div class="flex items-center gap-1 text-xs text-brand-gold">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                    <span class="text-gray-400 ml-1">(31 Reviews)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-2xl font-bold text-brand-red">₹8,999</span>
+                                <span class="text-xs text-gray-500">per person</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">
+                            A day tour covering the holy Kamakhya Temple, Umananda Island Temple, and the poignant War Cemetery.
+                        </p>
+                        <div class="border-t border-gray-100 pt-6 mt-auto">
+                            <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                                <span><i class="far fa-clock text-brand-gold mr-2"></i> 1 Day</span>
+                                <span><i class="fas fa-user-friends text-brand-gold mr-2"></i> Max 15</span>
+                            </div>
+                            <button class="w-full border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-900 hover:text-white transition-colors font-medium">View Itinerary</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="text-center mt-12">
+                 <button id="viewAllBtn" class="inline-flex items-center gap-2 text-brand-red font-bold hover:text-red-800 transition-colors uppercase tracking-wide text-sm border-2 border-brand-red px-6 py-2 rounded-full hover:bg-brand-red hover:text-white">
+                     View All Packages <i class="fas fa-chevron-down"></i>
+                 </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section (Teaser) -->
+    <section class="py-20 bg-gray-900 text-white relative overflow-hidden">
+        <!-- Decor element -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-brand-gold opacity-10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+            <div class="w-full md:w-1/2">
+                <h2 class="text-brand-gold font-bold uppercase tracking-widest mb-2 text-sm">Our Heritage</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold mb-6">Experience the Soul of the Northeast</h3>
+                <p class="text-gray-400 mb-6 leading-relaxed">
+                    Assam is a land of blue hills and red rivers. From the lush tea gardens to the vibrant Bihu dance, every corner tells a story of tradition and nature living in harmony.
+                </p>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-center gap-3">
+                        <i class="fas fa-check text-brand-gold"></i>
+                        <span>Guided Wildlife Safaris in 4x4 Jeeps</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fas fa-check text-brand-gold"></i>
+                        <span>Authentic Assamese Cuisine Tasting</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fas fa-check text-brand-gold"></i>
+                        <span>River Rafting in the Brahmaputra</span>
+                    </li>
+                </ul>
+                <button class="bg-transparent border border-white hover:bg-white hover:text-gray-900 text-white px-8 py-3 rounded-md font-medium transition-colors">
+                    Learn More About Culture
+                </button>
+            </div>
+            <div class="w-full md:w-1/2 relative">
+                <div class="grid grid-cols-2 gap-4">
+                     <img src="https://images.unsplash.com/photo-1626301646875-520e760c7041?q=80&w=2670&auto=format&fit=crop" class="rounded-lg shadow-lg translate-y-8" alt="Dancer">
+                     <img src="https://images.unsplash.com/photo-1523497880918-02ba40316c8c?q=80&w=2670&auto=format&fit=crop" class="rounded-lg shadow-lg" alt="Rhino">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-black text-white py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                     <span class="text-2xl font-serif font-bold">Assamica</span>
+                </div>
+                <p class="text-gray-500 text-sm">Unlocking the hidden gems of Northeast India for travelers worldwide.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-bold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><a href="#" class="hover:text-brand-gold">About Us</a></li>
+                    <li><a href="#" class="hover:text-brand-gold">Tours</a></li>
+                    <li><a href="#" class="hover:text-brand-gold">Blog</a></li>
+                    <li><a href="#" class="hover:text-brand-gold">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4">Contact</h4>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                    <li><i class="fas fa-phone mr-2 text-brand-gold"></i> +91 98765 43210</li>
+                    <li><i class="fas fa-envelope mr-2 text-brand-gold"></i> hello@assamica.com</li>
+                    <li><i class="fas fa-map-marker-alt mr-2 text-brand-gold"></i> Guwahati, Assam, India</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4">Newsletter</h4>
+                <div class="flex">
+                    <input type="email" placeholder="Your email" class="bg-gray-800 border-none text-white px-4 py-2 w-full rounded-l-md focus:ring-1 focus:ring-brand-gold outline-none">
+                    <button class="bg-brand-gold text-black px-4 py-2 rounded-r-md font-bold hover:bg-yellow-500">Go</button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-600 text-sm mt-12 pt-8 border-t border-gray-800">
+            &copy; 2024 Assamica Travels. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-black bg-opacity-80 transition-opacity backdrop-blur-sm" onclick="closeModal()"></div>
+    
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <!-- Increased max-width to 2xl for better picture visibility -->
+            <div class="relative transform overflow-hidden rounded-lg bg-gray-900 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-brand-gold">
+                
+                <!-- Close X button absolute positioned -->
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-white hover:text-brand-red z-10 bg-black/50 rounded-full p-2 w-10 h-10 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <!-- Image Area - Significantly larger height (h-64 to h-80) -->
+                <div class="relative h-72 sm:h-80 w-full">
+                    <img id="modalImage" src="" alt="Detail" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                    <h3 class="absolute bottom-4 left-6 text-3xl md:text-4xl font-serif font-bold text-white drop-shadow-lg" id="modalTitle">Title</h3>
+                </div>
+
+                <div class="bg-gray-900 px-6 pb-6 pt-4">
+                    <div class="flex flex-col gap-6">
+                        
+                        <!-- Description -->
+                        <p class="text-gray-300 leading-relaxed text-base" id="modalText">Description goes here.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-800 pt-6">
+                            
+                            <!-- Key Details Column -->
+                            <div>
+                                <h4 class="text-brand-gold font-bold uppercase tracking-wider text-xs mb-3">Quick Facts</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3 text-sm text-gray-400">
+                                        <div class="w-8 flex justify-center"><i class="fas fa-calendar-alt text-white"></i></div>
+                                        <div><span class="block text-xs text-gray-500">Best Season</span><span id="detailSeason" class="text-white">Oct - Mar</span></div>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-sm text-gray-400">
+                                        <div class="w-8 flex justify-center"><i class="fas fa-clock text-white"></i></div>
+                                        <div><span class="block text-xs text-gray-500">Duration</span><span id="detailDuration" class="text-white">3-4 Hours</span></div>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-sm text-gray-400">
+                                        <div class="w-8 flex justify-center"><i class="fas fa-map-marker-alt text-white"></i></div>
+                                        <div><span class="block text-xs text-gray-500">Location</span><span id="detailLocation" class="text-white">Kaziranga</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Highlights Column -->
+                            <div>
+                                <h4 class="text-brand-gold font-bold uppercase tracking-wider text-xs mb-3">Highlights</h4>
+                                <ul id="modalHighlights" class="space-y-2">
+                                    <!-- Populated by JS -->
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 px-6 py-4 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="closeModal(); document.getElementById('tours').scrollIntoView({behavior: 'smooth'})" class="inline-flex w-full justify-center rounded-md bg-brand-red px-6 py-2 text-sm font-bold uppercase tracking-wide text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto transition-colors transform hover:scale-105">
+                        Book This Tour
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navbar transparency on scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/90', 'shadow-lg');
+                navbar.classList.remove('p-6');
+                navbar.classList.add('py-4', 'px-6');
+            } else {
+                navbar.classList.remove('bg-black/90', 'shadow-lg');
+                navbar.classList.remove('py-4', 'px-6');
+                navbar.classList.add('p-6');
+            }
+        });
+
+        // View All Packages Logic
+        document.getElementById('viewAllBtn').addEventListener('click', function() {
+            const moreTours = document.getElementById('more-tours');
+            const btn = this;
+            
+            if (moreTours.classList.contains('hidden')) {
+                // Show
+                moreTours.classList.remove('hidden');
+                // Small timeout to allow the remove hidden to apply before opacity transition starts
+                setTimeout(() => {
+                    moreTours.classList.remove('opacity-0');
+                }, 10);
+                
+                btn.innerHTML = 'View Less <i class="fas fa-chevron-up"></i>';
+            } else {
+                // Hide
+                moreTours.classList.add('opacity-0');
+                setTimeout(() => {
+                    moreTours.classList.add('hidden');
+                }, 500); // Wait for transition
+                
+                btn.innerHTML = 'View All Packages <i class="fas fa-chevron-down"></i>';
+                
+                // Optional: Scroll back to top of section if desired, or just leave as is
+                document.getElementById('tours').scrollIntoView({behavior: 'smooth'});
+            }
+        });
+    </script>
+</body>
+</html>

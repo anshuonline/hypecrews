@@ -53,6 +53,58 @@ CREATE TABLE IF NOT EXISTS audition_submissions (
     FOREIGN KEY (deselected_by_admin_id) REFERENCES admins(id)
 );
 
+-- Create orders table for the new admin panel with expanded status options
+CREATE TABLE IF NOT EXISTS orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    order_title VARCHAR(255) NOT NULL,
+    order_description TEXT,
+    tracking_id VARCHAR(100) UNIQUE,
+    status ENUM(
+        'pending', 
+        'in_review', 
+        'approved', 
+        'processing', 
+        'in_production', 
+        'quality_check', 
+        'ready_for_delivery', 
+        'shipped', 
+        'delivered', 
+        'revision_requested', 
+        'on_hold', 
+        'completed', 
+        'cancelled'
+    ) DEFAULT 'pending',
+    custom_status VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Create order_status_history table
+CREATE TABLE IF NOT EXISTS order_status_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    status ENUM(
+        'pending', 
+        'in_review', 
+        'approved', 
+        'processing', 
+        'in_production', 
+        'quality_check', 
+        'ready_for_delivery', 
+        'shipped', 
+        'delivered', 
+        'revision_requested', 
+        'on_hold', 
+        'completed', 
+        'cancelled'
+    ) DEFAULT 'pending',
+    custom_status VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
 -- Insert default admin user (username: admin, password: admin123)
 INSERT IGNORE INTO admins (username, password, google_auth_enabled) 
 VALUES ('admin', '$2y$10$KvX.SCJ6V6gNzaF7DFBE.e.WuVoBz6SsD2kD4qlUuIa9x7ysQaq1W', 0);

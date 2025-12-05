@@ -86,6 +86,9 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
                         <i class="fas fa-chevron-down ml-2 text-xs transition-transform duration-300 group-hover:rotate-180"></i>
                     </button>
                     <div class="absolute right-0 mt-2 w-48 bg-dark shadow-xl rounded-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 border-t-4 border-primary">
+                        <a href="track_orders.php" class="block px-4 py-2 text-white hover:bg-light/10 hover:text-primary transition-all duration-300">
+                            <i class="fas fa-truck mr-2"></i> Track Orders
+                        </a>
                         <a href="profile.php" class="block px-4 py-2 text-white hover:bg-light/10 hover:text-primary transition-all duration-300">
                             <i class="fas fa-user-circle mr-2"></i> My Profile
                         </a>
@@ -157,6 +160,9 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
             <a href="form.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Audition</a>
             
             <?php if ($isLoggedIn): ?>
+                <a href="track_orders.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">
+                    <i class="fas fa-truck mr-2"></i> Track Orders
+                </a>
                 <a href="profile.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">
                     <i class="fas fa-user-circle mr-2"></i> My Profile
                 </a>
