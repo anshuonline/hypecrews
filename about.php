@@ -176,14 +176,14 @@ $pageTitle = "About Us - Hypecrews";
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Team Member 1 -->
+                <!-- Dheeraj Jyoti Saikia - CEO & Founder -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Team Member" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/Our-Team/company owner and and co founder .png" alt="Dheeraj Jyoti Saikia" class="w-full h-80 object-cover transition duration-500">
                     </div>
-                    <h3 class="text-xl font-bold">Alex Johnson</h3>
+                    <h3 class="text-xl font-bold">Dheeraj Jyoti Saikia</h3>
                     <p class="text-primary mb-3">CEO & Founder</p>
-                    <p class="text-gray-400 mb-4">Visionary leader with 15+ years in digital transformation</p>
+                    <p class="text-gray-400 mb-4">Visionary leader driving innovation and growth</p>
                     <div class="flex justify-center space-x-3">
                         <a href="#" class="text-gray-400 hover:text-primary transition">
                             <i class="fab fa-linkedin-in"></i>
@@ -194,14 +194,14 @@ $pageTitle = "About Us - Hypecrews";
                     </div>
                 </div>
                 
-                <!-- Team Member 2 -->
+                <!-- Jitu Moni Hazarika - Co Founder -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Team Member" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/Our-Team/company owner and and co founder .png" alt="Jitu Moni Hazarika" class="w-full h-80 object-cover transition duration-500">
                     </div>
-                    <h3 class="text-xl font-bold">Sarah Williams</h3>
-                    <p class="text-primary mb-3">Creative Director</p>
-                    <p class="text-gray-400 mb-4">Award-winning designer with expertise in brand strategy</p>
+                    <h3 class="text-xl font-bold">Jitu Moni Hazarika</h3>
+                    <p class="text-primary mb-3">Co Founder</p>
+                    <p class="text-gray-400 mb-4">Strategic partner in business development and operations</p>
                     <div class="flex justify-center space-x-3">
                         <a href="#" class="text-gray-400 hover:text-primary transition">
                             <i class="fab fa-linkedin-in"></i>
@@ -212,14 +212,14 @@ $pageTitle = "About Us - Hypecrews";
                     </div>
                 </div>
                 
-                <!-- Team Member 3 -->
+                <!-- Rajdeep Pandit - CTO -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Team Member" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/Our-Team/company owner and and co founder .png" alt="Rajdeep Pandit" class="w-full h-80 object-cover transition duration-500">
                     </div>
-                    <h3 class="text-xl font-bold">Michael Chen</h3>
+                    <h3 class="text-xl font-bold">Rajdeep Pandit</h3>
                     <p class="text-primary mb-3">CTO</p>
-                    <p class="text-gray-400 mb-4">Tech innovator specializing in scalable web solutions</p>
+                    <p class="text-gray-400 mb-4">Technology visionary and innovation driver</p>
                     <div class="flex justify-center space-x-3">
                         <a href="#" class="text-gray-400 hover:text-primary transition">
                             <i class="fab fa-linkedin-in"></i>
@@ -230,14 +230,104 @@ $pageTitle = "About Us - Hypecrews";
                     </div>
                 </div>
                 
-                <!-- Team Member 4 -->
+                <!-- Aruhan Gogoi - Head of Production -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Team Member" class="w-full h-80 object-cover transition duration-500">
+                        <img src="graphics/Our-Team/company owner and and co founder .png" alt="Aruhan Gogoi" class="w-full h-80 object-cover transition duration-500">
                     </div>
-                    <h3 class="text-xl font-bold">Emily Rodriguez</h3>
+                    <h3 class="text-xl font-bold">Aruhan Gogoi</h3>
+                    <p class="text-primary mb-3">Head of Production</p>
+                    <p class="text-gray-400 mb-4">Leadership in production operations and quality assurance</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Shreya Kumar - Marketing Director -->
+                <div class="team-member text-center">
+                    <div class="overflow-hidden rounded-xl mb-6">
+                        <img src="graphics/Our-Team/team female 2.png" alt="Shreya Kumar" class="w-full h-80 object-cover transition duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold">Shreya Kumar</h3>
                     <p class="text-primary mb-3">Marketing Director</p>
-                    <p class="text-gray-400 mb-4">Data-driven marketer with expertise in digital campaigns</p>
+                    <p class="text-gray-400 mb-4">Strategic marketer with expertise in brand growth</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Raghu Agarwal - Manager -->
+                <div class="team-member text-center">
+                    <div class="overflow-hidden rounded-xl mb-6">
+                        <img src="graphics/Our-Team/teams-male.png" alt="Raghu Agarwal" class="w-full h-80 object-cover transition duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold">Raghu Agarwal</h3>
+                    <p class="text-primary mb-3">Manager</p>
+                    <p class="text-gray-400 mb-4">Operations manager ensuring smooth business execution</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Harshit - Executor -->
+                <div class="team-member text-center">
+                    <div class="overflow-hidden rounded-xl mb-6">
+                        <img src="graphics/Our-Team/teams-male.png" alt="Harshit" class="w-full h-80 object-cover transition duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold">Harshit</h3>
+                    <p class="text-primary mb-3">Executor</p>
+                    <p class="text-gray-400 mb-4">Efficient executor driving project implementation</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Kavya Singh - HR Executive -->
+                <div class="team-member text-center">
+                    <div class="overflow-hidden rounded-xl mb-6">
+                        <img src="graphics/Our-Team/teams-female1.png" alt="Kavya Singh" class="w-full h-80 object-cover transition duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold">Kavya Singh</h3>
+                    <p class="text-primary mb-3">HR Executive</p>
+                    <p class="text-gray-400 mb-4">Human resources specialist fostering team growth</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Aadhya Patel - Sales Manager -->
+                <div class="team-member text-center">
+                    <div class="overflow-hidden rounded-xl mb-6">
+                        <img src="graphics/Our-Team/team female 2.png" alt="Aadhya Patel" class="w-full h-80 object-cover transition duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold">Aadhya Patel</h3>
+                    <p class="text-primary mb-3">Sales Manager</p>
+                    <p class="text-gray-400 mb-4">Sales leader driving business growth and client relations</p>
                     <div class="flex justify-center space-x-3">
                         <a href="#" class="text-gray-400 hover:text-primary transition">
                             <i class="fab fa-linkedin-in"></i>
