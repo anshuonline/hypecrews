@@ -212,14 +212,14 @@ $pageTitle = "About Us - Hypecrews";
                     </div>
                 </div>
                 
-                <!-- Rajdeep Pandit - CTO -->
+                <!-- Rajdeep Pandit - COO & CTO -->
                 <div class="team-member text-center">
                     <div class="overflow-hidden rounded-xl mb-6">
                         <img src="graphics/Our-Team/company owner and and co founder .png" alt="Rajdeep Pandit" class="w-full h-80 object-cover transition duration-500">
                     </div>
                     <h3 class="text-xl font-bold">Rajdeep Pandit</h3>
-                    <p class="text-primary mb-3">CTO</p>
-                    <p class="text-gray-400 mb-4">Technology visionary and innovation driver</p>
+                    <p class="text-primary mb-3">COO & CTO</p>
+                    <p class="text-gray-400 mb-4">Chief Operating Officer and Chief Technology Officer</p>
                     <div class="flex justify-center space-x-3">
                         <a href="#" class="text-gray-400 hover:text-primary transition">
                             <i class="fab fa-linkedin-in"></i>
