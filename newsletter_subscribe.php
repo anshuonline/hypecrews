@@ -2,15 +2,9 @@
 // Handle newsletter subscription via AJAX
 header('Content-Type: application/json');
 
-// Simple response for testing
-echo json_encode(['status' => 'success', 'message' => 'Simple test successful!']);
-exit;
-
 // Include database connection
-// require_once 'config/db.php';
+require_once 'config/db.php';
 
-// Rest of the code...
-/*
 // Check if request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
@@ -80,5 +74,3 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['status' => 'error', 'message' => 'Database error occurred. Please try again.']);
 }
-*/
-?>
