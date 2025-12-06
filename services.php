@@ -370,8 +370,6 @@ $pageTitle = "Our Services - Hypecrews";
 
     <?php include 'components/footer.php'; ?>
     
-    <?php include 'components/cursor_highlight.php'; ?>
-    
     <script src="js/main.js"></script>
 </body>
 </html>

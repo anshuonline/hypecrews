@@ -58,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Register user if no errors
     if (empty($errors)) {
         try {
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            // Use MD5 for password hashing
+            $hashed_password = md5($password);
             
             $stmt = $pdo->prepare("INSERT INTO users (username, first_name, last_name, email, mobile_number, country, age, company_name, company_website, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([

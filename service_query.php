@@ -183,11 +183,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div>
                             <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
                             <input 
-                                type="tel" 
+                                type="text" 
                                 id="phone" 
                                 name="phone" 
                                 class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Enter your phone number"
+                                placeholder="9876543210"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                                maxlength="15"
                                 value="<?php echo htmlspecialchars($phone); ?>">
                         </div>
                     </div>
@@ -230,5 +232,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php include 'components/footer.php'; ?>
     
     <script src="js/main.js"></script>
+    <script>
+        // Phone number validation - Allow only digits
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('phone');
+            
+            phoneInput.addEventListener('keypress', function(e) {
+                // Allow only digits (0-9)
+                if (e.which < 48 || e.which > 57) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Also prevent pasting non-numeric content
+            phoneInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const numericValue = paste.replace(/[^0-9]/g, '');
+                this.value = numericValue;
+            });
+        });
+    </script>
 </body>
 </html>

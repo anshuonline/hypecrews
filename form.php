@@ -297,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         
                                         <div>
                                             <label for="phone" class="block text-gray-300 font-medium mb-2">Phone Number <span class="text-red-500">*</span></label>
-                                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white backdrop-blur-sm" placeholder="+913613243276" required>
+                                            <input type="text" id="phone" name="phone" class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white backdrop-blur-sm" placeholder="9876543210" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="15">
                                         </div>
                                         
                                         <div>
@@ -512,6 +512,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             });
             
+            // Phone number validation - Allow only digits
+            document.getElementById('phone').addEventListener('keypress', function(e) {
+                // Allow only digits (0-9)
+                if (e.which < 48 || e.which > 57) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Also prevent pasting non-numeric content
+            document.getElementById('phone').addEventListener('paste', function(e) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const numericValue = paste.replace(/[^0-9]/g, '');
+                this.value = numericValue;
+            });
+            
             // Next button click
             nextButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -557,6 +573,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Special validation for email
                     if (input.type === 'email' && !isValidEmail(input.value)) {
                         showError('Please enter a valid email address.');
+                        input.focus();
+                        return false;
+                    }
+                    
+                    // Special validation for phone number
+                    if (input.name === 'phone' && !/^[0-9]+$/.test(input.value)) {
+                        showError('Phone number should contain only digits.');
                         input.focus();
                         return false;
                     }

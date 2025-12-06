@@ -169,7 +169,7 @@ $pageTitle = "About Us - Hypecrews";
                             <i class="fas fa-users text-primary text-2xl"></i>
                         </div>
                         <div>
-                            <p class="text-2xl font-bold text-white">754</p>
+                            <p class="text-2xl font-bold text-white">700+</p>
                             <p class="text-gray-400">Happy Clients</p>
                         </div>
                     </div>
@@ -286,7 +286,7 @@ $pageTitle = "About Us - Hypecrews";
                     <p class="text-primary mb-3">CEO & Founder</p>
                     <p class="text-gray-400 mb-4">Visionary leader driving innovation and growth</p>
                     <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                        <a href="https://www.linkedin.com/in/dheerajjyotisaikia/" class="text-gray-400 hover:text-primary transition" target="_blank">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <a href="#" class="text-gray-400 hover:text-primary transition">
@@ -322,7 +322,7 @@ $pageTitle = "About Us - Hypecrews";
                     <p class="text-primary mb-3">COO & CTO</p>
                     <p class="text-gray-400 mb-4">Chief Operating Officer and Chief Technology Officer</p>
                     <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
+                        <a href="https://www.linkedin.com/in/rajdeep-pandit-22b543282/" class="text-gray-400 hover:text-primary transition" target="_blank">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <a href="#" class="text-gray-400 hover:text-primary transition">

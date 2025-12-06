@@ -28,6 +28,10 @@ if (!isset($current_page)) {
             <i class="fas fa-question-circle mr-3"></i>
             <span>Queries</span>
         </a>
+        <a href="newsletter.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'newsletter') ? 'active' : ''; ?>">
+            <i class="fas fa-envelope mr-3"></i>
+            <span>Newsletter</span>
+        </a>
         <a href="users.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
             <i class="fas fa-users mr-3"></i>
             <span>Users</span>

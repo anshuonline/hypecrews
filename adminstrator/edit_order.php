@@ -40,10 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_id = isset($_POST['user_id']) && !empty($_POST['user_id']) ? $_POST['user_id'] : null;
     $order_title = isset($_POST['order_title']) ? trim($_POST['order_title']) : '';
     $order_description = isset($_POST['order_description']) ? trim($_POST['order_description']) : '';
-    $tracking_id = isset($_POST['tracking_id']) ? trim($_POST['tracking_id']) : '';
     $status = isset($_POST['status']) ? $_POST['status'] : 'pending';
     $custom_status = isset($_POST['custom_status']) ? trim($_POST['custom_status']) : '';
     $request_review = isset($_POST['request_review']) ? 1 : 0;
+    
+    // Always preserve the existing tracking ID - never change it
+    $tracking_id = $order['tracking_id'];
     
     // Validation
     if (empty($order_title)) {
@@ -57,12 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_check->execute([$order_id]);
             $old_order = $stmt_check->fetch(PDO::FETCH_ASSOC);
             
-            // Preserve existing tracking ID if not explicitly changed
-            if (empty($tracking_id)) {
-                $tracking_id = $order['tracking_id'];
-            }
-            
-            // Update the order
+            // Update the order (tracking ID is preserved)
             $stmt = $pdo->prepare("UPDATE orders SET user_id = ?, order_title = ?, order_description = ?, tracking_id = ?, status = ?, custom_status = ?, review_requested = ? WHERE id = ?");
             $stmt->execute([$user_id, $order_title, $order_description, $tracking_id, $status, $custom_status, $request_review, $order_id]);
             
@@ -241,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             
                             <div>
-                                <label for="tracking_id" class="block text-sm font-medium text-gray-300 mb-2">Tracking ID (Auto-generated)</label>
+                                <label for="tracking_id" class="block text-sm font-medium text-gray-300 mb-2">Tracking ID (Cannot be changed)</label>
                                 <input 
                                     type="text" 
                                     id="tracking_id" 

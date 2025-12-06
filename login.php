@@ -23,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $stmt->execute([$username, $username]);
             $user = $stmt->fetch();
             
-            if ($user && password_verify($password, $user['password'])) {
+            // Use MD5 to verify password
+            if ($user && $user['password'] === md5($password)) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['first_name'] = $user['first_name'];

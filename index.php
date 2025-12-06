@@ -605,8 +605,6 @@ $pageTitle = "Hypecrews - Professional Digital Services";
 
     <?php include 'components/footer.php'; ?>
     
-    <?php include 'components/cursor_highlight.php'; ?>
-    
     <script src="js/main.js"></script>
 </body>
 </html>
