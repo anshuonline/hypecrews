@@ -313,131 +313,19 @@ $pageTitle = "About Us - Hypecrews";
                     </div>
                 </div>
                 
-                <!-- Rajdeep Pandit - COO & CTO -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/co-founder.png" alt="Rajdeep Pandit" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Rajdeep Pandit</h3>
-                    <p class="text-primary mb-3">COO & CTO</p>
-                    <p class="text-gray-400 mb-4">Chief Operating Officer and Chief Technology Officer</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="https://www.linkedin.com/in/rajdeep-pandit-22b543282/" class="text-gray-400 hover:text-primary transition" target="_blank">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Rajdeep Pandit section -->
                 
-                <!-- Aruhan Gogoi - Head of Production -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/co-founder.png" alt="Aruhan Gogoi" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Aruhan Gogoi</h3>
-                    <p class="text-primary mb-3">Head of Production</p>
-                    <p class="text-gray-400 mb-4">Leadership in production operations and quality assurance</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Aruhan Gogoi section -->
                 
-                <!-- Shreya Kumar - Marketing Director -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/female2.png" alt="Shreya Kumar" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Shreya Kumar</h3>
-                    <p class="text-primary mb-3">Marketing Director</p>
-                    <p class="text-gray-400 mb-4">Strategic marketer with expertise in brand growth</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Shreya Kumar section -->
                 
-                <!-- Raghu Agarwal - Manager -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/male.png" alt="Raghu Agarwal" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Raghu Agarwal</h3>
-                    <p class="text-primary mb-3">Manager</p>
-                    <p class="text-gray-400 mb-4">Operations manager ensuring smooth business execution</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Raghu Agarwal section -->
                 
-                <!-- Harshit - Executor -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/male.png" alt="Harshit" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Harshit</h3>
-                    <p class="text-primary mb-3">Executor</p>
-                    <p class="text-gray-400 mb-4">Efficient executor driving project implementation</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Harshit section -->
                 
-                <!-- Kavya Singh - HR Executive -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/female1.png" alt="Kavya Singh" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Kavya Singh</h3>
-                    <p class="text-primary mb-3">HR Executive</p>
-                    <p class="text-gray-400 mb-4">Human resources specialist fostering team growth</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Kavya Singh section -->
                 
-                <!-- Aadhya Patel - Sales Manager -->
-                <div class="team-member text-center">
-                    <div class="overflow-hidden rounded-xl mb-6">
-                        <img src="graphics/our-team/female2.png" alt="Aadhya Patel" class="w-full h-80 object-cover transition duration-500">
-                    </div>
-                    <h3 class="text-xl font-bold">Aadhya Patel</h3>
-                    <p class="text-primary mb-3">Sales Manager</p>
-                    <p class="text-gray-400 mb-4">Sales leader driving business growth and client relations</p>
-                    <div class="flex justify-center space-x-3">
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+                <!-- Removed: Aadhya Patel section -->
             </div>
         </div>
     </section>

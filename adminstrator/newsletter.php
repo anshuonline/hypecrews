@@ -3,6 +3,43 @@ require_once 'auth.php';
 require_once '../config/db.php';
 $current_page = 'newsletter';
 
+// Handle export request
+if (isset($_GET['export']) && $_GET['export'] === 'xls') {
+    // Set headers for Excel export
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename="newsletter_subscribers.xls"');
+    
+    // Fetch all subscribers
+    try {
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        if (!empty($search)) {
+            $stmt = $pdo->prepare("SELECT email, subscribed_at, ip_address FROM newsletter_subscriptions WHERE email LIKE ? ORDER BY subscribed_at DESC");
+            $searchTerm = "%{$search}%";
+            $stmt->execute([$searchTerm]);
+        } else {
+            $stmt = $pdo->prepare("SELECT email, subscribed_at, ip_address FROM newsletter_subscriptions ORDER BY subscribed_at DESC");
+            $stmt->execute();
+        }
+        
+        $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Output Excel format
+        echo "Email\tSubscribed At\tIP Address\n";
+        
+        foreach ($subscribers as $subscriber) {
+            echo htmlspecialchars($subscriber['email']) . "\t" . 
+                 htmlspecialchars($subscriber['subscribed_at']) . "\t" . 
+                 htmlspecialchars($subscriber['ip_address'] ?? 'N/A') . "\n";
+        }
+        
+        exit;
+    } catch (PDOException $e) {
+        // Handle error silently or log it
+        exit;
+    }
+}
+
 // Handle search
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
@@ -68,6 +105,13 @@ try {
             <header class="bg-dark border-b border-gray-800 p-6">
                 <div class="flex justify-between items-center">
                     <h2 class="text-2xl font-bold">Newsletter Subscribers</h2>
+                    <?php if (!empty($subscribers)): ?>
+                    <div class="flex space-x-2">
+                        <a href="?export=xls<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                            <i class="fas fa-file-excel mr-2"></i> Export to Excel
+                        </a>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </header>
             

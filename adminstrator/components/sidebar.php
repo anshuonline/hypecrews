@@ -4,6 +4,11 @@
 if (!isset($current_page)) {
     $current_page = '';
 }
+
+// Ensure $admin_username is set
+if (!isset($admin_username)) {
+    $admin_username = 'Administrator';
+}
 ?>
 
 <div class="sidebar w-64 flex-shrink-0 flex flex-col">
