@@ -14,6 +14,31 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     }
 }
 
+// Handle fast status update
+if (isset($_POST['update_status']) && isset($_POST['order_id']) && isset($_POST['status'])) {
+    $order_id = intval($_POST['order_id']);
+    $status = $_POST['status'];
+    $custom_status = isset($_POST['custom_status']) ? trim($_POST['custom_status']) : '';
+    
+    try {
+        $stmt_check = $pdo->prepare("SELECT status, custom_status FROM orders WHERE id = ?");
+        $stmt_check->execute([$order_id]);
+        $old_order = $stmt_check->fetch(PDO::FETCH_ASSOC);
+        
+        $stmt = $pdo->prepare("UPDATE orders SET status = ?, custom_status = ? WHERE id = ?");
+        $stmt->execute([$status, $custom_status, $order_id]);
+        
+        if ($old_order && ($old_order['status'] != $status || $old_order['custom_status'] != $custom_status)) {
+            $stmt_history = $pdo->prepare("INSERT INTO order_status_history (order_id, status, custom_status) VALUES (?, ?, ?)");
+            $stmt_history->execute([$order_id, $status, $custom_status]);
+        }
+        
+        $success = "Order status updated successfully";
+    } catch (PDOException $e) {
+        $error = "Error updating order status: " . $e->getMessage();
+    }
+}
+
 // Handle search
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
@@ -74,6 +99,7 @@ try {
             font-weight: 500;
         }
     </style>
+    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="text-white">
     <div class="flex h-screen">
@@ -204,13 +230,16 @@ try {
                                         <?php echo date('M j, Y', strtotime($order['created_at'])); ?>
                                     </td>
                                     <td class="py-4">
-                                        <a href="edit_order.php?id=<?php echo $order['id']; ?>" class="text-primary hover:text-indigo-400 mr-3">
+                                        <button onclick="showStatusModal(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>', '<?php echo addslashes(htmlspecialchars($order['custom_status'] ?? '')); ?>')" class="text-secondary hover:text-purple-400 mr-3" title="Update Status">
+                                            <i class="fas fa-tasks"></i>
+                                        </button>
+                                        <a href="edit_order.php?id=<?php echo $order['id']; ?>" class="text-primary hover:text-indigo-400 mr-3" title="Edit Full Order">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="view_order.php?id=<?php echo $order['id']; ?>" class="text-gray-400 hover:text-white mr-3">
+                                        <a href="view_order.php?id=<?php echo $order['id']; ?>" class="text-gray-400 hover:text-white mr-3" title="View Order">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="?delete=<?php echo $order['id']; ?>" class="text-red-500 hover:text-red-400" onclick="return confirm('Are you sure you want to delete this order?')">
+                                        <a href="?delete=<?php echo $order['id']; ?>" class="text-red-500 hover:text-red-400" onclick="return confirm('Are you sure you want to delete this order?')" title="Delete Order">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
@@ -224,5 +253,77 @@ try {
             </div>
         </div>
     </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-dark rounded-xl shadow-lg max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">Quick Update Status</h3>
+                    <button onclick="closeStatusModal()" class="text-gray-400 hover:text-white focus:outline-none">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="statusForm" method="POST">
+                    <input type="hidden" name="update_status" value="1">
+                    <input type="hidden" id="orderIdInput" name="order_id" value="">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Select Status</label>
+                        <select name="status" id="statusSelect" class="w-full px-4 py-2 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white">
+                            <option value="pending">Pending</option>
+                            <option value="in_review">In Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="processing">Processing</option>
+                            <option value="in_production">In Production</option>
+                            <option value="quality_check">Quality Check</option>
+                            <option value="ready_for_delivery">Ready for Delivery</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="revision_requested">Revision Requested</option>
+                            <option value="on_hold">On Hold</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Custom Status (Optional)</label>
+                        <input type="text" name="custom_status" id="customStatusInput" class="w-full px-4 py-2 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="E.g., Developer Assigned">
+                        <p class="text-xs text-gray-500 mt-1">This will be shown in the timeline to the user.</p>
+                    </div>
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" onclick="closeStatusModal()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+                            Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStatusModal(orderId, currentStatus, customStatus) {
+            document.getElementById('orderIdInput').value = orderId;
+            document.getElementById('statusSelect').value = currentStatus;
+            document.getElementById('customStatusInput').value = customStatus || '';
+            document.getElementById('statusModal').classList.remove('hidden');
+            document.getElementById('statusModal').classList.add('flex');
+        }
+        
+        function closeStatusModal() {
+            document.getElementById('statusModal').classList.add('hidden');
+            document.getElementById('statusModal').classList.remove('flex');
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const statusModal = document.getElementById('statusModal');
+            if (event.target == statusModal) {
+                closeStatusModal();
+            }
+        }
+    </script>
 </body>
 </html>

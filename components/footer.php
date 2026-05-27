@@ -6,7 +6,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
             <div>
-                <h3 class="text-2xl font-bold mb-6">HYPE<span class="text-primary">CREWS</span></h3>
+                <img src="graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews" class="h-12 w-auto mb-6">
                 <p class="text-gray-400 mb-6">Empowering businesses with innovative digital solutions to thrive in the modern marketplace.</p>
                 <div class="flex space-x-4">
                     <a href="#" class="text-gray-400 hover:text-white transition">
@@ -30,6 +30,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     <li><a href="index.php" class="text-gray-400 hover:text-white transition">Home</a></li>
                     <li><a href="index.php#services" class="text-gray-400 hover:text-white transition">Services</a></li>
                     <li><a href="about.php" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                    <li><a href="careers.php" class="text-gray-400 hover:text-white transition">Careers</a></li>
                     <li><a href="contact.php" class="text-gray-400 hover:text-white transition">Contact</a></li>
                 </ul>
             </div>
@@ -41,6 +42,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     <li><a href="services.php#social" class="text-gray-400 hover:text-white transition">Social Media Management</a></li>
                     <li><a href="services.php#digital" class="text-gray-400 hover:text-white transition">Digital Marketing</a></li>
                     <li><a href="services.php#web" class="text-gray-400 hover:text-white transition">Web Development</a></li>
+                    <li><a href="https://music.hypecrews.com" target="_blank" class="text-gray-400 hover:text-white transition">Music Distribution</a></li>
                 </ul>
             </div>
             
@@ -67,7 +69,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </div>
         
         <div class="border-t border-gray-800 pt-8 text-center">
-            <p class="text-gray-400">&copy; <?php echo date("Y"); ?> Hypecrews. All rights reserved.</p>
+            <p class="text-gray-400">&copy; 2024-<?php echo date("Y"); ?> Hypecrews. All rights reserved.</p>
         </div>
     </div>
     

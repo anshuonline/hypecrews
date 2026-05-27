@@ -7,6 +7,47 @@ $pageTitle = "Privacy Policy";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?> - Hypecrews</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Read Hypecrews' Privacy Policy. Learn how we collect, use, and protect your personal information and data when using our digital services.">
+    <meta name="keywords" content="Hypecrews privacy policy, data protection, personal information, data security, digital privacy, Hypecrews legal">
+    <link rel="canonical" href="https://hypecrews.com/privacy-policy.php">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Privacy Policy - Hypecrews">
+    <meta property="og:description" content="Read Hypecrews' Privacy Policy. Learn how we collect, use, and protect your personal information.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hypecrews.com/privacy-policy.php">
+    <meta property="og:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
+    <meta property="og:site_name" content="Hypecrews">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Privacy Policy - Hypecrews">
+    <meta name="twitter:description" content="Read Hypecrews' Privacy Policy. Learn how we collect, use, and protect your personal information.">
+    <meta name="twitter:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Privacy Policy",
+        "description": "Privacy Policy outlining how Hypecrews collects, uses, and protects user data and personal information.",
+        "url": "https://hypecrews.com/privacy-policy.php",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Hypecrews",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png"
+            },
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Golaghat",
+                "addressRegion": "Assam",
+                "addressCountry": "IN"
+            }
+        },
+        "inLanguage": "en"
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,6 +69,7 @@ $pageTitle = "Privacy Policy";
             }
         }
     </script>
+    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="bg-dark text-white">
     <?php include 'components/nav.php'; ?>

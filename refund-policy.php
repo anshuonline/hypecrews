@@ -7,6 +7,47 @@ $pageTitle = "Refund Policy";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?> - Hypecrews</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Hypecrews Refund Policy — Learn about our refund terms for digital marketing, web development, content creation, and consulting services. Fair and transparent.">
+    <meta name="keywords" content="Hypecrews refund policy, refund terms, money back guarantee, service refund, cancellation policy, Hypecrews returns">
+    <link rel="canonical" href="https://hypecrews.com/refund-policy.php">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Refund Policy - Hypecrews">
+    <meta property="og:description" content="Hypecrews Refund Policy — Learn about our refund terms for digital marketing, web development, content creation, and consulting services.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hypecrews.com/refund-policy.php">
+    <meta property="og:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
+    <meta property="og:site_name" content="Hypecrews">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Refund Policy - Hypecrews">
+    <meta name="twitter:description" content="Hypecrews Refund Policy — Learn about our refund terms for digital marketing, web development, content creation, and consulting services.">
+    <meta name="twitter:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Refund Policy",
+        "description": "Hypecrews refund policy outlining terms and conditions for refunds on digital marketing, web development, content creation, and consulting services.",
+        "url": "https://hypecrews.com/refund-policy.php",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Hypecrews",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png"
+            },
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Golaghat",
+                "addressRegion": "Assam",
+                "addressCountry": "IN"
+            }
+        },
+        "inLanguage": "en"
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,6 +69,7 @@ $pageTitle = "Refund Policy";
             }
         }
     </script>
+    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="bg-dark text-white">
     <?php include 'components/nav.php'; ?>
@@ -49,6 +91,7 @@ $pageTitle = "Refund Policy";
                         <li>Processing time for refunds typically takes 5-10 business days</li>
                         <li>Approved refunds will be issued to the original payment method</li>
                         <li>Refund eligibility depends on service delivery status and terms</li>
+                        <li><strong>The management team's decision will be considered final in all refund-related matters.</strong></li>
                     </ul>
                     
                     <h3 class="text-xl font-bold mb-4 mt-8 text-white">2. Service-Based Refunds</h3>
@@ -58,6 +101,7 @@ $pageTitle = "Refund Policy";
                         <li><strong>Content Creation:</strong> Full refund available if content hasn't been delivered. No refunds for delivered content</li>
                         <li><strong>Social Media Management:</strong> Pro-rated refund for unused months with 30-day notice</li>
                         <li><strong>Consulting Services:</strong> Full refund available if session hasn't occurred. No refunds for completed sessions</li>
+                        <li><strong>Home Services:</strong> If a home service is initiated or started, no refunds will be provided thereafter.</li>
                     </ul>
                     
                     <h3 class="text-xl font-bold mb-4 mt-8 text-white">3. Subscription Services</h3>
@@ -93,7 +137,7 @@ $pageTitle = "Refund Policy";
                     <p class="text-gray-300 mb-6">We reserve the right to update or modify this refund policy at any time. Changes will be effective immediately upon posting on our website. Your continued use of our services after any modifications constitutes acceptance of the updated policy.</p>
                     
                     <div class="mt-10 p-4 bg-slate-900/50 rounded-lg border border-slate-700">
-                        <p class="text-gray-300"><strong>Contact Us:</strong> For any questions regarding our refund policy, please contact us at <a href="mailto:support@hypecrews.com" class="text-primary hover:underline">support@hypecrews.com</a> or call us at +1 (555) 123-4567.</p>
+                        <p class="text-gray-300"><strong>Contact Us:</strong> For any questions regarding our refund policy, please contact us at <a href="mailto:support@hypecrews.com" class="text-primary hover:underline">support@hypecrews.com</a> or call us at +913613243276.</p>
                     </div>
                 </div>
             </div>

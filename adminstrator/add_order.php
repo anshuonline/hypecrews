@@ -237,6 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-bottom: none;
         }
     </style>
+    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="text-white">
     <div class="flex h-screen">

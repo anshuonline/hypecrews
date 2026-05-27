@@ -72,14 +72,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Query - Hypecrews</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Submit a service inquiry to Hypecrews for digital marketing, web development, or creative solutions. We'll get back to you promptly.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://hypecrews.com/service_query.php">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script>
         tailwind.config = {
@@ -88,144 +92,171 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     colors: {
                         primary: '#6366f1',
                         secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        accent: '#ec4899',
+                        dark: '#0B0F19',
+                        light: '#f8fafc'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
                     }
                 }
             }
         }
     </script>
+    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
     <style>
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
+        .abstract-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: float 10s infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
         }
     </style>
 </head>
-<body class="bg-dark text-white">
+<body class="antialiased selection:bg-primary selection:text-white min-h-screen flex flex-col relative bg-dark">
     <?php include 'components/nav.php'; ?>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto">
-            <div class="mb-6">
-                <a href="services.php" class="inline-flex items-center text-primary hover:text-indigo-300 mb-4">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to Services
-                </a>
-                <h1 class="text-3xl font-bold">Service Query</h1>
-                <p class="text-gray-400">Interested in "<?php echo $service_name; ?>"? Please fill out the form below and we'll get back to you soon.</p>
+    <div class="flex-grow flex items-center justify-center relative overflow-hidden pt-32 pb-20 px-4">
+        <!-- Abstract Background -->
+        <div class="abstract-blob bg-primary w-96 h-96 top-[-10%] left-[-10%] pointer-events-none"></div>
+        <div class="abstract-blob bg-secondary w-80 h-80 bottom-[-10%] right-[-10%] pointer-events-none" style="animation-direction: alternate-reverse; animation-delay: 2s;"></div>
+        
+        <div class="relative z-10 w-full max-w-2xl mx-auto rounded-3xl overflow-hidden bg-[#0f172a]/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 p-8 md:p-12">
+            
+            <a href="services.php" class="inline-flex items-center text-sm font-medium text-gray-400 hover:text-white transition-colors mb-8 group">
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center mr-3 group-hover:bg-white/10 transition-colors">
+                    <i class="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
+                </div>
+                Back to Services
+            </a>
+
+            <div class="mb-8 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-white/10 mb-6 shadow-inner">
+                    <i class="fas fa-paper-plane text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-heading font-bold text-white mb-3">Service Inquiry</h1>
+                <p class="text-gray-400">Interested in <span class="text-white font-medium">"<?php echo $service_name; ?>"</span>? Fill out the details below.</p>
             </div>
             
             <?php if ($error): ?>
-            <div class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-700 backdrop-blur-sm">
+            <div class="mb-8 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]">
                 <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                    <div>
-                        <p class="text-red-300"><?php echo $error; ?></p>
+                    <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center mr-4 shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-400"></i>
                     </div>
+                    <p class="text-red-300 text-sm font-medium"><?php echo $error; ?></p>
                 </div>
             </div>
             <?php endif; ?>
             
             <?php if ($success): ?>
-            <div class="mb-6 p-4 rounded-lg bg-green-900/50 border border-green-700 backdrop-blur-sm">
+            <div class="mb-8 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]">
                 <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                    <div>
-                        <p class="text-green-300"><?php echo $success; ?></p>
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center mr-4 shrink-0">
+                        <i class="fas fa-check-circle text-emerald-400"></i>
                     </div>
+                    <p class="text-emerald-300 text-sm font-medium"><?php echo $success; ?></p>
                 </div>
             </div>
             <?php endif; ?>
             
-            <div class="bg-light rounded-xl shadow-lg p-6">
-                <form method="POST" class="space-y-6">
-                    <input type="hidden" name="service_name" value="<?php echo $service_name; ?>">
-                    
-                    <div>
-                        <label for="service" class="block text-sm font-medium text-gray-300 mb-2">Service</label>
-                        <input 
-                            type="text" 
-                            id="service" 
-                            class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                            value="<?php echo $service_name; ?>" 
-                            readonly>
+            <form method="POST" class="space-y-5">
+                <input type="hidden" name="service_name" value="<?php echo $service_name; ?>">
+                
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fas fa-cube text-gray-500 group-focus-within:text-primary transition-colors"></i>
                     </div>
-                    
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Full Name *</label>
-                        <input 
-                            type="text" 
-                            id="name" 
-                            name="name" 
-                            required
-                            class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="Enter your full name"
-                            value="<?php echo htmlspecialchars($name); ?>">
+                    <input 
+                        type="text" 
+                        class="w-full pl-12 pr-4 py-4 bg-dark/50 border border-white/10 rounded-xl text-gray-400 cursor-not-allowed"
+                        value="<?php echo $service_name; ?>" 
+                        readonly>
+                </div>
+                
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-gray-500 group-focus-within:text-primary transition-colors"></i>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address *</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                required
-                                class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Enter your email address"
-                                value="<?php echo htmlspecialchars($email); ?>">
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required
+                        class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300"
+                        placeholder="Your Full Name *"
+                        value="<?php echo htmlspecialchars($name); ?>">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-500 group-focus-within:text-primary transition-colors"></i>
                         </div>
-                        
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
-                            <input 
-                                type="text" 
-                                id="phone" 
-                                name="phone" 
-                                class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="9876543210"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
-                                maxlength="15"
-                                value="<?php echo htmlspecialchars($phone); ?>">
-                        </div>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required
+                            class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300"
+                            placeholder="Email Address *"
+                            value="<?php echo htmlspecialchars($email); ?>">
                     </div>
                     
-                    <div>
-                        <label for="company" class="block text-sm font-medium text-gray-300 mb-2">Company (Optional)</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-phone text-gray-500 group-focus-within:text-primary transition-colors"></i>
+                        </div>
                         <input 
                             type="text" 
-                            id="company" 
-                            name="company" 
-                            class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="Enter your company name"
-                            value="<?php echo htmlspecialchars($company); ?>">
+                            id="phone" 
+                            name="phone" 
+                            class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300"
+                            placeholder="Phone Number"
+                            maxlength="15"
+                            value="<?php echo htmlspecialchars($phone); ?>">
                     </div>
-                    
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Message *</label>
-                        <textarea 
-                            id="message" 
-                            name="message" 
-                            rows="5"
-                            required
-                            class="w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="Please provide details about your requirements..."><?php echo htmlspecialchars(isset($_POST['message']) ? $_POST['message'] : ''); ?></textarea>
+                </div>
+                
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fas fa-building text-gray-500 group-focus-within:text-primary transition-colors"></i>
                     </div>
-                    
-                    <div class="flex justify-end space-x-4">
-                        <button type="button" onclick="window.location.href='services.php'" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg">
-                            Cancel
-                        </button>
-                        <button type="submit" class="bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg">
-                            Submit Query
-                        </button>
+                    <input 
+                        type="text" 
+                        id="company" 
+                        name="company" 
+                        class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300"
+                        placeholder="Company Name (Optional)"
+                        value="<?php echo htmlspecialchars($company); ?>">
+                </div>
+                
+                <div class="relative group">
+                    <div class="absolute top-4 left-4 flex items-start pointer-events-none">
+                        <i class="fas fa-comment-alt text-gray-500 group-focus-within:text-primary transition-colors"></i>
                     </div>
-                </form>
-            </div>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        rows="4"
+                        required
+                        class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300 resize-none"
+                        placeholder="Tell us about your requirements... *"><?php echo htmlspecialchars(isset($_POST['message']) ? $_POST['message'] : ''); ?></textarea>
+                </div>
+                
+                <div class="pt-4">
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-primary/25 transform hover:-translate-y-1 flex items-center justify-center space-x-2">
+                        <span>Send Inquiry</span>
+                        <i class="fas fa-paper-plane text-sm"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -233,23 +264,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <script src="js/main.js"></script>
     <script>
-        // Phone number validation - Allow only digits
         document.addEventListener('DOMContentLoaded', function() {
             const phoneInput = document.getElementById('phone');
-            
             phoneInput.addEventListener('keypress', function(e) {
-                // Allow only digits (0-9)
-                if (e.which < 48 || e.which > 57) {
-                    e.preventDefault();
-                }
+                if (e.which < 48 || e.which > 57) e.preventDefault();
             });
-            
-            // Also prevent pasting non-numeric content
             phoneInput.addEventListener('paste', function(e) {
                 e.preventDefault();
                 const paste = (e.clipboardData || window.clipboardData).getData('text');
-                const numericValue = paste.replace(/[^0-9]/g, '');
-                this.value = numericValue;
+                this.value = paste.replace(/[^0-9]/g, '');
             });
         });
     </script>

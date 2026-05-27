@@ -11,9 +11,12 @@ if (!isset($admin_username)) {
 }
 ?>
 
-<div class="sidebar w-64 flex-shrink-0 flex flex-col">
+<!-- Mobile Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm" onclick="toggleSidebar()"></div>
+
+<div id="admin-sidebar" class="sidebar w-64 flex-shrink-0 flex flex-col absolute md:relative z-50 h-full bg-[#0f172a] transform -translate-x-full md:translate-x-0 transition-transform duration-300">
     <div class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">Hypecrews <span class="text-primary">Admin</span></h1>
+        <img src="../graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews Admin" class="h-10 w-auto">
     </div>
     
     <nav class="flex-1 py-6">
@@ -41,6 +44,15 @@ if (!isset($admin_username)) {
             <i class="fas fa-users mr-3"></i>
             <span>Users</span>
         </a>
+        <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Careers</div>
+        <a href="jobs.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'jobs') ? 'active' : ''; ?>">
+            <i class="fas fa-briefcase mr-3"></i>
+            <span>Manage Jobs</span>
+        </a>
+        <a href="job_applications.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'job_applications') ? 'active' : ''; ?>">
+            <i class="fas fa-file-alt mr-3"></i>
+            <span>Applications</span>
+        </a>
     </nav>
     
     <div class="p-6 border-t border-gray-800">
@@ -59,3 +71,45 @@ if (!isset($admin_username)) {
         </a>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Dynamically inject hamburger menu into the main content header
+    const header = document.querySelector('header');
+    if (header) {
+        const headerFlex = header.querySelector('.flex.justify-between.items-center') || header.querySelector('.flex') || header;
+        if (headerFlex) {
+            const titleElement = headerFlex.querySelector('h2');
+            
+            const hamburgerBtn = document.createElement('button');
+            hamburgerBtn.className = 'md:hidden text-white mr-4 focus:outline-none hover:text-primary transition-colors';
+            hamburgerBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            hamburgerBtn.onclick = toggleSidebar;
+            
+            if (titleElement) {
+                // Group hamburger and title
+                const titleWrapper = document.createElement('div');
+                titleWrapper.className = 'flex items-center';
+                headerFlex.insertBefore(titleWrapper, titleElement);
+                titleWrapper.appendChild(hamburgerBtn);
+                titleWrapper.appendChild(titleElement);
+            } else {
+                headerFlex.insertBefore(hamburgerBtn, headerFlex.firstChild);
+            }
+        }
+    }
+});
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('admin-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    
+    if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+    } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    }
+}
+</script>

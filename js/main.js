@@ -35,35 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
-    
-    if (mobileMenuButton && mobileMenuDropdown) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenuDropdown.classList.toggle('hidden');
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const isClickInsideMenu = mobileMenuButton.contains(event.target) || mobileMenuDropdown.contains(event.target);
-            if (!isClickInsideMenu && !mobileMenuDropdown.classList.contains('hidden')) {
-                mobileMenuDropdown.classList.add('hidden');
-            }
-        });
-    }
-    
-    // Mobile services menu toggle
-    const mobileServicesToggle = document.getElementById('mobile-services-toggle');
-    const mobileServicesMenu = document.getElementById('mobile-services-menu');
-    
-    if (mobileServicesToggle && mobileServicesMenu) {
-        mobileServicesToggle.addEventListener('click', function() {
-            mobileServicesMenu.classList.toggle('hidden');
-            const icon = this.querySelector('i');
-            icon.classList.toggle('rotate-180');
-        });
-    }
+
     
     // Animation on scroll
     const animateElements = document.querySelectorAll('.animate-on-scroll');

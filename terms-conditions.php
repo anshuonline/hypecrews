@@ -7,6 +7,47 @@ $pageTitle = "Terms & Conditions";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?> - Hypecrews</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Read Hypecrews' Terms & Conditions. Understand the rules, user responsibilities, payment terms, and policies governing our digital marketing and web services.">
+    <meta name="keywords" content="Hypecrews terms and conditions, terms of service, user agreement, digital services policy, Hypecrews legal, service terms">
+    <link rel="canonical" href="https://hypecrews.com/terms-conditions.php">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Terms & Conditions - Hypecrews">
+    <meta property="og:description" content="Read Hypecrews' Terms & Conditions. Understand the rules, user responsibilities, payment terms, and policies governing our digital services.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hypecrews.com/terms-conditions.php">
+    <meta property="og:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
+    <meta property="og:site_name" content="Hypecrews">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Terms & Conditions - Hypecrews">
+    <meta name="twitter:description" content="Read Hypecrews' Terms & Conditions. Understand the rules, user responsibilities, payment terms, and policies governing our digital services.">
+    <meta name="twitter:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Terms & Conditions",
+        "description": "Terms and conditions governing the use of Hypecrews digital marketing, web development, and creative services.",
+        "url": "https://hypecrews.com/terms-conditions.php",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Hypecrews",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png"
+            },
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Golaghat",
+                "addressRegion": "Assam",
+                "addressCountry": "IN"
+            }
+        },
+        "inLanguage": "en"
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,6 +69,7 @@ $pageTitle = "Terms & Conditions";
             }
         }
     </script>
+    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="bg-dark text-white">
     <?php include 'components/nav.php'; ?>
@@ -73,7 +115,7 @@ $pageTitle = "Terms & Conditions";
                     
                     <h3 class="text-xl font-bold mb-4 mt-8 text-white">5. Payment Terms</h3>
                     <ul class="list-disc pl-6 text-gray-300 mb-6 space-y-2">
-                        <li>All prices are quoted in USD unless otherwise specified</li>
+                        <li>All prices are quoted in INR (Indian Rupee) and USD (US Dollar) depending on the client location, unless otherwise specified</li>
                         <li>Payment is due according to the agreed payment schedule</li>
                         <li>Late payments may incur interest charges at 1.5% per month</li>
                         <li>Services may be suspended for overdue accounts</li>
