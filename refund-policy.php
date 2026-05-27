@@ -96,12 +96,12 @@ $pageTitle = "Refund Policy";
                     
                     <h3 class="text-xl font-bold mb-4 mt-8 text-white">2. Service-Based Refunds</h3>
                     <ul class="list-disc pl-6 text-gray-300 mb-6 space-y-2">
-                        <li><strong>Digital Marketing Services:</strong> Full refund available if campaign hasn't started. Partial refund for campaigns in progress based on work completed</li>
-                        <li><strong>Web Development:</strong> Full refund available before project commencement. After commencement, refund based on milestone completion</li>
-                        <li><strong>Content Creation:</strong> Full refund available if content hasn't been delivered. No refunds for delivered content</li>
-                        <li><strong>Social Media Management:</strong> Pro-rated refund for unused months with 30-day notice</li>
-                        <li><strong>Consulting Services:</strong> Full refund available if session hasn't occurred. No refunds for completed sessions</li>
-                        <li><strong>Home Services:</strong> If a home service is initiated or started, no refunds will be provided thereafter.</li>
+                        <li><strong>Digital Marketing Services:</strong> Refunds are strictly not provided once a campaign or strategy development has been initiated.</li>
+                        <li><strong>Web Development:</strong> Non-refundable deposit required upon commencement. No refunds will be provided once development has begun.</li>
+                        <li><strong>Content Creation:</strong> Strictly no refunds are permitted once an order has been placed, regardless of whether the content has been delivered or not.</li>
+                        <li><strong>Social Media Management:</strong> No refunds for the current billing cycle. Cancellations require a 30-day prior written notice.</li>
+                        <li><strong>Consulting Services:</strong> No refunds for booked sessions. Cancellations must be made at least 48 hours in advance to reschedule.</li>
+                        <li><strong>Home Services:</strong> If a home service is initiated or started, no refunds will be provided thereafter under any circumstances.</li>
                     </ul>
                     
                     <h3 class="text-xl font-bold mb-4 mt-8 text-white">3. Subscription Services</h3>
