@@ -283,8 +283,8 @@ try {
                                         <?php endif; ?>
                                     </div>
                                     <div class="text-xs font-mono text-gray-500 sm:text-right shrink-0">
-                                        <span class="block"><?php echo date('M j, Y', strtotime($history['created_at'])); ?></span>
-                                        <span class="block"><?php echo date('H:i:s T', strtotime($history['created_at'])); ?></span>
+                                        <span class="block local-date" data-utc="<?php echo str_replace(' ', 'T', $history['created_at']); ?>Z"><?php echo date('M j, Y', strtotime($history['created_at'])); ?></span>
+                                        <span class="block local-time" data-utc="<?php echo str_replace(' ', 'T', $history['created_at']); ?>Z"><?php echo date('H:i:s T', strtotime($history['created_at'])); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -305,8 +305,8 @@ try {
                                         <?php endif; ?>
                                     </div>
                                     <div class="text-xs font-mono text-primary/70 sm:text-right shrink-0">
-                                        <span class="block"><?php echo date('M j, Y', strtotime($order['updated_at'])); ?></span>
-                                        <span class="block"><?php echo date('H:i:s T', strtotime($order['updated_at'])); ?></span>
+                                        <span class="block local-date" data-utc="<?php echo str_replace(' ', 'T', $order['updated_at']); ?>Z"><?php echo date('M j, Y', strtotime($order['updated_at'])); ?></span>
+                                        <span class="block local-time" data-utc="<?php echo str_replace(' ', 'T', $order['updated_at']); ?>Z"><?php echo date('H:i:s T', strtotime($order['updated_at'])); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -331,12 +331,12 @@ try {
                             
                             <div class="flex items-center justify-between border-b border-white/5 pb-3">
                                 <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-play-circle w-4 text-emerald-400"></i> Init Date</span>
-                                <span class="text-sm font-medium"><?php echo date('M j, Y', strtotime($order['created_at'])); ?></span>
+                                <span class="text-sm font-medium local-date" data-utc="<?php echo str_replace(' ', 'T', $order['created_at']); ?>Z"><?php echo date('M j, Y', strtotime($order['created_at'])); ?></span>
                             </div>
                             
                             <div class="flex items-center justify-between border-b border-white/5 pb-3">
                                 <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-sync-alt w-4 text-cyan-400"></i> Last Sync</span>
-                                <span class="text-sm font-medium"><?php echo date('M j, Y', strtotime($order['updated_at'])); ?></span>
+                                <span class="text-sm font-medium local-date" data-utc="<?php echo str_replace(' ', 'T', $order['updated_at']); ?>Z"><?php echo date('M j, Y', strtotime($order['updated_at'])); ?></span>
                             </div>
                             
                             <?php if ($order['tracking_id']): ?>

@@ -231,7 +231,7 @@ try {
                             <div class="col-span-2 md:text-right flex items-center justify-between md:justify-end">
                                 <span class="md:hidden text-xs text-gray-500 uppercase font-semibold mr-2">Date:</span>
                                 <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-400"><?php echo date('M j, Y', strtotime($order['created_at'])); ?></span>
+                                    <span class="text-sm text-gray-400 local-date" data-utc="<?php echo str_replace(' ', 'T', $order['created_at']); ?>Z"><?php echo date('M j, Y', strtotime($order['created_at'])); ?></span>
                                     <i class="fas fa-chevron-right text-gray-600 group-hover:text-primary group-hover:translate-x-1 transition-all"></i>
                                 </div>
                             </div>
@@ -257,6 +257,14 @@ try {
             }, { threshold: 0.1 });
             
             document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+            
+            // Convert UTC times to local browser time
+            document.querySelectorAll('.local-date').forEach(el => {
+                const utcDate = new Date(el.getAttribute('data-utc'));
+                if (!isNaN(utcDate)) {
+                    el.innerText = utcDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+                }
+            });
         });
     </script>
 </body>
