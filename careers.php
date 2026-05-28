@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = "Careers - Hypecrews";
 require_once 'config/db.php';
 
