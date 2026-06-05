@@ -411,6 +411,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                 messages.forEach(msg => {
                     const isMine = msg.is_mine;
                     const isPinned = parseInt(msg.is_pinned) === 1;
+                    const isDeleted = parseInt(msg.is_deleted) === 1;
                     
                     const avatar = msg.profile_image 
                         ? `<img src="../${msg.profile_image}" class="w-8 h-8 rounded-full object-cover">`
@@ -419,48 +420,65 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                     // Format message content
                     let contentHtml = '';
                     
-                    // Pin badge
-                    if (isPinned) {
-                        contentHtml += `<div class="text-[10px] text-amber-400 mb-1 font-bold flex items-center"><i class="fas fa-thumbtack mr-1"></i> Pinned</div>`;
+                    if (isDeleted) {
+                        contentHtml = `<div class="text-gray-400/80 italic text-sm"><i class="fas fa-ban mr-1"></i> This message was deleted</div>`;
+                    } else {
+                        // Pin badge
+                        if (isPinned) {
+                            contentHtml += `<div class="text-[10px] text-amber-400 mb-1 font-bold flex items-center"><i class="fas fa-thumbtack mr-1"></i> Pinned</div>`;
+                        }
+                        
+                        // Text with links
+                        if (msg.message) {
+                            contentHtml += `<div>${linkify(escapeHtml(msg.message))}</div>`;
+                        }
+                        
+                        // Attached Image
+                        if (msg.image_url) {
+                            contentHtml += `<img src="../${msg.image_url}" class="image-preview" onclick="zoomImage(this.src)">`;
+                        }
+                        
+                        // Meeting Card
+                        if (msg.meeting_time) {
+                            const mDate = new Date(msg.meeting_time);
+                            contentHtml += `
+                            <div class="mt-2 bg-dark/50 border border-gray-600 rounded-lg p-3 w-64">
+                                <div class="flex items-center text-primary font-bold mb-2">
+                                    <i class="fas fa-calendar-alt mr-2 text-lg"></i>
+                                    Meeting Invite
+                                </div>
+                                <div class="text-xs text-gray-300 mb-3 font-mono bg-black/30 p-2 rounded">
+                                    ${mDate.toLocaleString()}
+                                </div>
+                                <a href="${msg.meeting_link}" target="_blank" class="block text-center w-full bg-green-600 hover:bg-green-500 text-white text-sm font-bold py-2 rounded transition-colors">
+                                    <i class="fas fa-video mr-1"></i> Join Meeting
+                                </a>
+                            </div>`;
+                        }
                     }
                     
-                    // Text with links
-                    if (msg.message) {
-                        contentHtml += `<div>${linkify(escapeHtml(msg.message))}</div>`;
-                    }
+                    // Pin & Delete Buttons
+                    const pinBtn = !isDeleted ? `<button onclick="togglePin(${msg.id})" class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-amber-400 ${isPinned ? '!text-amber-400 !opacity-100' : ''}"><i class="fas fa-thumbtack"></i></button>` : '';
                     
-                    // Attached Image
-                    if (msg.image_url) {
-                        contentHtml += `<img src="../${msg.image_url}" class="image-preview" onclick="zoomImage(this.src)">`;
+                    let deleteBtn = '';
+                    if (isMine && !isDeleted) {
+                        // Using ISO string to reliably parse date
+                        // MySQL format: YYYY-MM-DD HH:MM:SS -> replace space with T
+                        const tStr = msg.created_at.replace(' ', 'T');
+                        const msgTime = new Date(tStr).getTime();
+                        const now = new Date().getTime();
+                        if (now - msgTime <= 10000) { // 10 seconds
+                            deleteBtn = `<button onclick="deleteMessage(${msg.id})" class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-red-400 ml-2"><i class="fas fa-trash"></i></button>`;
+                        }
                     }
-                    
-                    // Meeting Card
-                    if (msg.meeting_time) {
-                        const mDate = new Date(msg.meeting_time);
-                        contentHtml += `
-                        <div class="mt-2 bg-dark/50 border border-gray-600 rounded-lg p-3 w-64">
-                            <div class="flex items-center text-primary font-bold mb-2">
-                                <i class="fas fa-calendar-alt mr-2 text-lg"></i>
-                                Meeting Invite
-                            </div>
-                            <div class="text-xs text-gray-300 mb-3 font-mono bg-black/30 p-2 rounded">
-                                ${mDate.toLocaleString()}
-                            </div>
-                            <a href="${msg.meeting_link}" target="_blank" class="block text-center w-full bg-green-600 hover:bg-green-500 text-white text-sm font-bold py-2 rounded transition-colors">
-                                <i class="fas fa-video mr-1"></i> Join Meeting
-                            </a>
-                        </div>`;
-                    }
-                    
-                    // Pin Button
-                    const pinBtn = `<button onclick="togglePin(${msg.id})" class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-amber-400 ${isPinned ? '!text-amber-400 !opacity-100' : ''}"><i class="fas fa-thumbtack"></i></button>`;
 
                     if (isMine) {
                         html += `
                         <div class="flex justify-end mb-4 group">
                             <div class="flex items-end max-w-[85%]">
-                                <div class="mr-3 mb-2 shrink-0">
+                                <div class="mr-3 mb-2 shrink-0 flex items-center">
                                     ${pinBtn}
+                                    ${deleteBtn}
                                 </div>
                                 <div class="flex flex-col items-end">
                                     <span class="text-xs text-gray-400 mb-1 mr-1">You, ${msg.time}</span>
@@ -542,6 +560,24 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
             .then(r => r.json())
             .then(d => { if(d.status === 'success') fetchMessages(); })
             .catch(e => console.error("Pin error:", e));
+        }
+        
+        function deleteMessage(msgId) {
+            if(!confirm("Delete this message for everyone?")) return;
+            const formData = new FormData();
+            formData.append('action', 'delete');
+            formData.append('message_id', msgId);
+            
+            fetch('api_chat.php', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(d => { 
+                if(d.status === 'success') {
+                    fetchMessages();
+                } else {
+                    alert("Error: " + d.message);
+                }
+            })
+            .catch(e => console.error("Delete error:", e));
         }
 
         chatForm.addEventListener('submit', function(e) {

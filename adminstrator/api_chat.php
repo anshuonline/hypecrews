@@ -73,6 +73,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
     
+    if ($action === 'delete') {
+        $message_id = (int)$_POST['message_id'];
+        try {
+            $stmt = $pdo->prepare("SELECT sender_id, created_at FROM admin_chats WHERE id = ?");
+            $stmt->execute([$message_id]);
+            $msg = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($msg && $msg['sender_id'] == $admin_id) {
+                $created_time = strtotime($msg['created_at']);
+                $current_time = time();
+                $diff = $current_time - $created_time;
+                
+                // 10 seconds limit for testing
+                if ($diff <= 10) {
+                    $del_stmt = $pdo->prepare("UPDATE admin_chats SET is_deleted = 1, message = '', image_url = NULL, meeting_time = NULL, meeting_link = NULL, is_pinned = 0 WHERE id = ?");
+                    $del_stmt->execute([$message_id]);
+                    echo json_encode(['status' => 'success']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Time limit exceeded (10 seconds)']);
+                }
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+            }
+        } catch (PDOException $e) {
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+        exit;
+    }
+    
     $chat_with = isset($_POST['chat_with']) ? $_POST['chat_with'] : 'group';
     $message = isset($_POST['message']) ? trim($_POST['message']) : '';
     $meeting_time = !empty($_POST['meeting_time']) ? $_POST['meeting_time'] : null;
