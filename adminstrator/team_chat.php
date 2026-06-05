@@ -452,33 +452,41 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                         </div>`;
                     }
                     
-                    // Pin Button Overlay
-                    const pinBtn = `<button onclick="togglePin(${msg.id})" class="opacity-0 group-hover:opacity-100 transition-opacity absolute ${isMine ? '-left-6' : '-right-6'} top-2 text-gray-500 hover:text-amber-400 ${isPinned ? '!text-amber-400 !opacity-100' : ''}"><i class="fas fa-thumbtack"></i></button>`;
+                    // Pin Button
+                    const pinBtn = `<button onclick="togglePin(${msg.id})" class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-amber-400 ${isPinned ? '!text-amber-400 !opacity-100' : ''}"><i class="fas fa-thumbtack"></i></button>`;
 
                     if (isMine) {
                         html += `
-                        <div class="flex justify-end mb-4 group relative">
-                            ${pinBtn}
-                            <div class="flex flex-col items-end max-w-[85%]">
-                                <span class="text-xs text-gray-400 mb-1 mr-1">You, ${msg.time}</span>
-                                <div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none shadow-md break-words relative">
-                                    ${contentHtml}
+                        <div class="flex justify-end mb-4 group">
+                            <div class="flex items-end max-w-[85%]">
+                                <div class="mr-3 mb-2 shrink-0">
+                                    ${pinBtn}
+                                </div>
+                                <div class="flex flex-col items-end">
+                                    <span class="text-xs text-gray-400 mb-1 mr-1">You, ${msg.time}</span>
+                                    <div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none shadow-md break-words">
+                                        ${contentHtml}
+                                    </div>
                                 </div>
                             </div>
                         </div>`;
                     } else {
                         html += `
-                        <div class="flex justify-start mb-4 group relative">
-                            <div class="mr-2 mt-auto mb-1 shrink-0">
-                                ${avatar}
-                            </div>
-                            <div class="flex flex-col items-start max-w-[85%] relative">
-                                <span class="text-xs text-gray-400 mb-1 ml-1">${escapeHtml(msg.username)}, ${msg.time}</span>
-                                <div class="bg-gray-700 text-white p-3 rounded-2xl rounded-tl-none shadow-md break-words">
-                                    ${contentHtml}
+                        <div class="flex justify-start mb-4 group">
+                            <div class="flex items-end max-w-[85%]">
+                                <div class="mr-2 mt-auto mb-1 shrink-0">
+                                    ${avatar}
+                                </div>
+                                <div class="flex flex-col items-start">
+                                    <span class="text-xs text-gray-400 mb-1 ml-1">${escapeHtml(msg.username)}, ${msg.time}</span>
+                                    <div class="bg-gray-700 text-white p-3 rounded-2xl rounded-tl-none shadow-md break-words">
+                                        ${contentHtml}
+                                    </div>
+                                </div>
+                                <div class="ml-3 mb-2 shrink-0">
+                                    ${pinBtn}
                                 </div>
                             </div>
-                            ${pinBtn}
                         </div>`;
                     }
                 });
