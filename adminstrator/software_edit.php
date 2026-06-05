@@ -1,3 +1,4 @@
+<?php
 require_once 'auth.php';
 require_once '../config/db.php';
 require_once 'components/logger.php';
