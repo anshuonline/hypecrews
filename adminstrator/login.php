@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
+require_once 'components/logger.php';
 
 $error = '';
 
@@ -19,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_username'] = $admin['username'];
                 $_SESSION['admin_id'] = $admin['id'];
+                
+                logAdminActivity($pdo, 'LOGIN', 'Admin successfully logged in.');
+                
                 header('Location: index.php');
                 exit;
             } else {
