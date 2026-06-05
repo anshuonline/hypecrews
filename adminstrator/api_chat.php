@@ -50,10 +50,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         }
         
-        // Update last read timestamp
-        $pdo->exec("UPDATE administrators SET last_chat_read = CURRENT_TIMESTAMP WHERE id = $admin_id");
+        // Update last read timestamp and last active status
+        $pdo->exec("UPDATE administrators SET last_chat_read = CURRENT_TIMESTAMP, last_active = CURRENT_TIMESTAMP WHERE id = $admin_id");
         
-        echo json_encode(['status' => 'success', 'data' => $messages]);
+        // Check if partner is online
+        $chat_partner_online = false;
+        $chat_with = isset($_GET['chat_with']) ? $_GET['chat_with'] : 'group';
+        if ($chat_with !== 'group') {
+            $stmt = $pdo->prepare("SELECT last_active FROM administrators WHERE id = ?");
+            $stmt->execute([(int)$chat_with]);
+            $partner = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($partner && !empty($partner['last_active'])) {
+                $last_active = strtotime($partner['last_active']);
+                if (time() - $last_active <= 30) {
+                    $chat_partner_online = true;
+                }
+            }
+        }
+
+        echo json_encode(['status' => 'success', 'data' => $messages, 'partner_online' => $chat_partner_online]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }

@@ -15,11 +15,16 @@ $admin_profile_image = null;
 $unread_chat_count = 0;
 if (isset($pdo) && isset($_SESSION['admin_id'])) {
     try {
+        $admin_id = $_SESSION['admin_id'];
+        
+        // Update last active time for the current admin
+        $pdo->exec("UPDATE administrators SET last_active = CURRENT_TIMESTAMP WHERE id = $admin_id");
+        
         $stmt_sidebar = $pdo->prepare("SELECT profile_image FROM administrators WHERE id = ?");
-        $stmt_sidebar->execute([$_SESSION['admin_id']]);
-        $sidebar_admin = $stmt_sidebar->fetch(PDO::FETCH_ASSOC);
-        if ($sidebar_admin && !empty($sidebar_admin['profile_image'])) {
-            $admin_profile_image = $sidebar_admin['profile_image'];
+        $stmt_sidebar->execute([$admin_id]);
+        $row = $stmt_sidebar->fetch(PDO::FETCH_ASSOC);
+        if ($row && !empty($row['profile_image'])) {
+            $admin_profile_image = $row['profile_image'];
         }
         
         $stmt_unread = $pdo->prepare("SELECT COUNT(*) FROM admin_chats WHERE sender_id != ? AND (created_at > (SELECT last_chat_read FROM administrators WHERE id = ?) OR (SELECT last_chat_read FROM administrators WHERE id = ?) IS NULL)");

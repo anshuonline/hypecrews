@@ -7,7 +7,7 @@ $admin_id = $_SESSION['admin_id'];
 
 // Fetch all other admins
 try {
-    $stmt = $pdo->prepare("SELECT id, username, profile_image FROM administrators WHERE id != ? ORDER BY username ASC");
+    $stmt = $pdo->prepare("SELECT id, username, profile_image, last_active FROM administrators WHERE id != ? ORDER BY username ASC");
     $stmt->execute([$admin_id]);
     $other_admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -148,8 +148,17 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                             <?php echo substr(htmlspecialchars($oa['username']), 0, 1); ?>
                                         </div>
                                     <?php endif; ?>
+                                    <?php 
+                                        $is_online = false;
+                                        if (!empty($oa['last_active'])) {
+                                            $last_active = strtotime($oa['last_active']);
+                                            if (time() - $last_active <= 30) {
+                                                $is_online = true;
+                                            }
+                                        }
+                                    ?>
                                     <!-- Online Indicator -->
-                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#0f172a] rounded-full"></div>
+                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 <?php echo $is_online ? 'bg-green-500' : 'bg-gray-500'; ?> border-2 border-[#0f172a] rounded-full"></div>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="font-semibold text-gray-100 truncate text-[15px]"><?php echo htmlspecialchars($oa['username']); ?></p>
@@ -193,6 +202,13 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                             }
                             if ($dm_user) {
                                 $chat_title = htmlspecialchars($dm_user['username']);
+                                $dm_is_online = false;
+                                if (!empty($dm_user['last_active'])) {
+                                    $dm_last_active = strtotime($dm_user['last_active']);
+                                    if (time() - $dm_last_active <= 30) {
+                                        $dm_is_online = true;
+                                    }
+                                }
                                 if (!empty($dm_user['profile_image'])) {
                                     $chat_icon = '<div class="w-10 h-10 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0"><img src="../' . htmlspecialchars($dm_user['profile_image']) . '" class="w-full h-full object-cover"></div>';
                                 } else {
@@ -204,7 +220,15 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                         <?php echo $chat_icon; ?>
                         <div>
                             <h2 class="text-lg font-bold text-white"><?php echo $chat_title; ?></h2>
-                            <p class="text-xs text-green-400"><i class="fas fa-circle text-[8px] mr-1"></i> Online</p>
+                            <?php if ($chat_with === 'group'): ?>
+                                <p class="text-xs text-green-400"><i class="fas fa-circle text-[8px] mr-1"></i> Active</p>
+                            <?php else: ?>
+                                <?php if (isset($dm_is_online) && $dm_is_online): ?>
+                                    <p id="partnerStatus" class="text-xs text-green-400"><i class="fas fa-circle text-[8px] mr-1"></i> Online</p>
+                                <?php else: ?>
+                                    <p id="partnerStatus" class="text-xs text-gray-400"><i class="fas fa-circle text-[8px] mr-1"></i> Offline</p>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     
@@ -419,6 +443,19 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                     if (data.status === 'success') {
                         renderMessages(data.data);
                         updateDetailsPanels(data.data);
+                        
+                        if (chatWith !== 'group') {
+                            const statusEl = document.getElementById('partnerStatus');
+                            if (statusEl) {
+                                if (data.partner_online) {
+                                    statusEl.innerHTML = '<i class="fas fa-circle text-[8px] mr-1"></i> Online';
+                                    statusEl.className = 'text-xs text-green-400';
+                                } else {
+                                    statusEl.innerHTML = '<i class="fas fa-circle text-[8px] mr-1"></i> Offline';
+                                    statusEl.className = 'text-xs text-gray-400';
+                                }
+                            }
+                        }
                     }
                 })
                 .catch(err => console.error("Error fetching messages:", err));
