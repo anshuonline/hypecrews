@@ -104,12 +104,12 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Action Buttons -->
                 <div class="w-full md:w-auto mt-6 md:mt-0 md:pb-2 flex-shrink-0" data-aos="fade-up" data-aos-delay="200">
                     <?php if ($software['file_type'] == 'upload' && !empty($software['file_path'])): ?>
-                        <a href="<?php echo htmlspecialchars($software['file_path']); ?>" download class="flex items-center justify-center bg-primary hover:bg-indigo-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all transform hover:-translate-y-1 w-full md:w-auto text-lg">
+                        <a href="<?php echo htmlspecialchars($software['file_path']); ?>" download class="flex items-center justify-center bg-primary hover:bg-indigo-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all transform hover:-translate-y-1 w-full md:w-auto text-lg" onclick="startDownload(event, this.href)">
                             <i class="fas fa-download mr-3"></i> Download App
                         </a>
                     <?php elseif ($software['file_type'] == 'google_drive' && !empty($software['file_path'])): ?>
                         <!-- Google Drive Proxy Download -->
-                        <a href="download.php?id=<?php echo $software['id']; ?>" class="flex items-center justify-center bg-primary hover:bg-indigo-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all transform hover:-translate-y-1 w-full md:w-auto text-lg">
+                        <a href="download.php?id=<?php echo $software['id']; ?>" class="flex items-center justify-center bg-primary hover:bg-indigo-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all transform hover:-translate-y-1 w-full md:w-auto text-lg" onclick="startDownload(event, this.href)">
                             <i class="fas fa-cloud-download-alt mr-3"></i> Download App
                         </a>
                     <?php endif; ?>
@@ -253,6 +253,32 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img id="lightbox-img" class="max-w-[90%] max-h-[90vh] rounded-lg shadow-2xl" src="">
     </div>
 
+    <!-- Download Loading Modal -->
+    <div id="download-modal" class="fixed inset-0 z-[110] bg-black/90 hidden items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="bg-gray-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="download-modal-content">
+            <!-- Loading State -->
+            <div id="download-loading">
+                <div class="inline-block relative w-16 h-16 mb-6">
+                    <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
+                    <div class="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+                    <i class="fas fa-download absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Preparing Download</h3>
+                <p class="text-gray-400 text-sm">Please wait while we fetch your file...</p>
+            </div>
+            
+            <!-- Success State -->
+            <div id="download-success" class="hidden">
+                <div class="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Download Started!</h3>
+                <p class="text-gray-400 text-sm mb-6">Your download should begin automatically.</p>
+                <button onclick="closeDownloadModal()" class="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function openLightbox(src) {
             const modal = document.getElementById('lightbox');
@@ -265,6 +291,50 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
             const modal = document.getElementById('lightbox');
             modal.classList.add('opacity-0');
             setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        // Download Handler
+        function startDownload(e, url) {
+            e.preventDefault(); // Prevent immediate download
+            
+            const modal = document.getElementById('download-modal');
+            const loadingState = document.getElementById('download-loading');
+            const successState = document.getElementById('download-success');
+            const modalContent = document.getElementById('download-modal-content');
+            
+            // Reset modal state
+            loadingState.style.display = 'block';
+            successState.style.display = 'none';
+            
+            // Show modal
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+            
+            // Simulate preparation time (2 seconds)
+            setTimeout(() => {
+                // Trigger actual download (creates an invisible iframe or direct redirect)
+                window.location.href = url;
+                
+                // Show success state
+                loadingState.style.display = 'none';
+                successState.style.display = 'block';
+            }, 2000);
+        }
+
+        function closeDownloadModal() {
+            const modal = document.getElementById('download-modal');
+            const modalContent = document.getElementById('download-modal-content');
+            
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
         }
     </script>
 
