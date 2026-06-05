@@ -140,8 +140,11 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                             <a href="?chat=<?php echo $oa['id']; ?>" class="group flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $oa['id'] ? 'bg-gradient-to-r from-primary/20 to-indigo-500/10 border border-primary/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'hover:bg-white/5 border border-transparent'; ?>">
                                 <div class="relative mr-4 shrink-0 transform group-hover:scale-105 transition-transform duration-300">
                                     <?php if (!empty($oa['profile_image'])): ?>
-                                        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1e293b] bg-dark">
-                                            <img src="../<?php echo htmlspecialchars($oa['profile_image']); ?>" class="w-full h-full object-cover">
+                                        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1e293b] bg-dark relative group/img">
+                                            <img src="../<?php echo htmlspecialchars($oa['profile_image']); ?>" class="w-full h-full object-cover cursor-pointer transition-transform duration-300 group-hover/img:scale-110" onclick="event.preventDefault(); event.stopPropagation(); zoomImage(this.src)">
+                                            <div class="absolute inset-0 bg-black/40 hidden group-hover/img:flex items-center justify-center cursor-pointer" onclick="event.preventDefault(); event.stopPropagation(); zoomImage(this.previousElementSibling.src)">
+                                                <i class="fas fa-search-plus text-white/80 text-xs"></i>
+                                            </div>
                                         </div>
                                     <?php else: ?>
                                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border-2 border-[#1e293b] text-lg font-bold shadow-inner">
@@ -215,7 +218,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                     }
                                 }
                                 if (!empty($dm_user['profile_image'])) {
-                                    $chat_icon = '<div class="w-10 h-10 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0"><img src="../' . htmlspecialchars($dm_user['profile_image']) . '" class="w-full h-full object-cover"></div>';
+                                    $chat_icon = '<div class="w-10 h-10 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0 relative group/icon cursor-pointer"><img src="../' . htmlspecialchars($dm_user['profile_image']) . '" class="w-full h-full object-cover transition-transform duration-300 group-hover/icon:scale-110" onclick="zoomImage(this.src)"><div class="absolute inset-0 bg-black/40 hidden group-hover/icon:flex items-center justify-center" onclick="zoomImage(this.previousElementSibling.src)"><i class="fas fa-search-plus text-white/80 text-xs"></i></div></div>';
                                 } else {
                                     $chat_icon = '<div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center mr-3 shadow-lg shrink-0 font-bold">' . substr($chat_title, 0, 1) . '</div>';
                                 }
@@ -498,7 +501,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                     const isDeleted = parseInt(msg.is_deleted) === 1;
                     
                     const avatar = msg.profile_image 
-                        ? `<img src="../${msg.profile_image}" class="w-8 h-8 rounded-full object-cover">`
+                        ? `<img src="../${msg.profile_image}" class="w-8 h-8 rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity" onclick="zoomImage(this.src)" title="Zoom Profile Picture">`
                         : `<div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold">${msg.initial}</div>`;
                     
                     // Format message content
