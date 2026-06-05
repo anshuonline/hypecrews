@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Pricing logic
     $is_paid = isset($_POST['is_paid']) ? (int)$_POST['is_paid'] : 0;
     $price = $is_paid ? (float)$_POST['price'] : 0.00;
-    $payment_link = '';
+    $payment_link = $is_paid && isset($_POST['payment_link']) ? trim($_POST['payment_link']) : '';
 
     $logo_path = '';
     $banner_path = '';
@@ -214,9 +214,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </label>
                             </div>
                             
-                            <div id="price_input" style="display:none;" class="bg-gray-800 p-4 rounded-lg w-full md:w-1/2">
-                                <label class="block text-gray-400 mb-2">Price (₹)</label>
-                                <input type="number" step="0.01" name="price" placeholder="e.g. 499.00" class="w-full px-4 py-2 rounded-lg border">
+                            <div id="price_input" style="display:none;" class="bg-gray-800 p-4 rounded-lg w-full">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-gray-400 mb-2">Price (₹)</label>
+                                        <input type="number" step="0.01" name="price" placeholder="e.g. 499.00" class="w-full px-4 py-2 rounded-lg border">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-400 mb-2">Payment Link</label>
+                                        <input type="text" name="payment_link" placeholder="e.g. https://razorpay.me/..." class="w-full px-4 py-2 rounded-lg border">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
