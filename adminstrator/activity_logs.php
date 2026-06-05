@@ -13,29 +13,29 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $action_filter = isset($_GET['action_filter']) ? trim($_GET['action_filter']) : '';
 
 // Query building
-$query = "SELECT * FROM admin_logs WHERE 1=1";
+$query = "SELECT l.*, a.profile_image FROM admin_logs l LEFT JOIN administrators a ON l.admin_id = a.id WHERE 1=1";
 $params = [];
 
 if (!empty($search)) {
-    $query .= " AND (admin_username LIKE ? OR description LIKE ?)";
+    $query .= " AND (l.admin_username LIKE ? OR l.description LIKE ?)";
     $params[] = "%$search%";
     $params[] = "%$search%";
 }
 
 if (!empty($action_filter)) {
-    $query .= " AND action_type = ?";
+    $query .= " AND l.action_type = ?";
     $params[] = $action_filter;
 }
 
 // Get total count for pagination
-$countQuery = str_replace("SELECT *", "SELECT COUNT(*)", $query);
+$countQuery = str_replace("SELECT l.*, a.profile_image", "SELECT COUNT(*)", $query);
 $stmt_count = $pdo->prepare($countQuery);
 $stmt_count->execute($params);
 $total_logs = $stmt_count->fetchColumn();
 $total_pages = ceil($total_logs / $limit);
 
 // Fetch logs
-$query .= " ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
+$query .= " ORDER BY l.created_at DESC LIMIT $limit OFFSET $offset";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -147,9 +147,15 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
                                     </td>
                                     <td class="py-4">
                                         <div class="flex items-center">
-                                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 text-sm font-bold shadow-lg">
-                                                <?php echo substr(htmlspecialchars($log['admin_username']), 0, 1); ?>
-                                            </div>
+                                            <?php if (!empty($log['profile_image'])): ?>
+                                                <div class="w-8 h-8 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0">
+                                                    <img src="../<?php echo htmlspecialchars($log['profile_image']); ?>" class="w-full h-full object-cover">
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 text-sm font-bold shadow-lg shrink-0">
+                                                    <?php echo substr(htmlspecialchars($log['admin_username']), 0, 1); ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <span class="font-medium"><?php echo htmlspecialchars($log['admin_username']); ?></span>
                                         </div>
                                     </td>
