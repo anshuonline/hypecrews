@@ -48,20 +48,20 @@ try {
     <title>Admin Dashboard - Hypecrews</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1d4ed8', // Enterprise Blue (Tailwind blue-700)
-                        secondary: '#334155', // Slate 700
-                        gov_bg: '#f8fafc', // Slate 50
-                        gov_card: '#ffffff',
-                        gov_border: '#e2e8f0', // Slate 200
-                        gov_text: '#0f172a', // Slate 900
-                        gov_text_muted: '#64748b' // Slate 500
+                        primary: '#3b82f6', // Bright Blue
+                        secondary: '#94a3b8', // Slate 400
+                        gov_bg: '#0b1121', // Very Dark Blue/Slate
+                        gov_card: '#1e293b', // Slate 800
+                        gov_border: '#334155', // Slate 700
+                        gov_text: '#f8fafc', // Slate 50
+                        gov_text_muted: '#94a3b8' // Slate 400
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif']
@@ -72,15 +72,15 @@ try {
     </script>
     <style>
         body {
-            background-color: #0f172a; /* Sidebar background context */
+            background-color: #0b1121;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
         }
         /* Custom scrollbar for modern enterprise look */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
@@ -88,22 +88,22 @@ try {
     <div class="flex h-screen overflow-hidden">
         
         <!-- Sidebar Wrapper - Ensure dark context is maintained for sidebar component -->
-        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl">
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl border-r border-gov_border">
             <?php include 'components/sidebar.php'; ?>
         </div>
         
-        <!-- Main Content - Light Enterprise Theme -->
+        <!-- Main Content - Dark Enterprise Theme -->
         <div class="flex-1 flex flex-col h-full bg-gov_bg text-gov_text overflow-hidden relative">
             
             <!-- Enterprise Header -->
-            <header class="bg-white border-b border-gov_border px-8 py-5 flex justify-between items-center shadow-sm z-10">
+            <header class="bg-gov_card border-b border-gov_border px-8 py-5 flex justify-between items-center shadow-sm z-10">
                 <div>
                     <h1 class="text-2xl font-bold text-gov_text tracking-tight">Dashboard Overview</h1>
                     <p class="text-sm text-gov_text_muted mt-1 font-medium">Hypecrews Administrative Portal</p>
                 </div>
-                <div class="hidden md:flex items-center gap-4 bg-slate-100 px-4 py-2 rounded-lg border border-slate-200">
+                <div class="hidden md:flex items-center gap-4 bg-[#0f172a] px-4 py-2 rounded-lg border border-gov_border">
                     <i class="far fa-calendar-alt text-primary"></i>
-                    <span class="text-sm font-semibold text-secondary"><?php echo date('l, F j, Y'); ?></span>
+                    <span class="text-sm font-semibold text-gov_text_muted"><?php echo date('l, F j, Y'); ?></span>
                 </div>
             </header>
             
@@ -111,10 +111,10 @@ try {
             <div class="flex-1 overflow-y-auto p-8">
                 
                 <?php if (isset($error)): ?>
-                <div class="mb-8 p-4 rounded-md bg-red-50 border-l-4 border-red-600 shadow-sm">
+                <div class="mb-8 p-4 rounded-md bg-red-900/30 border-l-4 border-red-500 shadow-sm">
                     <div class="flex items-center">
-                        <i class="fas fa-exclamation-triangle text-red-600 text-xl mr-3"></i>
-                        <p class="text-red-800 font-medium"><?php echo htmlspecialchars($error); ?></p>
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                        <p class="text-red-200 font-medium"><?php echo htmlspecialchars($error); ?></p>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -125,65 +125,65 @@ try {
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         
                         <!-- Metric Card 1 -->
-                        <div class="bg-white rounded-lg border border-gov_border p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-gov_card rounded-lg border border-gov_border p-6 shadow-lg hover:border-primary/50 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-semibold text-gov_text_muted uppercase tracking-wider mb-1">Total Orders</p>
+                                    <p class="text-xs font-semibold text-gov_text_muted uppercase tracking-widest mb-1">Total Orders</p>
                                     <p class="text-3xl font-bold text-gov_text"><?php echo number_format($total_orders); ?></p>
                                 </div>
-                                <div class="w-12 h-12 rounded bg-blue-50 flex items-center justify-center border border-blue-100">
-                                    <i class="fas fa-box text-primary text-xl"></i>
+                                <div class="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                                    <i class="fas fa-box text-blue-400 text-xl"></i>
                                 </div>
                             </div>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center text-sm text-green-600 font-medium">
+                            <div class="mt-4 pt-4 border-t border-gov_border flex items-center text-sm text-emerald-400 font-medium">
                                 <i class="fas fa-arrow-up mr-1"></i> System metric
                             </div>
                         </div>
                         
                         <!-- Metric Card 2 -->
-                        <div class="bg-white rounded-lg border border-gov_border p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-gov_card rounded-lg border border-gov_border p-6 shadow-lg hover:border-indigo-500/50 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-semibold text-gov_text_muted uppercase tracking-wider mb-1">Total Users</p>
+                                    <p class="text-xs font-semibold text-gov_text_muted uppercase tracking-widest mb-1">Total Users</p>
                                     <p class="text-3xl font-bold text-gov_text"><?php echo number_format($total_users); ?></p>
                                 </div>
-                                <div class="w-12 h-12 rounded bg-indigo-50 flex items-center justify-center border border-indigo-100">
-                                    <i class="fas fa-users text-indigo-600 text-xl"></i>
+                                <div class="w-12 h-12 rounded bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+                                    <i class="fas fa-users text-indigo-400 text-xl"></i>
                                 </div>
                             </div>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center text-sm text-green-600 font-medium">
+                            <div class="mt-4 pt-4 border-t border-gov_border flex items-center text-sm text-emerald-400 font-medium">
                                 <i class="fas fa-arrow-up mr-1"></i> Registered users
                             </div>
                         </div>
                         
                         <!-- Metric Card 3 -->
-                        <div class="bg-white rounded-lg border border-gov_border p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-gov_card rounded-lg border border-gov_border p-6 shadow-lg hover:border-emerald-500/50 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-semibold text-gov_text_muted uppercase tracking-wider mb-1">Total Reviews</p>
+                                    <p class="text-xs font-semibold text-gov_text_muted uppercase tracking-widest mb-1">Total Reviews</p>
                                     <p class="text-3xl font-bold text-gov_text"><?php echo number_format($total_reviews); ?></p>
                                 </div>
-                                <div class="w-12 h-12 rounded bg-emerald-50 flex items-center justify-center border border-emerald-100">
-                                    <i class="fas fa-star text-emerald-600 text-xl"></i>
+                                <div class="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                                    <i class="fas fa-star text-emerald-400 text-xl"></i>
                                 </div>
                             </div>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center text-sm text-gov_text_muted font-medium">
+                            <div class="mt-4 pt-4 border-t border-gov_border flex items-center text-sm text-gov_text_muted font-medium">
                                 <i class="fas fa-chart-line mr-1"></i> Feedback collected
                             </div>
                         </div>
                         
                         <!-- Metric Card 4 -->
-                        <div class="bg-white rounded-lg border border-gov_border p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-gov_card rounded-lg border border-gov_border p-6 shadow-lg hover:border-orange-500/50 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-semibold text-gov_text_muted uppercase tracking-wider mb-1">Active Queries</p>
+                                    <p class="text-xs font-semibold text-gov_text_muted uppercase tracking-widest mb-1">Active Queries</p>
                                     <p class="text-3xl font-bold text-gov_text"><?php echo number_format($total_queries); ?></p>
                                 </div>
-                                <div class="w-12 h-12 rounded bg-orange-50 flex items-center justify-center border border-orange-100">
-                                    <i class="fas fa-question-circle text-orange-600 text-xl"></i>
+                                <div class="w-12 h-12 rounded bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
+                                    <i class="fas fa-question-circle text-orange-400 text-xl"></i>
                                 </div>
                             </div>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center text-sm text-gov_text_muted font-medium">
+                            <div class="mt-4 pt-4 border-t border-gov_border flex items-center text-sm text-gov_text_muted font-medium">
                                 <i class="fas fa-headset mr-1"></i> Support requests
                             </div>
                         </div>
@@ -195,15 +195,15 @@ try {
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
                     
                     <!-- Recent Orders Table -->
-                    <div class="bg-white rounded-lg border border-gov_border shadow-sm flex flex-col">
-                        <div class="p-6 border-b border-gov_border flex justify-between items-center bg-slate-50/50 rounded-t-lg">
+                    <div class="bg-gov_card rounded-lg border border-gov_border shadow-lg flex flex-col">
+                        <div class="p-6 border-b border-gov_border flex justify-between items-center bg-[#182132] rounded-t-lg">
                             <h3 class="text-lg font-bold text-gov_text flex items-center"><i class="fas fa-file-invoice text-primary mr-2"></i> Recent Order Operations</h3>
-                            <a href="orders.php" class="text-sm font-semibold text-primary hover:text-blue-800 transition-colors">View Directory &rarr;</a>
+                            <a href="orders.php" class="text-sm font-semibold text-primary hover:text-blue-400 transition-colors">View Directory &rarr;</a>
                         </div>
                         <div class="p-0 overflow-x-auto flex-grow">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="bg-slate-50 border-b border-gov_border text-xs uppercase tracking-wider text-gov_text_muted font-bold">
+                                    <tr class="bg-[#0f172a] border-b border-gov_border text-xs uppercase tracking-widest text-gov_text_muted font-bold">
                                         <th class="px-6 py-4">Reference ID / Subject</th>
                                         <th class="px-6 py-4">Requester</th>
                                         <th class="px-6 py-4 text-right">Current Status</th>
@@ -214,10 +214,10 @@ try {
                                         <tr><td colspan="3" class="px-6 py-8 text-center text-gov_text_muted">No records found.</td></tr>
                                     <?php else: ?>
                                         <?php foreach ($recent_orders as $order): ?>
-                                        <tr class="hover:bg-slate-50 transition-colors">
+                                        <tr class="hover:bg-[#253347] transition-colors">
                                             <td class="px-6 py-4">
                                                 <div class="font-semibold text-gov_text"><?php echo htmlspecialchars($order['order_title']); ?></div>
-                                                <div class="text-xs text-gov_text_muted mt-1 font-mono">ORD-<?php echo str_pad($order['id'], 5, '0', STR_PAD_LEFT); ?></div>
+                                                <div class="text-xs text-gov_text_muted mt-1 font-mono bg-black/20 inline-block px-1.5 py-0.5 rounded border border-white/5">ORD-<?php echo str_pad($order['id'], 5, '0', STR_PAD_LEFT); ?></div>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <div class="text-sm font-medium text-gov_text">
@@ -227,22 +227,22 @@ try {
                                             <td class="px-6 py-4 text-right">
                                                 <?php
                                                 $statusClasses = [
-                                                    'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                                                    'in_review' => 'bg-blue-100 text-blue-800 border-blue-200',
-                                                    'approved' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
-                                                    'processing' => 'bg-purple-100 text-purple-800 border-purple-200',
-                                                    'in_production' => 'bg-cyan-100 text-cyan-800 border-cyan-200',
-                                                    'quality_check' => 'bg-teal-100 text-teal-800 border-teal-200',
-                                                    'ready_for_delivery' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
-                                                    'shipped' => 'bg-blue-100 text-blue-800 border-blue-200',
-                                                    'delivered' => 'bg-green-100 text-green-800 border-green-200',
-                                                    'revision_requested' => 'bg-orange-100 text-orange-800 border-orange-200',
-                                                    'on_hold' => 'bg-amber-100 text-amber-800 border-amber-200',
-                                                    'completed' => 'bg-green-100 text-green-800 border-green-200',
-                                                    'cancelled' => 'bg-red-100 text-red-800 border-red-200'
+                                                    'pending' => 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+                                                    'in_review' => 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+                                                    'approved' => 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+                                                    'processing' => 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+                                                    'in_production' => 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+                                                    'quality_check' => 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+                                                    'ready_for_delivery' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+                                                    'shipped' => 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+                                                    'delivered' => 'bg-green-500/10 text-green-400 border-green-500/20',
+                                                    'revision_requested' => 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+                                                    'on_hold' => 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+                                                    'completed' => 'bg-green-500/10 text-green-400 border-green-500/20',
+                                                    'cancelled' => 'bg-red-500/10 text-red-400 border-red-500/20'
                                                 ];
                                                 ?>
-                                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-md border <?php echo $statusClasses[$order['status']]; ?>">
+                                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded border <?php echo $statusClasses[$order['status']]; ?>">
                                                     <?php echo strtoupper(str_replace('_', ' ', $order['status'])); ?>
                                                 </span>
                                             </td>
@@ -255,15 +255,15 @@ try {
                     </div>
                     
                     <!-- Recent Queries Table -->
-                    <div class="bg-white rounded-lg border border-gov_border shadow-sm flex flex-col">
-                        <div class="p-6 border-b border-gov_border flex justify-between items-center bg-slate-50/50 rounded-t-lg">
+                    <div class="bg-gov_card rounded-lg border border-gov_border shadow-lg flex flex-col">
+                        <div class="p-6 border-b border-gov_border flex justify-between items-center bg-[#182132] rounded-t-lg">
                             <h3 class="text-lg font-bold text-gov_text flex items-center"><i class="fas fa-inbox text-primary mr-2"></i> Communications & Inquiries</h3>
-                            <a href="queries.php" class="text-sm font-semibold text-primary hover:text-blue-800 transition-colors">View All &rarr;</a>
+                            <a href="queries.php" class="text-sm font-semibold text-primary hover:text-blue-400 transition-colors">View All &rarr;</a>
                         </div>
                         <div class="p-0 overflow-x-auto flex-grow">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="bg-slate-50 border-b border-gov_border text-xs uppercase tracking-wider text-gov_text_muted font-bold">
+                                    <tr class="bg-[#0f172a] border-b border-gov_border text-xs uppercase tracking-widest text-gov_text_muted font-bold">
                                         <th class="px-6 py-4">Service Inquiry</th>
                                         <th class="px-6 py-4">Submitted By</th>
                                         <th class="px-6 py-4 text-right">Timestamp</th>
@@ -274,14 +274,14 @@ try {
                                         <tr><td colspan="3" class="px-6 py-8 text-center text-gov_text_muted">No records found.</td></tr>
                                     <?php else: ?>
                                         <?php foreach ($recent_queries as $query): ?>
-                                        <tr class="hover:bg-slate-50 transition-colors">
+                                        <tr class="hover:bg-[#253347] transition-colors">
                                             <td class="px-6 py-4">
                                                 <div class="font-semibold text-gov_text"><?php echo htmlspecialchars($query['service_name']); ?></div>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <div class="text-sm font-medium text-gov_text"><?php echo htmlspecialchars($query['name']); ?></div>
                                             </td>
-                                            <td class="px-6 py-4 text-right text-sm text-gov_text_muted">
+                                            <td class="px-6 py-4 text-right text-sm text-gov_text_muted font-mono">
                                                 <?php 
                                                 $query_time = strtotime($query['created_at']);
                                                 $current_time = time();
