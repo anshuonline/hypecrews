@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'queries';
 
 // Handle status update
@@ -11,6 +12,9 @@ if (isset($_POST['update_status']) && isset($_POST['query_id']) && isset($_POST[
     try {
         $stmt = $pdo->prepare("UPDATE service_queries SET status = ? WHERE id = ?");
         $stmt->execute([$status, $query_id]);
+        
+        logAdminActivity($pdo, 'UPDATE_QUERY', "Updated query #{$query_id} status to {$status}");
+        
         $success = "Query status updated successfully";
     } catch (PDOException $e) {
         $error = "Error updating query status: " . $e->getMessage();
