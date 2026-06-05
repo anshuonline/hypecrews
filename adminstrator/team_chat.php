@@ -402,8 +402,8 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                 return;
             }
             
-            // Check if there are new messages or a pin state changed
-            const currentHashes = messages.map(m => m.id + '_' + m.is_pinned).join(',');
+            // Check if there are new messages or a pin/delete state changed
+            const currentHashes = messages.map(m => m.id + '_' + m.is_pinned + '_' + m.is_deleted).join(',');
             if (messagesDiv.dataset.lastHash !== currentHashes) {
                 messagesDiv.dataset.lastHash = currentHashes;
                 let html = '';
