@@ -9,6 +9,21 @@ if (!isset($current_page)) {
 if (!isset($admin_username)) {
     $admin_username = 'Administrator';
 }
+
+// Fetch profile image if possible
+$admin_profile_image = null;
+if (isset($pdo) && isset($_SESSION['admin_id'])) {
+    try {
+        $stmt_sidebar = $pdo->prepare("SELECT profile_image FROM administrators WHERE id = ?");
+        $stmt_sidebar->execute([$_SESSION['admin_id']]);
+        $sidebar_admin = $stmt_sidebar->fetch(PDO::FETCH_ASSOC);
+        if ($sidebar_admin && !empty($sidebar_admin['profile_image'])) {
+            $admin_profile_image = $sidebar_admin['profile_image'];
+        }
+    } catch (Exception $e) {
+        // silently ignore error in sidebar
+    }
+}
 ?>
 
 <!-- Mobile Overlay -->
@@ -65,18 +80,25 @@ if (!isset($admin_username)) {
     </nav>
     
     <div class="p-6 border-t border-gray-800">
-        <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center mr-3">
-                <i class="fas fa-user"></i>
+        <a href="profile.php" class="flex items-center hover:bg-gray-800 p-2 rounded-lg transition-colors -mx-2 mb-2">
+            <?php if ($admin_profile_image): ?>
+                <div class="w-10 h-10 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0">
+                    <img src="../<?php echo htmlspecialchars($admin_profile_image); ?>" class="w-full h-full object-cover">
+                </div>
+            <?php else: ?>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 shadow-lg shrink-0 text-white font-bold">
+                    <?php echo substr(htmlspecialchars($admin_username), 0, 1); ?>
+                </div>
+            <?php endif; ?>
+            
+            <div class="overflow-hidden">
+                <p class="font-medium text-white truncate"><?php echo htmlspecialchars($admin_username); ?></p>
+                <p class="text-xs text-indigo-400 mt-0.5">Edit Profile</p>
             </div>
-            <div>
-                <p class="font-medium"><?php echo htmlspecialchars($admin_username); ?></p>
-                <p class="text-sm text-gray-400">Administrator</p>
-            </div>
-        </div>
-        <a href="logout.php" class="mt-4 flex items-center text-gray-400 hover:text-white">
-            <i class="fas fa-sign-out-alt mr-2"></i>
-            <span>Logout</span>
+        </a>
+        <a href="logout.php" class="flex items-center text-gray-400 hover:text-red-400 transition-colors p-2 -mx-2 rounded-lg hover:bg-gray-800/50">
+            <i class="fas fa-sign-out-alt mr-3"></i>
+            <span class="text-sm font-medium">Logout</span>
         </a>
     </div>
 </div>
