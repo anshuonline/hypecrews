@@ -1,27 +1,25 @@
+<?php
 require_once 'auth.php';
 require_once '../config/db.php';
 require_once 'components/logger.php';
-$current_page = 'softwares';
 $current_page = 'softwares';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
-    $keywords = trim($_POST['keywords']);
-    $version = trim($_POST['version']);
+    $keywords = trim($_POST['keywords'] ?? '');
+    $version = trim($_POST['version'] ?? '');
     
     // Platforms logic (comma separated)
     $platforms = isset($_POST['platforms']) ? implode(', ', $_POST['platforms']) : '';
     
-    $file_type = $_POST['file_type'];
-    $file_path = trim($_POST['external_link']);
+    $file_type = $_POST['file_type'] ?? 'google_drive';
+    $file_path = trim($_POST['external_link'] ?? '');
     
     // Store links
-    $playstore_link = trim($_POST['playstore_link']);
-    $appstore_link = trim($_POST['appstore_link']);
-    $windows_store_link = trim($_POST['windows_store_link']);
-
-
+    $playstore_link = trim($_POST['playstore_link'] ?? '');
+    $appstore_link = trim($_POST['appstore_link'] ?? '');
+    $windows_store_link = trim($_POST['windows_store_link'] ?? '');
 
     $logo_path = '';
     $banner_path = '';
@@ -53,13 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Handle Software File Upload (if file_type is upload)
-    if ($file_type == 'upload' && isset($_FILES['software_file']) && $_FILES['software_file']['error'] == 0) {
-        $ext = strtolower(pathinfo($_FILES['software_file']['name'], PATHINFO_EXTENSION));
-        $file_name = uniqid('app_') . '.' . $ext;
-        if (move_uploaded_file($_FILES['software_file']['tmp_name'], $upload_dir . $file_name)) {
-            $file_path = 'uploads/softwares/' . $file_name;
-        } else {
-            $error = "Failed to upload software file. Check server limits.";
+    if ($file_type == 'upload' && isset($_FILES['software_file'])) {
+        if ($_FILES['software_file']['error'] == 0) {
+            $ext = strtolower(pathinfo($_FILES['software_file']['name'], PATHINFO_EXTENSION));
+            $file_name = uniqid('app_') . '.' . $ext;
+            if (move_uploaded_file($_FILES['software_file']['tmp_name'], $upload_dir . $file_name)) {
+                $file_path = 'uploads/softwares/' . $file_name;
+            } else {
+                $error = "Failed to move uploaded software file. Check directory permissions.";
+            }
+        } elseif ($_FILES['software_file']['error'] != UPLOAD_ERR_NO_FILE) {
+            $error = "Software file upload failed. Error code: " . $_FILES['software_file']['error'];
         }
     }
 
