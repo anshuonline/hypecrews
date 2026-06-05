@@ -46,10 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $appstore_link = trim($_POST['appstore_link']);
     $windows_store_link = trim($_POST['windows_store_link']);
 
-    // Pricing logic
-    $is_paid = isset($_POST['is_paid']) ? (int)$_POST['is_paid'] : 0;
-    $price = $is_paid ? (float)$_POST['price'] : 0.00;
-    $payment_link = $is_paid && isset($_POST['payment_link']) ? trim($_POST['payment_link']) : '';
+    $is_paid = 0; $price = 0.00; $payment_link = '';
     
     $error = '';
     $upload_dir = '../uploads/softwares/';
@@ -264,36 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <p class="text-sm text-gray-500 mb-4">No screenshots uploaded yet.</p>
                                 <?php endif; ?>
 
-                        <label class="block text-gray-400 mb-2 mt-4">Add New Screenshots (Select Multiple)</label>
+                                <label class="block text-gray-400 mb-2 mt-4">Add New Screenshots (Select Multiple)</label>
                                 <input type="file" name="screenshots[]" multiple accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-700 file:text-white">
-                            </div>
-                        </div>
-
-                        <!-- Pricing -->
-                        <h3 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2 mt-8">Pricing</h3>
-                        <div class="mb-6">
-                            <div class="flex gap-6 mb-4">
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" name="is_paid" value="0" <?php echo $software['is_paid'] == 0 ? 'checked' : ''; ?> onclick="document.getElementById('price_input').style.display='none';"> 
-                                    Free
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" name="is_paid" value="1" <?php echo $software['is_paid'] == 1 ? 'checked' : ''; ?> onclick="document.getElementById('price_input').style.display='block';"> 
-                                    Paid
-                                </label>
-                            </div>
-                            
-                            <div id="price_input" style="display:<?php echo $software['is_paid'] == 1 ? 'block' : 'none'; ?>;" class="bg-gray-800 p-4 rounded-lg w-full">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-gray-400 mb-2">Price (₹)</label>
-                                        <input type="number" step="0.01" name="price" value="<?php echo htmlspecialchars($software['price']); ?>" placeholder="e.g. 499.00" class="w-full px-4 py-2 rounded-lg border">
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-400 mb-2">Payment Link</label>
-                                        <input type="text" name="payment_link" value="<?php echo htmlspecialchars($software['payment_link']); ?>" placeholder="e.g. https://razorpay.me/..." class="w-full px-4 py-2 rounded-lg border">
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
