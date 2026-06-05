@@ -37,8 +37,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     $file_type = $_POST['file_type'];
     $file_path = trim($_POST['external_link']);
+    
+    $upload_dir = '../uploads/softwares/';
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+
     if ($file_type == 'upload') {
-        $file_path = $software['file_path'];
+        if (isset($_FILES['software_file']) && $_FILES['software_file']['error'] == 0) {
+            $ext = strtolower(pathinfo($_FILES['software_file']['name'], PATHINFO_EXTENSION));
+            $new_file_name = uniqid('app_') . '.' . $ext;
+            if (move_uploaded_file($_FILES['software_file']['tmp_name'], $upload_dir . $new_file_name)) {
+                // Delete old file if it was an uploaded file
+                if (!empty($software['file_path']) && $software['file_type'] == 'upload' && file_exists('../' . $software['file_path'])) {
+                    unlink('../' . $software['file_path']);
+                }
+                $file_path = 'uploads/softwares/' . $new_file_name;
+            } else {
+                $error = "Failed to upload new software file.";
+                $file_path = $software['file_path'];
+            }
+        } else {
+            // Keep the old file
+            $file_path = $software['file_path'];
+        }
     }
     
     // Store links
@@ -270,18 +290,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="mb-6">
                             <div class="flex gap-6 mb-4">
                                 <label class="flex items-center gap-2">
-                                    <input type="radio" name="file_type" value="google_drive" <?php echo $software['file_type']=='google_drive'?'checked':''; ?> onclick="document.getElementById('gd_input').style.display='block';"> 
+                                    <input type="radio" name="file_type" value="google_drive" <?php echo $software['file_type']=='google_drive'?'checked':''; ?> onclick="document.getElementById('gd_input').style.display='block'; document.getElementById('upload_input').style.display='none';"> 
                                     Google Drive / External URL
                                 </label>
                                 <label class="flex items-center gap-2">
-                                    <input type="radio" name="file_type" value="upload" <?php echo $software['file_type']=='upload'?'checked':''; ?> onclick="document.getElementById('gd_input').style.display='none';"> 
-                                    Direct File Upload (Keeps existing file)
+                                    <input type="radio" name="file_type" value="upload" <?php echo $software['file_type']=='upload'?'checked':''; ?> onclick="document.getElementById('gd_input').style.display='none'; document.getElementById('upload_input').style.display='block';"> 
+                                    Direct File Upload
                                 </label>
                             </div>
                             
                             <div id="gd_input" class="bg-gray-800 p-4 rounded-lg" style="display:<?php echo $software['file_type']=='google_drive'?'block':'none'; ?>;">
                                 <label class="block text-gray-400 mb-2">Google Drive File ID or Direct Link</label>
                                 <input type="text" name="external_link" value="<?php echo $software['file_type']=='google_drive' ? htmlspecialchars($software['file_path']) : ''; ?>" class="w-full px-4 py-2 rounded-lg border">
+                            </div>
+
+                            <div id="upload_input" class="bg-gray-800 p-4 rounded-lg mt-4" style="display:<?php echo $software['file_type']=='upload'?'block':'none'; ?>;">
+                                <?php if($software['file_type']=='upload' && !empty($software['file_path'])): ?>
+                                    <div class="mb-4 p-3 bg-gray-900 rounded border border-gray-700 flex items-center justify-between">
+                                        <div>
+                                            <p class="text-sm text-gray-400">Current File on Server:</p>
+                                            <p class="text-white font-medium break-all"><?php echo basename($software['file_path']); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                <label class="block text-gray-400 mb-2">Upload New File to Replace Current (.exe, .zip, .apk)</label>
+                                <input type="file" name="software_file" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-700 file:text-white">
+                                <p class="text-xs text-yellow-500 mt-2"><i class="fas fa-exclamation-triangle"></i> Leave blank to keep the existing file. Uploading a new file will permanently delete the old one.</p>
                             </div>
                         </div>
 
