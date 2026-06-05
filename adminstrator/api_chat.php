@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         if ($chat_with === 'group') {
             $stmt = $pdo->prepare("
-                SELECT c.*, a.username, a.profile_image 
+                SELECT c.*, a.username, a.profile_image, a.special_tag 
                 FROM admin_chats c 
                 JOIN administrators a ON c.sender_id = a.id 
                 WHERE c.receiver_id IS NULL 
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } else {
             $other_id = (int)$chat_with;
             $stmt = $pdo->prepare("
-                SELECT c.*, a.username, a.profile_image 
+                SELECT c.*, a.username, a.profile_image, a.special_tag 
                 FROM admin_chats c 
                 JOIN administrators a ON c.sender_id = a.id 
                 WHERE (c.sender_id = ? AND c.receiver_id = ?) 

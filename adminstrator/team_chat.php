@@ -7,7 +7,7 @@ $admin_id = $_SESSION['admin_id'];
 
 // Fetch all other admins
 try {
-    $stmt = $pdo->prepare("SELECT id, username, profile_image, last_active FROM administrators WHERE id != ? ORDER BY username ASC");
+    $stmt = $pdo->prepare("SELECT id, username, profile_image, last_active, special_tag FROM administrators WHERE id != ? ORDER BY username ASC");
     $stmt->execute([$admin_id]);
     $other_admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -161,7 +161,12 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                     <div id="online-dot-<?php echo $oa['id']; ?>" class="absolute bottom-0 right-0 w-3.5 h-3.5 <?php echo $is_online ? 'bg-green-500' : 'bg-gray-500'; ?> border-2 border-[#0f172a] rounded-full transition-colors duration-300"></div>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-gray-100 truncate text-[15px]"><?php echo htmlspecialchars($oa['username']); ?></p>
+                                    <div class="flex items-center gap-1.5">
+                                        <p class="font-semibold text-gray-100 truncate text-[15px]"><?php echo htmlspecialchars($oa['username']); ?></p>
+                                        <?php if (!empty($oa['special_tag'])): ?>
+                                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 text-white uppercase shadow-sm shrink-0"><?php echo htmlspecialchars($oa['special_tag']); ?></span>
+                                        <?php endif; ?>
+                                    </div>
                                     <p class="text-xs text-gray-500 truncate group-hover:text-gray-400 transition-colors">Admin</p>
                                 </div>
                                 <?php if($chat_with == $oa['id']): ?>
@@ -551,6 +556,8 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                         }
                     }
 
+                    const specialTagBadge = msg.special_tag ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 text-white uppercase shadow-sm ml-1.5 align-middle">${escapeHtml(msg.special_tag)}</span>` : '';
+
                     if (isMine) {
                         html += `
                         <div class="flex justify-end mb-4 group">
@@ -560,7 +567,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                     ${deleteBtn}
                                 </div>
                                 <div class="flex flex-col items-end">
-                                    <span class="text-xs text-gray-400 mb-1 mr-1">You, ${msg.time}</span>
+                                    <span class="text-xs text-gray-400 mb-1 mr-1 flex items-center">You${specialTagBadge}, ${msg.time}</span>
                                     <div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none shadow-md break-words">
                                         ${contentHtml}
                                     </div>
@@ -575,12 +582,12 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                     ${avatar}
                                 </div>
                                 <div class="flex flex-col items-start">
-                                    <span class="text-xs text-gray-400 mb-1 ml-1">${escapeHtml(msg.username)}, ${msg.time}</span>
+                                    <span class="text-xs text-gray-400 mb-1 ml-1 flex items-center">${escapeHtml(msg.username)}${specialTagBadge}, ${msg.time}</span>
                                     <div class="bg-gray-700 text-white p-3 rounded-2xl rounded-tl-none shadow-md break-words">
                                         ${contentHtml}
                                     </div>
                                 </div>
-                                <div class="ml-3 mb-2 shrink-0">
+                                <div class="ml-3 mb-2 shrink-0 flex items-center">
                                     ${pinBtn}
                                 </div>
                             </div>
