@@ -93,50 +93,78 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
             <div id="contacts-overlay" class="fixed inset-0 bg-black/60 z-10 hidden md:hidden backdrop-blur-sm" onclick="toggleContacts()"></div>
             
             <!-- Chat Contacts Sidebar (Left) -->
-            <div id="contacts-sidebar" class="absolute md:relative z-20 w-full md:w-80 bg-light border-r border-gray-800 flex flex-col h-full shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
-                <div class="p-4 border-b border-gray-800 bg-dark shrink-0 flex items-center justify-between">
-                    <h2 class="text-xl font-bold">Chats</h2>
-                    <button class="md:hidden text-gray-400 hover:text-white" onclick="toggleContacts()">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
+            <div id="contacts-sidebar" class="absolute md:relative z-20 w-full md:w-80 bg-[#0f172a]/95 backdrop-blur-md border-r border-white/5 flex flex-col h-full shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-2xl">
+                
+                <!-- Sidebar Header with Search -->
+                <div class="p-5 shrink-0 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-white tracking-tight">Messages</h2>
+                        <button class="md:hidden text-gray-400 hover:text-white" onclick="toggleContacts()">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Search Input -->
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-500"></i>
+                        </div>
+                        <input type="text" placeholder="Search chats..." class="w-full bg-[#1e293b]/80 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all placeholder-gray-500">
+                    </div>
                 </div>
                 
-                <div class="flex-1 overflow-y-auto chat-scroll p-2 space-y-1">
+                <div class="flex-1 overflow-y-auto chat-scroll px-3 pb-4 space-y-1">
+                    
                     <!-- Group Chat Option -->
-                    <a href="?chat=group" class="flex items-center p-3 rounded-lg transition-colors <?php echo $chat_with === 'group' ? 'bg-primary/20 border border-primary/50' : 'hover:bg-gray-800'; ?>">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mr-4 shadow-lg shrink-0">
-                            <i class="fas fa-users text-white"></i>
+                    <a href="?chat=group" class="group flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with === 'group' ? 'bg-gradient-to-r from-primary/20 to-indigo-500/10 border border-primary/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'hover:bg-white/5 border border-transparent'; ?>">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-4 shadow-lg shrink-0 transform group-hover:scale-105 transition-transform duration-300">
+                            <i class="fas fa-users text-white text-lg"></i>
                         </div>
-                        <div>
-                            <p class="font-bold text-white">Team Group Chat</p>
-                            <p class="text-xs text-gray-400">Chat with all admins</p>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-white truncate text-base">Team Group Chat</p>
+                            <p class="text-xs text-indigo-300 truncate">General discussion</p>
                         </div>
+                        <?php if($chat_with === 'group'): ?>
+                            <div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#6366f1]"></div>
+                        <?php endif; ?>
                     </a>
                     
-                    <div class="pt-4 pb-2 px-3">
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Direct Messages</p>
+                    <div class="pt-6 pb-2 px-2 flex items-center justify-between">
+                        <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Direct Messages</p>
+                        <span class="bg-white/10 text-gray-300 text-[10px] px-2 py-0.5 rounded-full"><?php echo count($other_admins); ?></span>
                     </div>
                     
                     <!-- Other Admins -->
                     <?php if (!empty($other_admins)): ?>
                         <?php foreach($other_admins as $oa): ?>
-                            <a href="?chat=<?php echo $oa['id']; ?>" class="flex items-center p-3 rounded-lg transition-colors <?php echo $chat_with == $oa['id'] ? 'bg-primary/20 border border-primary/50' : 'hover:bg-gray-800'; ?>">
-                                <?php if (!empty($oa['profile_image'])): ?>
-                                    <div class="w-12 h-12 rounded-full mr-4 overflow-hidden border border-gray-600 bg-dark shrink-0">
-                                        <img src="../<?php echo htmlspecialchars($oa['profile_image']); ?>" class="w-full h-full object-cover">
-                                    </div>
-                                <?php else: ?>
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center mr-4 shadow-lg shrink-0 text-lg font-bold">
-                                        <?php echo substr(htmlspecialchars($oa['username']), 0, 1); ?>
-                                    </div>
-                                <?php endif; ?>
-                                <div>
-                                    <p class="font-medium text-white"><?php echo htmlspecialchars($oa['username']); ?></p>
+                            <a href="?chat=<?php echo $oa['id']; ?>" class="group flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $oa['id'] ? 'bg-gradient-to-r from-primary/20 to-indigo-500/10 border border-primary/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'hover:bg-white/5 border border-transparent'; ?>">
+                                <div class="relative mr-4 shrink-0 transform group-hover:scale-105 transition-transform duration-300">
+                                    <?php if (!empty($oa['profile_image'])): ?>
+                                        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1e293b] bg-dark">
+                                            <img src="../<?php echo htmlspecialchars($oa['profile_image']); ?>" class="w-full h-full object-cover">
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border-2 border-[#1e293b] text-lg font-bold shadow-inner">
+                                            <?php echo substr(htmlspecialchars($oa['username']), 0, 1); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <!-- Online Indicator -->
+                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#0f172a] rounded-full"></div>
                                 </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-semibold text-gray-100 truncate text-[15px]"><?php echo htmlspecialchars($oa['username']); ?></p>
+                                    <p class="text-xs text-gray-500 truncate group-hover:text-gray-400 transition-colors">Admin</p>
+                                </div>
+                                <?php if($chat_with == $oa['id']): ?>
+                                    <div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#6366f1]"></div>
+                                <?php endif; ?>
                             </a>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-sm text-gray-500 p-3">No other admins found.</p>
+                        <div class="flex flex-col items-center justify-center p-6 text-center bg-white/5 rounded-2xl border border-white/5 border-dashed mt-2">
+                            <i class="fas fa-user-slash text-gray-600 text-3xl mb-3"></i>
+                            <p class="text-sm text-gray-400">No other admins found.</p>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
