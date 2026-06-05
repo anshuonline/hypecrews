@@ -158,7 +158,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                         }
                                     ?>
                                     <!-- Online Indicator -->
-                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 <?php echo $is_online ? 'bg-green-500' : 'bg-gray-500'; ?> border-2 border-[#0f172a] rounded-full"></div>
+                                    <div id="online-dot-<?php echo $oa['id']; ?>" class="absolute bottom-0 right-0 w-3.5 h-3.5 <?php echo $is_online ? 'bg-green-500' : 'bg-gray-500'; ?> border-2 border-[#0f172a] rounded-full transition-colors duration-300"></div>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="font-semibold text-gray-100 truncate text-[15px]"><?php echo htmlspecialchars($oa['username']); ?></p>
@@ -455,6 +455,20 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                     statusEl.className = 'text-xs text-gray-400';
                                 }
                             }
+                        }
+                        
+                        // Update all sidebar online dots
+                        if (data.online_admins) {
+                            document.querySelectorAll('[id^="online-dot-"]').forEach(el => {
+                                const adminId = parseInt(el.id.replace('online-dot-', ''));
+                                if (data.online_admins.includes(adminId)) {
+                                    el.classList.remove('bg-gray-500');
+                                    el.classList.add('bg-green-500');
+                                } else {
+                                    el.classList.remove('bg-green-500');
+                                    el.classList.add('bg-gray-500');
+                                }
+                            });
                         }
                     }
                 })

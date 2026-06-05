@@ -67,8 +67,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 }
             }
         }
+        
+        // Get all online admins for sidebar
+        $online_admins = [];
+        $stmt_online = $pdo->query("SELECT id, last_active FROM administrators");
+        while ($row = $stmt_online->fetch(PDO::FETCH_ASSOC)) {
+            if (!empty($row['last_active'])) {
+                if (time() - strtotime($row['last_active']) <= 30) {
+                    $online_admins[] = (int)$row['id'];
+                }
+            }
+        }
 
-        echo json_encode(['status' => 'success', 'data' => $messages, 'partner_online' => $chat_partner_online]);
+        echo json_encode(['status' => 'success', 'data' => $messages, 'partner_online' => $chat_partner_online, 'online_admins' => $online_admins]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
