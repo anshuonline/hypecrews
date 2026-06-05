@@ -175,74 +175,70 @@ try {
                         <p class="text-gray-400">No queries found</p>
                     </div>
                     <?php else: ?>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800 text-sm">
-                                    <th class="pb-3 min-w-[100px]">Service</th>
-                                    <th class="pb-3 min-w-[150px]">Customer</th>
-                                    <th class="pb-3 min-w-[180px]">Contact</th>
-                                    <th class="pb-3 min-w-[250px]">Message</th>
-                                    <th class="pb-3 min-w-[100px] text-center">Status</th>
-                                    <th class="pb-3 min-w-[100px]">Date</th>
-                                    <th class="pb-3 min-w-[100px] text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($queries as $query): ?>
-                                <tr class="border-b border-gray-800 hover:bg-dark/50 text-sm">
-                                    <td class="py-4 align-top">
-                                        <p class="font-medium text-white"><?php echo htmlspecialchars($query['service_name']); ?></p>
-                                    </td>
-                                    <td class="py-4 align-top pr-4">
-                                        <p class="font-semibold text-gray-300"><?php echo htmlspecialchars($query['name']); ?></p>
-                                        <?php if ($query['company']): ?>
-                                        <p class="text-xs text-gray-500 mt-1"><?php echo htmlspecialchars($query['company']); ?></p>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-4 align-top pr-4">
-                                        <p class="text-indigo-400 break-all"><a href="mailto:<?php echo htmlspecialchars($query['email']); ?>"><?php echo htmlspecialchars($query['email']); ?></a></p>
-                                        <?php if ($query['phone']): ?>
-                                        <p class="text-xs text-gray-400 mt-1"><i class="fas fa-phone-alt mr-1 text-gray-500"></i><?php echo htmlspecialchars($query['phone']); ?></p>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-4 align-top pr-4">
-                                        <div class="text-gray-300 bg-gray-900/50 p-3 rounded-lg border border-gray-800 text-xs leading-relaxed max-w-md">
-                                            <?php echo nl2br(htmlspecialchars($query['message'])); ?>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 align-top text-center">
-                                        <?php
-                                        $statusClasses = [
-                                            'new' => 'bg-yellow-500/10 text-yellow-500',
-                                            'in_progress' => 'bg-blue-500/10 text-blue-500',
-                                            'resolved' => 'bg-green-500/10 text-green-500'
-                                        ];
-                                        $statusLabels = [
-                                            'new' => 'New',
-                                            'in_progress' => 'In Progress',
-                                            'resolved' => 'Resolved'
-                                        ];
-                                        ?>
-                                        <span class="status-badge <?php echo $statusClasses[$query['status']]; ?>">
-                                            <?php echo $statusLabels[$query['status']]; ?>
-                                        </span>
-                                    </td>
-                                    <td class="py-4 align-top text-gray-400">
-                                        <?php echo date('M j, Y', strtotime($query['created_at'])); ?>
-                                    </td>
-                                    <td class="py-4 align-top text-center">
-                                        <button onclick="showQueryDetails(<?php echo $query['id']; ?>)" class="text-primary hover:text-indigo-400 mr-3">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button onclick="showStatusModal(<?php echo $query['id']; ?>, '<?php echo $query['status']; ?>')" class="text-gray-400 hover:text-white">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <?php foreach ($queries as $query): ?>
+                        <?php
+                            $statusClasses = [
+                                'new' => 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                                'in_progress' => 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+                                'resolved' => 'bg-green-500/10 text-green-500 border-green-500/20'
+                            ];
+                            $statusLabels = [
+                                'new' => 'New',
+                                'in_progress' => 'In Progress',
+                                'resolved' => 'Resolved'
+                            ];
+                        ?>
+                        <div class="bg-dark/50 border border-gray-800 hover:border-primary/50 transition-all rounded-xl p-6 flex flex-col h-full relative shadow-lg shadow-black/20">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="status-badge border <?php echo $statusClasses[$query['status']]; ?>">
+                                    <?php echo $statusLabels[$query['status']]; ?>
+                                </span>
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="far fa-clock mr-1"></i> <?php echo date('M j, Y', strtotime($query['created_at'])); ?>
+                                </span>
+                            </div>
+                            
+                            <h3 class="text-lg font-bold text-white mb-4 line-clamp-1" title="<?php echo htmlspecialchars($query['service_name']); ?>">
+                                <?php echo htmlspecialchars($query['service_name']); ?>
+                            </h3>
+                            
+                            <div class="flex flex-col gap-2 mb-4 bg-gray-900/40 p-4 rounded-lg">
+                                <p class="text-sm text-gray-200 font-medium flex items-center">
+                                    <i class="fas fa-user text-gray-500 mr-2 w-4 text-center"></i> 
+                                    <span class="truncate"><?php echo htmlspecialchars($query['name']); ?></span>
+                                    <?php if ($query['company']): ?>
+                                    <span class="text-xs text-gray-500 ml-1 truncate">(<?php echo htmlspecialchars($query['company']); ?>)</span>
+                                    <?php endif; ?>
+                                </p>
+                                <p class="text-sm text-indigo-400 flex items-center">
+                                    <i class="fas fa-envelope text-gray-500 mr-2 w-4 text-center"></i> 
+                                    <a href="mailto:<?php echo htmlspecialchars($query['email']); ?>" class="truncate hover:text-indigo-300"><?php echo htmlspecialchars($query['email']); ?></a>
+                                </p>
+                                <?php if ($query['phone']): ?>
+                                <p class="text-sm text-gray-400 flex items-center">
+                                    <i class="fas fa-phone-alt text-gray-500 mr-2 w-4 text-center"></i> 
+                                    <a href="tel:<?php echo htmlspecialchars($query['phone']); ?>" class="hover:text-gray-300"><?php echo htmlspecialchars($query['phone']); ?></a>
+                                </p>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="flex-grow mb-6">
+                                <div class="text-gray-400 text-sm leading-relaxed line-clamp-3 relative">
+                                    <?php echo nl2br(htmlspecialchars($query['message'])); ?>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center border-t border-gray-800 pt-4 mt-auto">
+                                <button onclick="showStatusModal(<?php echo $query['id']; ?>, '<?php echo $query['status']; ?>')" class="text-sm text-gray-400 hover:text-white flex items-center px-2 py-1 rounded transition-colors">
+                                    <i class="fas fa-edit mr-2"></i> Status
+                                </button>
+                                <button onclick="showQueryDetails(<?php echo $query['id']; ?>)" class="text-sm bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-lg font-medium transition-all flex items-center">
+                                    <i class="fas fa-eye mr-2"></i> Details
+                                </button>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
                 </div>
