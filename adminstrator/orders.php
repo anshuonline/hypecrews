@@ -176,83 +176,99 @@ try {
                         </button>
                     </div>
                     <?php else: ?>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800">
-                                    <th class="pb-3">Order</th>
-                                    <th class="pb-3">User</th>
-                                    <th class="pb-3">Tracking ID</th>
-                                    <th class="pb-3">Status</th>
-                                    <th class="pb-3">Date</th>
-                                    <th class="pb-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($orders as $order): ?>
-                                <tr class="border-b border-gray-800 hover:bg-dark/50">
-                                    <td class="py-4">
-                                        <p class="font-medium"><?php echo htmlspecialchars($order['order_title']); ?></p>
-                                        <p class="text-sm text-gray-400"><?php echo substr(htmlspecialchars($order['order_description']), 0, 50); ?>...</p>
-                                    </td>
-                                    <td class="py-4">
-                                        <?php if ($order['user_id']): ?>
-                                        <p><?php echo htmlspecialchars($order['first_name'] . ' ' . $order['last_name']); ?></p>
-                                        <p class="text-sm text-gray-400">@<?php echo htmlspecialchars($order['username']); ?></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <?php foreach ($orders as $order): ?>
+                        <?php
+                            $statusClasses = [
+                                'pending' => 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
+                                'in_review' => 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
+                                'approved' => 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20',
+                                'processing' => 'bg-purple-500/10 text-purple-500 border border-purple-500/20',
+                                'in_production' => 'bg-cyan-500/10 text-cyan-500 border border-cyan-500/20',
+                                'quality_check' => 'bg-teal-500/10 text-teal-500 border border-teal-500/20',
+                                'ready_for_delivery' => 'bg-green-500/10 text-green-500 border border-green-500/20',
+                                'shipped' => 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
+                                'delivered' => 'bg-green-500/10 text-green-500 border border-green-500/20',
+                                'revision_requested' => 'bg-orange-500/10 text-orange-500 border border-orange-500/20',
+                                'on_hold' => 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
+                                'completed' => 'bg-green-500/10 text-green-500 border border-green-500/20',
+                                'cancelled' => 'bg-red-500/10 text-red-500 border border-red-500/20'
+                            ];
+                        ?>
+                        <div class="bg-[#1e293b]/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 hover:shadow-[0_0_25px_rgba(99,102,241,0.15)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 flex flex-col h-full group relative overflow-hidden">
+                            <!-- Top Decorator -->
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            
+                            <!-- Header -->
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex-1 mr-3">
+                                    <h3 class="font-bold text-lg text-white mb-2 leading-tight group-hover:text-primary transition-colors"><?php echo htmlspecialchars($order['order_title']); ?></h3>
+                                    <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider <?php echo $statusClasses[$order['status']] ?? 'bg-gray-500/10 text-gray-400 border border-gray-500/20'; ?> inline-flex items-center">
+                                        <?php if($order['status'] === 'completed'): ?>
+                                            <i class="fas fa-check-circle mr-1.5"></i>
+                                        <?php elseif($order['status'] === 'pending'): ?>
+                                            <i class="fas fa-clock mr-1.5"></i>
                                         <?php else: ?>
-                                        <p class="text-gray-400">No user assigned</p>
+                                            <i class="fas fa-circle text-[8px] mr-1.5"></i>
                                         <?php endif; ?>
-                                    </td>
-                                    <td class="py-4">
-                                        <?php if ($order['tracking_id']): ?>
-                                        <span class="font-mono"><?php echo htmlspecialchars($order['tracking_id']); ?></span>
-                                        <?php else: ?>
-                                        <span class="text-gray-400">Not assigned</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-4">
-                                        <?php
-                                        $statusClasses = [
-                                            'pending' => 'bg-yellow-500/10 text-yellow-500',
-                                            'in_review' => 'bg-blue-500/10 text-blue-500',
-                                            'approved' => 'bg-indigo-500/10 text-indigo-500',
-                                            'processing' => 'bg-purple-500/10 text-purple-500',
-                                            'in_production' => 'bg-cyan-500/10 text-cyan-500',
-                                            'quality_check' => 'bg-teal-500/10 text-teal-500',
-                                            'ready_for_delivery' => 'bg-green-500/10 text-green-500',
-                                            'shipped' => 'bg-blue-500/10 text-blue-500',
-                                            'delivered' => 'bg-green-500/10 text-green-500',
-                                            'revision_requested' => 'bg-orange-500/10 text-orange-500',
-                                            'on_hold' => 'bg-yellow-500/10 text-yellow-500',
-                                            'completed' => 'bg-green-500/10 text-green-500',
-                                            'cancelled' => 'bg-red-500/10 text-red-500'
-                                        ];
-                                        ?>
-                                        <span class="status-badge <?php echo $statusClasses[$order['status']]; ?>">
-                                            <?php echo ucfirst(str_replace('_', ' ', $order['status'])); ?>
-                                        </span>
-                                    </td>
-                                    <td class="py-4 text-gray-400">
-                                        <?php echo date('M j, Y', strtotime($order['created_at'])); ?>
-                                    </td>
-                                    <td class="py-4">
-                                        <button onclick="showStatusModal(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>', '<?php echo addslashes(htmlspecialchars($order['custom_status'] ?? '')); ?>')" class="text-secondary hover:text-purple-400 mr-3" title="Update Status">
-                                            <i class="fas fa-tasks"></i>
-                                        </button>
-                                        <a href="edit_order.php?id=<?php echo $order['id']; ?>" class="text-primary hover:text-indigo-400 mr-3" title="Edit Full Order">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="view_order.php?id=<?php echo $order['id']; ?>" class="text-gray-400 hover:text-white mr-3" title="View Order">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="?delete=<?php echo $order['id']; ?>" class="text-red-500 hover:text-red-400" onclick="return confirm('Are you sure you want to delete this order?')" title="Delete Order">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                        <?php echo ucfirst(str_replace('_', ' ', $order['status'])); ?>
+                                    </span>
+                                </div>
+                                <div class="text-right shrink-0 mt-1">
+                                    <?php if ($order['tracking_id']): ?>
+                                        <p class="text-[10px] text-gray-400 font-mono bg-black/40 px-2 py-1 rounded border border-white/5 flex items-center gap-1.5" title="Tracking ID">
+                                            <i class="fas fa-hashtag text-gray-500"></i> <?php echo htmlspecialchars($order['tracking_id']); ?>
+                                        </p>
+                                    <?php else: ?>
+                                        <p class="text-[10px] text-gray-600 font-mono bg-black/20 px-2 py-1 rounded border border-white/5 italic">
+                                            No Tracking
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-5 flex-1">
+                                <p class="text-sm text-gray-400 line-clamp-2 leading-relaxed"><?php echo htmlspecialchars($order['order_description']); ?></p>
+                            </div>
+                            
+                            <!-- User Details -->
+                            <div class="flex items-center mb-5 bg-[#0f172a]/80 p-3 rounded-xl border border-white/5 group-hover:bg-[#0f172a] transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-600/20 border border-indigo-500/30 flex items-center justify-center mr-3 shrink-0">
+                                    <i class="fas fa-user text-indigo-400"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <?php if ($order['user_id']): ?>
+                                        <p class="text-sm font-semibold text-white truncate"><?php echo htmlspecialchars($order['first_name'] . ' ' . $order['last_name']); ?></p>
+                                        <p class="text-xs text-indigo-400 truncate">@<?php echo htmlspecialchars($order['username']); ?></p>
+                                    <?php else: ?>
+                                        <p class="text-sm text-gray-500 italic">No user assigned</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer Actions -->
+                            <div class="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
+                                <span class="text-xs text-gray-500 font-medium flex items-center bg-white/5 px-2 py-1 rounded">
+                                    <i class="far fa-calendar-alt mr-1.5 text-gray-400"></i> <?php echo date('M j, Y', strtotime($order['created_at'])); ?>
+                                </span>
+                                <div class="flex space-x-1.5">
+                                    <button onclick="showStatusModal(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>', '<?php echo addslashes(htmlspecialchars($order['custom_status'] ?? '')); ?>')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-secondary/20 hover:text-secondary text-gray-400 flex items-center justify-center transition-colors" title="Update Status">
+                                        <i class="fas fa-tasks text-[13px]"></i>
+                                    </button>
+                                    <a href="edit_order.php?id=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-primary/20 hover:text-primary text-gray-400 flex items-center justify-center transition-colors" title="Edit Order">
+                                        <i class="fas fa-edit text-[13px]"></i>
+                                    </a>
+                                    <a href="view_order.php?id=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 hover:text-white text-gray-400 flex items-center justify-center transition-colors" title="View Order">
+                                        <i class="fas fa-eye text-[13px]"></i>
+                                    </a>
+                                    <a href="?delete=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500/20 hover:text-red-500 text-gray-400 flex items-center justify-center transition-colors" onclick="return confirm('Are you sure you want to delete this order?')" title="Delete Order">
+                                        <i class="fas fa-trash text-[13px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
                 </div>
