@@ -157,8 +157,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         id="password" 
                         name="password" 
                         required 
-                        class="w-full bg-dark/50 border border-gray-700 rounded-lg pl-10 pr-4 py-3.5 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                        class="w-full bg-dark/50 border border-gray-700 rounded-lg pl-10 pr-12 py-3.5 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                         placeholder="Enter your password">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <button type="button" id="togglePassword" class="text-gray-500 hover:text-gray-300 focus:outline-none">
+                            <i class="far fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -173,5 +178,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>© 2024-<?php echo date("Y"); ?> Hypecrews. All rights reserved.</p>
         </div>
     </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const eyeIcon = document.querySelector('#eyeIcon');
+
+        togglePassword.addEventListener('click', function (e) {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            if (type === 'password') {
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            } else {
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+        });
+    </script>
 </body>
 </html>

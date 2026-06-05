@@ -58,22 +58,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = isset($_POST['action']) ? $_POST['action'] : 'send';
+    
+    if ($action === 'pin') {
+        $message_id = (int)$_POST['message_id'];
+        try {
+            // Toggle pin status
+            $stmt = $pdo->prepare("UPDATE admin_chats SET is_pinned = NOT is_pinned WHERE id = ?");
+            $stmt->execute([$message_id]);
+            echo json_encode(['status' => 'success']);
+        } catch (PDOException $e) {
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+        exit;
+    }
+    
     $chat_with = isset($_POST['chat_with']) ? $_POST['chat_with'] : 'group';
     $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+    $meeting_time = !empty($_POST['meeting_time']) ? $_POST['meeting_time'] : null;
+    $meeting_link = !empty($_POST['meeting_link']) ? $_POST['meeting_link'] : null;
+    $image_url = null;
     
-    if (empty($message)) {
+    // Handle image upload
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['image'];
+        $max_size = 2 * 1024 * 1024; // 2MB
+        if ($file['size'] > $max_size) {
+            echo json_encode(['status' => 'error', 'message' => 'Image exceeds 2MB limit']);
+            exit;
+        }
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, $allowed)) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid image format']);
+            exit;
+        }
+        $upload_dir = '../uploads/chat_images/';
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+        
+        $new_name = uniqid('chat_') . '.' . $ext;
+        if (move_uploaded_file($file['tmp_name'], $upload_dir . $new_name)) {
+            $image_url = 'uploads/chat_images/' . $new_name;
+        }
+    }
+    
+    if (empty($message) && empty($image_url) && empty($meeting_time)) {
         echo json_encode(['status' => 'error', 'message' => 'Empty message']);
         exit;
     }
     
     try {
         if ($chat_with === 'group') {
-            $stmt = $pdo->prepare("INSERT INTO admin_chats (sender_id, receiver_id, message) VALUES (?, NULL, ?)");
-            $stmt->execute([$admin_id, $message]);
+            $stmt = $pdo->prepare("INSERT INTO admin_chats (sender_id, receiver_id, message, image_url, meeting_time, meeting_link) VALUES (?, NULL, ?, ?, ?, ?)");
+            $stmt->execute([$admin_id, $message, $image_url, $meeting_time, $meeting_link]);
         } else {
             $receiver_id = (int)$chat_with;
-            $stmt = $pdo->prepare("INSERT INTO admin_chats (sender_id, receiver_id, message) VALUES (?, ?, ?)");
-            $stmt->execute([$admin_id, $receiver_id, $message]);
+            $stmt = $pdo->prepare("INSERT INTO admin_chats (sender_id, receiver_id, message, image_url, meeting_time, meeting_link) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$admin_id, $receiver_id, $message, $image_url, $meeting_time, $meeting_link]);
         }
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
