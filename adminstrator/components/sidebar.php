@@ -63,6 +63,10 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
             <i class="fas fa-clipboard-list mr-3"></i>
             <span>Activity Logs</span>
         </a>
+        <a href="team_chat.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'team_chat') ? 'active' : ''; ?>">
+            <i class="fas fa-comments mr-3"></i>
+            <span>Team Chat</span>
+        </a>
         <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</div>
         <a href="softwares.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'softwares') ? 'active' : ''; ?>">
             <i class="fas fa-laptop-code mr-3"></i>
