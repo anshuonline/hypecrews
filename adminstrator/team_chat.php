@@ -229,7 +229,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
             
             <!-- Details Sidebar (Right) - Upcoming Meetings & Pins -->
             <div id="details-overlay" class="fixed inset-0 bg-black/60 z-10 hidden backdrop-blur-sm" onclick="toggleDetails()"></div>
-            <div id="details-sidebar" class="absolute md:relative z-20 w-full md:w-80 bg-light border-l border-gray-800 flex flex-col h-full shrink-0 transform translate-x-full transition-transform duration-300 right-0">
+            <div id="details-sidebar" class="absolute z-30 w-full md:w-80 bg-light border-l border-gray-800 flex flex-col h-full shrink-0 transform translate-x-full transition-transform duration-300 right-0 top-0 bottom-0 shadow-2xl">
                 <div class="p-4 border-b border-gray-800 bg-dark shrink-0 flex items-center justify-between">
                     <h2 class="text-lg font-bold"><i class="fas fa-info-circle mr-2 text-primary"></i>Chat Details</h2>
                     <button class="text-gray-400 hover:text-white" onclick="toggleDetails()">
