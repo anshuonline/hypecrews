@@ -108,7 +108,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
             100% { left: 200%; }
         }
     </style>
-    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
+    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="text-white overflow-hidden">
     <div class="flex h-[100dvh]">

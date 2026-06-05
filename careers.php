@@ -213,7 +213,7 @@ try {
             opacity: 1;
         }
     </style>
-    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
+    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="text-white antialiased selection:bg-primary selection:text-white">
     <?php include 'components/nav.php'; ?>

@@ -3,7 +3,7 @@
 <head>
     <title>Database Setup</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
+    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8">

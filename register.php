@@ -208,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             100% { transform: scale(1.1) translate(20px, -20px); opacity: 0.5; }
         }
     </style>
-    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
+    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="antialiased selection:bg-primary selection:text-white min-h-screen flex flex-col relative">
     <!-- Abstract Background -->

@@ -199,7 +199,7 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
         }
         @keyframes blink { 50% { opacity: 0; } }
     </style>
-    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
+    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
     <div class="ambient-bg"></div>

@@ -96,7 +96,7 @@ try {
             border-color: rgba(99, 102, 241, 0.3);
         }
     </style>
-    <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
+    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
     <div class="ambient-bg"></div>
