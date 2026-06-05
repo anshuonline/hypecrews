@@ -142,62 +142,66 @@ try {
                         <p class="text-gray-400">No softwares added yet</p>
                     </div>
                     <?php else: ?>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800">
-                                    <th class="pb-3 w-16">Icon</th>
-                                    <th class="pb-3">Name / Version</th>
-                                    <th class="pb-3">Platforms</th>
-                                    <th class="pb-3">Pricing</th>
-                                    <th class="pb-3">Added On</th>
-                                    <th class="pb-3 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($softwares as $software): ?>
-                                <tr class="border-b border-gray-800 hover:bg-dark/50">
-                                    <td class="py-4">
-                                        <?php if (!empty($software['logo_path'])): ?>
-                                            <img src="../<?php echo htmlspecialchars($software['logo_path']); ?>" alt="Logo" class="w-12 h-12 object-cover rounded-lg bg-dark">
-                                        <?php else: ?>
-                                            <div class="w-12 h-12 rounded-lg bg-dark flex items-center justify-center text-gray-500">
-                                                <i class="fas fa-image"></i>
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-4">
-                                        <p class="font-medium text-lg"><?php echo htmlspecialchars($software['name']); ?></p>
-                                        <p class="text-sm text-gray-400">v<?php echo htmlspecialchars($software['version']); ?></p>
-                                    </td>
-                                    <td class="py-4">
-                                        <p><?php echo htmlspecialchars($software['platform']); ?></p>
-                                    </td>
-                                    <td class="py-4">
-                                        <?php if ($software['is_paid']): ?>
-                                            <span class="bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full text-xs font-medium border border-purple-800">Paid - ₹<?php echo number_format($software['price'], 2); ?></span>
-                                        <?php else: ?>
-                                            <span class="bg-green-900/50 text-green-300 px-3 py-1 rounded-full text-xs font-medium border border-green-800">Free</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="py-4 text-gray-400">
-                                        <?php echo date('M j, Y', strtotime($software['created_at'])); ?>
-                                    </td>
-                                    <td class="py-4 text-right space-x-2">
-                                        <a href="../software_details.php?id=<?php echo $software['id']; ?>" target="_blank" class="text-blue-400 hover:text-blue-300" title="View Public Page">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="software_edit.php?id=<?php echo $software['id']; ?>" class="text-yellow-400 hover:text-yellow-300" title="Edit Software">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="?delete=<?php echo $software['id']; ?>" onclick="return confirm('Are you sure you want to delete this software? All related files will be removed.');" class="text-red-400 hover:text-red-300" title="Delete Software">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <?php foreach ($softwares as $software): ?>
+                        <div class="bg-[#1e293b]/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 hover:shadow-[0_0_25px_rgba(99,102,241,0.15)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 flex flex-col h-full group relative overflow-hidden">
+                            <!-- Top Decorator -->
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            
+                            <!-- Header (Icon & Name) -->
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="shrink-0">
+                                    <?php if (!empty($software['logo_path'])): ?>
+                                        <img src="../<?php echo htmlspecialchars($software['logo_path']); ?>" alt="Logo" class="w-16 h-16 object-cover rounded-xl shadow-lg border border-white/10 bg-[#0f172a] group-hover:scale-105 transition-transform duration-300">
+                                    <?php else: ?>
+                                        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-gray-400 border border-white/10 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                                            <i class="fas fa-image text-2xl"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="font-bold text-lg text-white mb-1 leading-tight group-hover:text-primary transition-colors truncate" title="<?php echo htmlspecialchars($software['name']); ?>"><?php echo htmlspecialchars($software['name']); ?></h3>
+                                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-gray-400 border border-white/5">
+                                        v<?php echo htmlspecialchars($software['version']); ?>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Platform & Pricing -->
+                            <div class="mb-5 space-y-2">
+                                <div class="flex items-center text-sm bg-black/20 rounded-lg p-2 border border-white/5 group-hover:bg-black/40 transition-colors">
+                                    <div class="w-6 text-center text-gray-500 mr-2"><i class="fas fa-desktop"></i></div>
+                                    <span class="text-gray-300 truncate" title="<?php echo htmlspecialchars($software['platform']); ?>"><?php echo htmlspecialchars($software['platform']); ?></span>
+                                </div>
+                                <div class="flex items-center text-sm bg-black/20 rounded-lg p-2 border border-white/5 group-hover:bg-black/40 transition-colors">
+                                    <div class="w-6 text-center text-gray-500 mr-2"><i class="fas fa-tag"></i></div>
+                                    <?php if ($software['is_paid']): ?>
+                                        <span class="text-purple-400 font-medium">₹<?php echo number_format($software['price'], 2); ?></span>
+                                    <?php else: ?>
+                                        <span class="text-green-400 font-medium">Free</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer Actions -->
+                            <div class="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
+                                <span class="text-xs text-gray-500 font-medium flex items-center bg-white/5 px-2 py-1 rounded">
+                                    <i class="far fa-calendar-alt mr-1.5 text-gray-400"></i> <?php echo date('M j, Y', strtotime($software['created_at'])); ?>
+                                </span>
+                                <div class="flex space-x-1.5">
+                                    <a href="../software_details.php?id=<?php echo $software['id']; ?>" target="_blank" class="w-8 h-8 rounded-full bg-white/5 hover:bg-blue-500/20 hover:text-blue-400 text-gray-400 flex items-center justify-center transition-colors tooltip" title="View Public Page">
+                                        <i class="fas fa-eye text-[13px]"></i>
+                                    </a>
+                                    <a href="software_edit.php?id=<?php echo $software['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-yellow-500/20 hover:text-yellow-400 text-gray-400 flex items-center justify-center transition-colors tooltip" title="Edit Software">
+                                        <i class="fas fa-edit text-[13px]"></i>
+                                    </a>
+                                    <a href="?delete=<?php echo $software['id']; ?>" onclick="return confirm('Are you sure you want to delete this software? All related files will be removed.');" class="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500/20 hover:text-red-500 text-gray-400 flex items-center justify-center transition-colors tooltip" title="Delete Software">
+                                        <i class="fas fa-trash text-[13px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
                 </div>
