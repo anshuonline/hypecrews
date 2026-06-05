@@ -148,7 +148,7 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
                                     <td class="py-4">
                                         <div class="flex items-center">
                                             <?php if (!empty($log['profile_image'])): ?>
-                                                <div class="w-8 h-8 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0">
+                                                <div class="w-8 h-8 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0 cursor-pointer hover:border-primary transition-colors" onclick="zoomImage(this.querySelector('img').src)">
                                                     <img src="../<?php echo htmlspecialchars($log['profile_image']); ?>" class="w-full h-full object-cover">
                                                 </div>
                                             <?php else: ?>
@@ -190,5 +190,27 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
             </div>
         </div>
     </div>
+
+    <!-- Zoom Modal -->
+    <div id="imageZoomModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden items-center justify-center p-4 transition-opacity" onclick="closeZoom()">
+        <button class="absolute top-6 right-6 text-white hover:text-red-500 text-3xl focus:outline-none" onclick="closeZoom()">&times;</button>
+        <img id="zoomedImage" src="" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain border-4 border-gray-800" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function zoomImage(src) {
+            const modal = document.getElementById('imageZoomModal');
+            const img = document.getElementById('zoomedImage');
+            img.src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeZoom() {
+            const modal = document.getElementById('imageZoomModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
 </body>
 </html>
