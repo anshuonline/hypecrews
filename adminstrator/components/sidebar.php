@@ -44,6 +44,11 @@ if (!isset($admin_username)) {
             <i class="fas fa-users mr-3"></i>
             <span>Users</span>
         </a>
+        <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</div>
+        <a href="softwares.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'softwares') ? 'active' : ''; ?>">
+            <i class="fas fa-laptop-code mr-3"></i>
+            <span>Manage Softwares</span>
+        </a>
         <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Careers</div>
         <a href="jobs.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'jobs') ? 'active' : ''; ?>">
             <i class="fas fa-briefcase mr-3"></i>

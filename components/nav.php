@@ -169,6 +169,7 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
                     </a>
                 </div>
             </div>
+            <a href="softwares.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Softwares</a>
             <a href="about.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">About</a>
             <a href="careers.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Careers</a>
             <a href="contact.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Contact</a>
@@ -271,6 +272,7 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
                     </a>
                 </div>
             </div>
+            <a href="softwares.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Softwares</a>
             <a href="about.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">About</a>
             <a href="careers.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Careers</a>
             <a href="contact.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">Contact</a>
