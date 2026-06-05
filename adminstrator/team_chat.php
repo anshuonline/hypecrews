@@ -78,6 +78,35 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
             cursor: pointer;
             margin-top: 5px;
         }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .tag-gradient {
+            background: linear-gradient(270deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
+        }
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            animation: shine 2.5s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            15% { left: 200%; }
+            100% { left: 200%; }
+        }
     </style>
     <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
@@ -167,7 +196,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                                     <div class="flex items-center gap-1.5">
                                         <p class="font-semibold text-gray-100 truncate text-[15px]"><?php echo htmlspecialchars($oa['username']); ?></p>
                                         <?php if (!empty($oa['special_tag'])): ?>
-                                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 text-white uppercase shadow-sm shrink-0"><?php echo htmlspecialchars($oa['special_tag']); ?></span>
+                                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider text-white uppercase shadow-sm shrink-0 tag-gradient shine-effect border border-white/20"><?php echo htmlspecialchars($oa['special_tag']); ?></span>
                                         <?php endif; ?>
                                     </div>
                                     <p class="text-xs text-gray-500 truncate group-hover:text-gray-400 transition-colors">Admin</p>
@@ -559,7 +588,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                         }
                     }
 
-                    const specialTagBadge = msg.special_tag ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 text-white uppercase shadow-sm ml-1.5 align-middle">${escapeHtml(msg.special_tag)}</span>` : '';
+                    const specialTagBadge = msg.special_tag ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider text-white uppercase shadow-sm ml-1.5 align-middle tag-gradient shine-effect border border-white/20">${escapeHtml(msg.special_tag)}</span>` : '';
 
                     if (isMine) {
                         html += `
