@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hypecrews.com/sitemap.php
+Sitemap: https://hypecrews.com/sitemap.xml
 
