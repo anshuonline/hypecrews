@@ -1,27 +1,5 @@
-# Robots.txt for Hypecrews
-# https://hypecrews.com
-
 User-agent: *
 Allow: /
 
-# Disallow private/admin pages
-Disallow: /adminstrator/
-Disallow: /config/
-Disallow: /schemas/
-Disallow: /uploads/
-Disallow: /login.php
-Disallow: /register.php
-Disallow: /logout.php
-Disallow: /profile.php
-Disallow: /track_orders.php
-Disallow: /order_details.php
-Disallow: /submit_review.php
-Disallow: /check_db.php
-Disallow: /setup_db.php
-Disallow: /contact-handler.php
-Disallow: /newsletter_subscribe.php
-Disallow: /service_query.php
-Disallow: /clear_email_session.php
-
-# Sitemap location
 Sitemap: https://hypecrews.com/sitemap.xml
+
