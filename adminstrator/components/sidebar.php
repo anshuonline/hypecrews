@@ -12,6 +12,7 @@ if (!isset($admin_username)) {
 
 // Fetch profile image if possible
 $admin_profile_image = null;
+$unread_chat_count = 0;
 if (isset($pdo) && isset($_SESSION['admin_id'])) {
     try {
         $stmt_sidebar = $pdo->prepare("SELECT profile_image FROM administrators WHERE id = ?");
@@ -20,6 +21,10 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
         if ($sidebar_admin && !empty($sidebar_admin['profile_image'])) {
             $admin_profile_image = $sidebar_admin['profile_image'];
         }
+        
+        $stmt_unread = $pdo->prepare("SELECT COUNT(*) FROM admin_chats WHERE sender_id != ? AND (created_at > (SELECT last_chat_read FROM administrators WHERE id = ?) OR (SELECT last_chat_read FROM administrators WHERE id = ?) IS NULL)");
+        $stmt_unread->execute([$_SESSION['admin_id'], $_SESSION['admin_id'], $_SESSION['admin_id']]);
+        $unread_chat_count = $stmt_unread->fetchColumn();
     } catch (Exception $e) {
         // silently ignore error in sidebar
     }
@@ -63,9 +68,14 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
             <i class="fas fa-clipboard-list mr-3"></i>
             <span>Activity Logs</span>
         </a>
-        <a href="team_chat.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'team_chat') ? 'active' : ''; ?>">
-            <i class="fas fa-comments mr-3"></i>
-            <span>Team Chat</span>
+        <a href="team_chat.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white justify-between <?php echo ($current_page == 'team_chat') ? 'active' : ''; ?>">
+            <div class="flex items-center">
+                <i class="fas fa-comments mr-3"></i>
+                <span>Team Chat</span>
+            </div>
+            <?php if ($unread_chat_count > 0): ?>
+            <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg pulse-animation"><?php echo $unread_chat_count; ?></span>
+            <?php endif; ?>
         </a>
         <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</div>
         <a href="softwares.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'softwares') ? 'active' : ''; ?>">

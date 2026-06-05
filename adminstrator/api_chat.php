@@ -48,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         }
         
+        // Update last read timestamp
+        $pdo->exec("UPDATE administrators SET last_chat_read = CURRENT_TIMESTAMP WHERE id = $admin_id");
+        
         echo json_encode(['status' => 'success', 'data' => $messages]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

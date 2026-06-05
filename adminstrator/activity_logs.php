@@ -132,39 +132,69 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800">
-                                    <th class="pb-4 font-semibold">Timestamp</th>
-                                    <th class="pb-4 font-semibold">Admin</th>
-                                    <th class="pb-4 font-semibold">Action</th>
-                                    <th class="pb-4 font-semibold">Details</th>
+                                <tr class="text-left text-gray-400 border-b border-gray-800 text-xs uppercase tracking-wider">
+                                    <th class="pb-3 font-semibold min-w-[150px]">Timestamp</th>
+                                    <th class="pb-3 font-semibold min-w-[200px]">Admin</th>
+                                    <th class="pb-3 font-semibold min-w-[150px]">Action</th>
+                                    <th class="pb-3 font-semibold">Details</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="divide-y divide-gray-800/50">
                                 <?php foreach ($logs as $log): ?>
                                 <tr class="border-b border-gray-800/50 hover:bg-dark/40 transition-colors">
-                                    <td class="py-4 whitespace-nowrap text-sm text-gray-400">
-                                        <?php echo date('M j, Y h:i A', strtotime($log['created_at'])); ?>
+                                    <td class="py-4 whitespace-nowrap text-sm text-gray-400 flex items-center h-full mt-2">
+                                        <i class="far fa-clock mr-2 text-gray-500"></i>
+                                        <div>
+                                            <div class="text-gray-300"><?php echo date('M j, Y', strtotime($log['created_at'])); ?></div>
+                                            <div class="text-xs text-gray-500"><?php echo date('h:i A', strtotime($log['created_at'])); ?></div>
+                                        </div>
                                     </td>
                                     <td class="py-4">
                                         <div class="flex items-center">
                                             <?php if (!empty($log['profile_image'])): ?>
-                                                <div class="w-8 h-8 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0 cursor-pointer hover:border-primary transition-colors" onclick="zoomImage(this.querySelector('img').src)">
+                                                <div class="w-10 h-10 rounded-full mr-3 overflow-hidden border-2 border-gray-700 bg-dark shrink-0 cursor-pointer hover:border-primary transition-colors shadow-lg" onclick="zoomImage(this.querySelector('img').src)">
                                                     <img src="../<?php echo htmlspecialchars($log['profile_image']); ?>" class="w-full h-full object-cover">
                                                 </div>
                                             <?php else: ?>
-                                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 text-sm font-bold shadow-lg shrink-0">
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 text-sm font-bold shadow-lg shrink-0 border-2 border-gray-700 text-white">
                                                     <?php echo substr(htmlspecialchars($log['admin_username']), 0, 1); ?>
                                                 </div>
                                             <?php endif; ?>
-                                            <span class="font-medium"><?php echo htmlspecialchars($log['admin_username']); ?></span>
+                                            <div>
+                                                <span class="font-bold text-white text-sm"><?php echo htmlspecialchars($log['admin_username']); ?></span>
+                                                <p class="text-xs text-gray-500">Administrator</p>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="py-4">
-                                        <span class="bg-gray-800 text-indigo-300 px-3 py-1 rounded-md text-xs font-semibold border border-gray-700">
-                                            <?php echo htmlspecialchars($log['action_type']); ?>
+                                        <?php
+                                            $action = htmlspecialchars($log['action_type']);
+                                            $badgeClass = 'bg-gray-800 text-gray-300 border-gray-700';
+                                            $icon = 'fa-dot-circle';
+                                            
+                                            if ($action === 'LOGIN') {
+                                                $badgeClass = 'bg-green-900/40 text-green-400 border-green-800/50';
+                                                $icon = 'fa-sign-in-alt';
+                                            } elseif ($action === 'LOGOUT') {
+                                                $badgeClass = 'bg-red-900/40 text-red-400 border-red-800/50';
+                                                $icon = 'fa-sign-out-alt';
+                                            } elseif (strpos($action, 'UPDATE') !== false || strpos($action, 'EDIT') !== false) {
+                                                $badgeClass = 'bg-blue-900/40 text-blue-400 border-blue-800/50';
+                                                $icon = 'fa-edit';
+                                            } elseif (strpos($action, 'CREATE') !== false || strpos($action, 'ADD') !== false) {
+                                                $badgeClass = 'bg-indigo-900/40 text-indigo-400 border-indigo-800/50';
+                                                $icon = 'fa-plus-circle';
+                                            } elseif (strpos($action, 'DELETE') !== false) {
+                                                $badgeClass = 'bg-rose-900/40 text-rose-400 border-rose-800/50';
+                                                $icon = 'fa-trash-alt';
+                                            }
+                                        ?>
+                                        <span class="<?php echo $badgeClass; ?> px-3 py-1.5 rounded-full text-xs font-semibold border flex items-center w-max shadow-sm">
+                                            <i class="fas <?php echo $icon; ?> mr-2 opacity-70"></i>
+                                            <?php echo $action; ?>
                                         </span>
                                     </td>
-                                    <td class="py-4 text-gray-300 text-sm">
+                                    <td class="py-4 text-gray-300 text-sm leading-relaxed max-w-md">
                                         <?php echo htmlspecialchars($log['description']); ?>
                                     </td>
                                 </tr>

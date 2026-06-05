@@ -74,12 +74,18 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
         <?php include 'components/sidebar.php'; ?>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col md:flex-row h-screen">
+        <div class="flex-1 flex flex-col md:flex-row h-screen relative overflow-hidden">
+            
+            <!-- Mobile Contacts Overlay Background -->
+            <div id="contacts-overlay" class="fixed inset-0 bg-black/60 z-10 hidden md:hidden backdrop-blur-sm" onclick="toggleContacts()"></div>
             
             <!-- Chat Contacts Sidebar (Left) -->
-            <div class="w-full md:w-80 bg-light border-r border-gray-800 flex flex-col h-1/3 md:h-full shrink-0">
+            <div id="contacts-sidebar" class="absolute md:relative z-20 w-full md:w-80 bg-light border-r border-gray-800 flex flex-col h-full shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
                 <div class="p-4 border-b border-gray-800 bg-dark shrink-0 flex items-center justify-between">
                     <h2 class="text-xl font-bold">Chats</h2>
+                    <button class="md:hidden text-gray-400 hover:text-white" onclick="toggleContacts()">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
                 
                 <div class="flex-1 overflow-y-auto chat-scroll p-2 space-y-1">
@@ -123,10 +129,13 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
             </div>
             
             <!-- Chat Window (Right) -->
-            <div class="flex-1 flex flex-col bg-dark relative h-2/3 md:h-full border-t md:border-t-0 border-gray-800">
+            <div class="flex-1 flex flex-col bg-dark relative h-full border-t md:border-t-0 border-gray-800 w-full">
                 
                 <!-- Chat Header -->
-                <div class="p-4 bg-light border-b border-gray-800 flex items-center shadow-md shrink-0">
+                <div class="p-4 bg-light border-b border-gray-800 flex items-center shadow-md shrink-0 w-full">
+                    <button class="md:hidden mr-3 text-gray-400 hover:text-white" onclick="toggleContacts()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
                     <?php 
                     $chat_title = "Team Group Chat";
                     $chat_icon = '<div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mr-3 shadow-lg"><i class="fas fa-users text-white"></i></div>';
@@ -164,12 +173,12 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                 </div>
                 
                 <!-- Chat Input Area -->
-                <div class="p-4 bg-light border-t border-gray-800 shrink-0">
-                    <form id="chatForm" class="flex gap-2">
+                <div class="p-3 bg-light border-t border-gray-800 shrink-0 w-full pb-safe">
+                    <form id="chatForm" class="flex gap-2 items-center">
                         <input type="hidden" id="chatWith" value="<?php echo htmlspecialchars($chat_with); ?>">
-                        <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message here..." class="flex-1 bg-dark border border-gray-700 rounded-full px-6 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-                        <button type="submit" class="bg-primary hover:bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-transform hover:scale-105 shrink-0">
-                            <i class="fas fa-paper-plane"></i>
+                        <input type="text" id="messageInput" autocomplete="off" placeholder="Message..." class="flex-1 bg-dark border border-gray-700 rounded-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-base text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                        <button type="submit" class="bg-primary hover:bg-indigo-600 text-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shadow-lg transition-transform hover:scale-105 shrink-0">
+                            <i class="fas fa-paper-plane text-sm md:text-base"></i>
                         </button>
                     </form>
                 </div>
@@ -180,6 +189,12 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
 
     <!-- AJAX Script -->
     <script>
+        function toggleContacts() {
+            const sidebar = document.getElementById('contacts-sidebar');
+            const overlay = document.getElementById('contacts-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
         const chatWith = document.getElementById('chatWith').value;
         const messagesDiv = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
