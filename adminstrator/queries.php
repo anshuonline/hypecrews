@@ -174,38 +174,40 @@ try {
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800">
-                                    <th class="pb-3">Service</th>
-                                    <th class="pb-3">Customer</th>
-                                    <th class="pb-3">Contact</th>
-                                    <th class="pb-3">Message</th>
-                                    <th class="pb-3">Status</th>
-                                    <th class="pb-3">Date</th>
-                                    <th class="pb-3">Actions</th>
+                                <tr class="text-left text-gray-400 border-b border-gray-800 text-sm">
+                                    <th class="pb-3 min-w-[100px]">Service</th>
+                                    <th class="pb-3 min-w-[150px]">Customer</th>
+                                    <th class="pb-3 min-w-[180px]">Contact</th>
+                                    <th class="pb-3 min-w-[250px]">Message</th>
+                                    <th class="pb-3 min-w-[100px] text-center">Status</th>
+                                    <th class="pb-3 min-w-[100px]">Date</th>
+                                    <th class="pb-3 min-w-[100px] text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($queries as $query): ?>
-                                <tr class="border-b border-gray-800 hover:bg-dark/50">
-                                    <td class="py-4">
-                                        <p class="font-medium"><?php echo htmlspecialchars($query['service_name']); ?></p>
+                                <tr class="border-b border-gray-800 hover:bg-dark/50 text-sm">
+                                    <td class="py-4 align-top">
+                                        <p class="font-medium text-white"><?php echo htmlspecialchars($query['service_name']); ?></p>
                                     </td>
-                                    <td class="py-4">
-                                        <p><?php echo htmlspecialchars($query['name']); ?></p>
+                                    <td class="py-4 align-top pr-4">
+                                        <p class="font-semibold text-gray-300"><?php echo htmlspecialchars($query['name']); ?></p>
                                         <?php if ($query['company']): ?>
-                                        <p class="text-sm text-gray-400"><?php echo htmlspecialchars($query['company']); ?></p>
+                                        <p class="text-xs text-gray-500 mt-1"><?php echo htmlspecialchars($query['company']); ?></p>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="py-4">
-                                        <p><?php echo htmlspecialchars($query['email']); ?></p>
+                                    <td class="py-4 align-top pr-4">
+                                        <p class="text-indigo-400 break-all"><a href="mailto:<?php echo htmlspecialchars($query['email']); ?>"><?php echo htmlspecialchars($query['email']); ?></a></p>
                                         <?php if ($query['phone']): ?>
-                                        <p class="text-sm text-gray-400"><?php echo htmlspecialchars($query['phone']); ?></p>
+                                        <p class="text-xs text-gray-400 mt-1"><i class="fas fa-phone-alt mr-1 text-gray-500"></i><?php echo htmlspecialchars($query['phone']); ?></p>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="py-4">
-                                        <p><?php echo nl2br(htmlspecialchars(substr($query['message'], 0, 100))); ?><?php echo strlen($query['message']) > 100 ? '...' : ''; ?></p>
+                                    <td class="py-4 align-top pr-4">
+                                        <div class="text-gray-300 bg-gray-900/50 p-3 rounded-lg border border-gray-800 text-xs leading-relaxed max-w-md">
+                                            <?php echo nl2br(htmlspecialchars($query['message'])); ?>
+                                        </div>
                                     </td>
-                                    <td class="py-4">
+                                    <td class="py-4 align-top text-center">
                                         <?php
                                         $statusClasses = [
                                             'new' => 'bg-yellow-500/10 text-yellow-500',
@@ -222,10 +224,10 @@ try {
                                             <?php echo $statusLabels[$query['status']]; ?>
                                         </span>
                                     </td>
-                                    <td class="py-4 text-gray-400">
+                                    <td class="py-4 align-top text-gray-400">
                                         <?php echo date('M j, Y', strtotime($query['created_at'])); ?>
                                     </td>
-                                    <td class="py-4">
+                                    <td class="py-4 align-top text-center">
                                         <button onclick="showQueryDetails(<?php echo $query['id']; ?>)" class="text-primary hover:text-indigo-400 mr-3">
                                             <i class="fas fa-eye"></i>
                                         </button>

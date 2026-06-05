@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'orders';
 
 // Handle delete request
@@ -8,6 +9,9 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     try {
         $stmt = $pdo->prepare("DELETE FROM orders WHERE id = ?");
         $stmt->execute([$_GET['delete']]);
+        
+        logAdminActivity($pdo, 'DELETE_ORDER', "Deleted order ID: " . $_GET['delete']);
+        
         $success = "Order deleted successfully";
     } catch (PDOException $e) {
         $error = "Error deleting order: " . $e->getMessage();
@@ -31,6 +35,8 @@ if (isset($_POST['update_status']) && isset($_POST['order_id']) && isset($_POST[
         if ($old_order && ($old_order['status'] != $status || $old_order['custom_status'] != $custom_status)) {
             $stmt_history = $pdo->prepare("INSERT INTO order_status_history (order_id, status, custom_status) VALUES (?, ?, ?)");
             $stmt_history->execute([$order_id, $status, $custom_status]);
+            
+            logAdminActivity($pdo, 'UPDATE_ORDER_STATUS', "Fast updated order status for order ID: $order_id to '$status'");
         }
         
         $success = "Order status updated successfully";

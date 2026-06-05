@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 
 // Initialize variables
 $error = '';
@@ -55,6 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $company_website ?: null,
                     $hashed_password
                 ]);
+                
+                $new_user_id = $pdo->lastInsertId();
+                logAdminActivity($pdo, 'ADD_USER', "Added new user: $username (ID: $new_user_id)");
                 
                 $success = 'User added successfully!';
                 

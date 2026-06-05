@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'softwares';
 
 // Handle deletion
@@ -38,6 +39,9 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
             // Delete from database (cascades screenshots)
             $stmt = $pdo->prepare("DELETE FROM softwares WHERE id = ?");
             $stmt->execute([$id]);
+            
+            logAdminActivity($pdo, 'DELETE_SOFTWARE', "Deleted software: " . $software['name'] . " (ID: $id)");
+            
             $success = "Software deleted successfully.";
         }
     } catch (PDOException $e) {

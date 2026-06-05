@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 
 $error = '';
 $success = '';
@@ -67,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($old_order && ($old_order['status'] != $status || $old_order['custom_status'] != $custom_status)) {
                 $stmt_history = $pdo->prepare("INSERT INTO order_status_history (order_id, status, custom_status) VALUES (?, ?, ?)");
                 $stmt_history->execute([$order_id, $status, $custom_status]);
+                
+                logAdminActivity($pdo, 'UPDATE_ORDER_STATUS', "Updated order status for tracking: $tracking_id to '$status'");
+            } else {
+                logAdminActivity($pdo, 'UPDATE_ORDER', "Updated order details for tracking: $tracking_id");
             }
             
             $success = "Order updated successfully";

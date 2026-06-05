@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'jobs';
 
 // Handle deletion
@@ -8,6 +9,9 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     try {
         $stmt = $pdo->prepare("DELETE FROM jobs WHERE id = ?");
         $stmt->execute([$_GET['delete']]);
+        
+        logAdminActivity($pdo, 'DELETE_JOB', "Deleted job ID: " . $_GET['delete']);
+        
         $success = "Job deleted successfully.";
     } catch (PDOException $e) {
         $error = "Error deleting job: " . $e->getMessage();
@@ -19,6 +23,9 @@ if (isset($_GET['toggle_status']) && is_numeric($_GET['toggle_status'])) {
     try {
         $stmt = $pdo->prepare("UPDATE jobs SET status = IF(status='active', 'closed', 'active') WHERE id = ?");
         $stmt->execute([$_GET['toggle_status']]);
+        
+        logAdminActivity($pdo, 'TOGGLE_JOB_STATUS', "Toggled status for job ID: " . $_GET['toggle_status']);
+        
         header("Location: jobs.php");
         exit;
     } catch (PDOException $e) {

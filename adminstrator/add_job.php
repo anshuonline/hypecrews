@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'jobs';
 
 $job = [
@@ -49,11 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($is_edit) {
                 $stmt = $pdo->prepare("UPDATE jobs SET title=?, department=?, location=?, employment_type=?, description=?, requirements=? WHERE id=?");
                 $stmt->execute([$title, $department, $location, $employment_type, $description, $requirements, $_GET['id']]);
+                
+                logAdminActivity($pdo, 'UPDATE_JOB', "Updated job: $title (ID: " . $_GET['id'] . ")");
+                
                 $success = "Job updated successfully.";
                 $job = $_POST; // preserve filled fields
             } else {
                 $stmt = $pdo->prepare("INSERT INTO jobs (title, department, location, employment_type, description, requirements) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $department, $location, $employment_type, $description, $requirements]);
+                
+                $job_id = $pdo->lastInsertId();
+                logAdminActivity($pdo, 'ADD_JOB', "Added new job: $title (ID: $job_id)");
+                
                 $success = "Job created successfully.";
                 // Clear form if added
                 $job = ['title'=>'', 'department'=>'', 'location'=>'', 'employment_type'=>'Full-time', 'description'=>'', 'requirements'=>''];

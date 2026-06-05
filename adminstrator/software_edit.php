@@ -1,6 +1,6 @@
-<?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'softwares';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -134,6 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->execute([$name, $description, $keywords, $version, $platforms, $logo_path, $banner_path, $file_type, $file_path, $playstore_link, $appstore_link, $windows_store_link, $is_paid, $price, $payment_link, $id]);
             
             $pdo->commit();
+
+            logAdminActivity($pdo, 'UPDATE_SOFTWARE', "Updated software: " . $name);
+
             header("Location: softwares.php?msg=updated");
             exit;
         } catch (PDOException $e) {

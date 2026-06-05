@@ -1,6 +1,7 @@
-<?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
+$current_page = 'softwares';
 $current_page = 'softwares';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -89,8 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $ss_name = uniqid('ss_') . '.' . $ext;
                             if (move_uploaded_file($files['tmp_name'][$i], $upload_dir . $ss_name)) {
                                 $ss_path = 'uploads/softwares/' . $ss_name;
-                                $ss_stmt = $pdo->prepare("INSERT INTO software_screenshots (software_id, image_path) VALUES (?, ?)");
-                                $ss_stmt->execute([$software_id, $ss_path]);
+                                $pdo->prepare("INSERT INTO software_screenshots (software_id, image_path, display_order) VALUES (?, ?, ?)")->execute([$software_id, $ss_path, $i]);
                             }
                         }
                     }
@@ -98,6 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
             $pdo->commit();
+
+            logAdminActivity($pdo, 'ADD_SOFTWARE', "Added new software: " . $name);
+
             header("Location: softwares.php?msg=added");
             exit;
         } catch (PDOException $e) {

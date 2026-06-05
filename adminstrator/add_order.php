@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 
 $error = '';
 $success = '';
@@ -56,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Record initial status in history
             $stmt_history = $pdo->prepare("INSERT INTO order_status_history (order_id, status, custom_status) VALUES (?, ?, ?)");
             $stmt_history->execute([$order_id, $status, $custom_status]);
+            
+            logAdminActivity($pdo, 'ADD_ORDER', "Added new order for User ID: $user_id. Tracking: $tracking_id");
             
             $success = "Order added successfully";
             
