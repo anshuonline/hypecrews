@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $appstore_link = trim($_POST['appstore_link']);
     $windows_store_link = trim($_POST['windows_store_link']);
 
-    $is_paid = 0; $price = 0.00; $payment_link = '';
+
     
     $error = '';
     $upload_dir = '../uploads/softwares/';
@@ -131,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             // 6. Update Software Record
-            $stmt = $pdo->prepare("UPDATE softwares SET name=?, description=?, keywords=?, version=?, platform=?, logo_path=?, banner_path=?, file_type=?, file_path=?, playstore_link=?, appstore_link=?, windows_store_link=?, is_paid=?, price=?, payment_link=? WHERE id=?");
-            $stmt->execute([$name, $description, $keywords, $version, $platforms, $logo_path, $banner_path, $file_type, $file_path, $playstore_link, $appstore_link, $windows_store_link, $is_paid, $price, $payment_link, $id]);
+            $stmt = $pdo->prepare("UPDATE softwares SET name=?, description=?, keywords=?, version=?, platform=?, logo_path=?, banner_path=?, file_type=?, file_path=?, playstore_link=?, appstore_link=?, windows_store_link=? WHERE id=?");
+            $stmt->execute([$name, $description, $keywords, $version, $platforms, $logo_path, $banner_path, $file_type, $file_path, $playstore_link, $appstore_link, $windows_store_link, $id]);
             
             $pdo->commit();
 

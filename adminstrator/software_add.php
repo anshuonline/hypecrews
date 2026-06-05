@@ -21,10 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $appstore_link = trim($_POST['appstore_link']);
     $windows_store_link = trim($_POST['windows_store_link']);
 
-    // Hardcode free for now
-    $is_paid = 0;
-    $price = 0.00;
-    $payment_link = '';
+
 
     $logo_path = '';
     $banner_path = '';
@@ -75,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pdo->beginTransaction();
             
             // Insert Software
-            $stmt = $pdo->prepare("INSERT INTO softwares (name, description, keywords, version, platform, logo_path, banner_path, file_type, file_path, playstore_link, appstore_link, windows_store_link, is_paid, price, payment_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$name, $description, $keywords, $version, $platforms, $logo_path, $banner_path, $file_type, $file_path, $playstore_link, $appstore_link, $windows_store_link, $is_paid, $price, $payment_link]);
+            $stmt = $pdo->prepare("INSERT INTO softwares (name, description, keywords, version, platform, logo_path, banner_path, file_type, file_path, playstore_link, appstore_link, windows_store_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$name, $description, $keywords, $version, $platforms, $logo_path, $banner_path, $file_type, $file_path, $playstore_link, $appstore_link, $windows_store_link]);
             
             $software_id = $pdo->lastInsertId();
             
