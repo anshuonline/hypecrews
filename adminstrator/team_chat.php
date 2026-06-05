@@ -111,12 +111,12 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
     <link rel="icon" type="image/png" href="/Hypecrews/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="text-white overflow-hidden">
-    <div class="flex h-screen">
+    <div class="flex h-[100dvh]">
         <!-- Sidebar -->
         <?php include 'components/sidebar.php'; ?>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col md:flex-row h-screen relative overflow-hidden">
+        <div class="flex-1 flex flex-col md:flex-row h-[100dvh] relative overflow-hidden">
             
             <!-- Mobile Contacts Overlay Background -->
             <div id="contacts-overlay" class="fixed inset-0 bg-black/60 z-10 hidden md:hidden backdrop-blur-sm" onclick="toggleContacts()"></div>
@@ -293,7 +293,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                 </div>
 
                 <!-- Chat Input Area -->
-                <div class="p-3 bg-light border-t border-gray-800 shrink-0 w-full pb-safe">
+                <div class="p-3 md:p-4 bg-light border-t border-gray-800 shrink-0 w-full pb-6 md:pb-4">
                     <form id="chatForm" class="flex gap-2 items-center">
                         <input type="hidden" id="chatWith" value="<?php echo htmlspecialchars($chat_with); ?>">
                         
