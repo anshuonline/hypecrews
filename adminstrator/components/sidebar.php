@@ -37,90 +37,107 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
 ?>
 
 <!-- Mobile Overlay -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm" onclick="toggleSidebar()"></div>
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-md transition-opacity" onclick="toggleSidebar()"></div>
 
-<div id="admin-sidebar" class="sidebar w-64 flex-shrink-0 flex flex-col absolute md:relative z-50 h-full bg-[#0f172a] transform -translate-x-full md:translate-x-0 transition-transform duration-300">
-    <div class="p-6 border-b border-gray-800">
-        <img src="../graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews Admin" class="h-10 w-auto">
+<div id="admin-sidebar" class="sidebar w-64 flex-shrink-0 flex flex-col absolute md:relative z-50 h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+    <div class="p-6 border-b border-white/10 flex items-center justify-center">
+        <!-- Kept original logo but centered it, could also use a custom version if needed -->
+        <img src="../graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews Admin" class="h-9 w-auto hover:opacity-80 transition-opacity">
     </div>
     
-    <nav class="flex-1 py-6">
-        <a href="index.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>">
-            <i class="fas fa-home mr-3"></i>
+    <nav class="flex-1 py-4 overflow-y-auto overflow-x-hidden" style="scrollbar-width: none;">
+        <!-- General Section -->
+        <div class="px-6 py-2 mb-1 text-[10px] font-bold text-white/30 uppercase tracking-[0.15em]">General</div>
+        
+        <a href="index.php" class="nav-link flex items-center <?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>">
+            <i class="fas fa-home mr-3 text-lg"></i>
             <span>Dashboard</span>
         </a>
-        <a href="orders.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'orders') ? 'active' : ''; ?>">
-            <i class="fas fa-box mr-3"></i>
+        <a href="orders.php" class="nav-link flex items-center <?php echo ($current_page == 'orders') ? 'active' : ''; ?>">
+            <i class="fas fa-box mr-3 text-lg"></i>
             <span>Orders</span>
         </a>
-        <a href="reviews.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'reviews') ? 'active' : ''; ?>">
-            <i class="fas fa-star mr-3"></i>
+        <a href="reviews.php" class="nav-link flex items-center <?php echo ($current_page == 'reviews') ? 'active' : ''; ?>">
+            <i class="fas fa-star mr-3 text-lg"></i>
             <span>Reviews</span>
         </a>
-        <a href="queries.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'queries') ? 'active' : ''; ?>">
-            <i class="fas fa-question-circle mr-3"></i>
+        <a href="queries.php" class="nav-link flex items-center <?php echo ($current_page == 'queries') ? 'active' : ''; ?>">
+            <i class="fas fa-question-circle mr-3 text-lg"></i>
             <span>Queries</span>
         </a>
-        <a href="newsletter.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'newsletter') ? 'active' : ''; ?>">
-            <i class="fas fa-envelope mr-3"></i>
-            <span>Newsletter</span>
-        </a>
-        <a href="users.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
-            <i class="fas fa-users mr-3"></i>
+        
+        <!-- Community Section -->
+        <div class="px-6 py-2 mt-4 mb-1 text-[10px] font-bold text-white/30 uppercase tracking-[0.15em]">Community</div>
+        
+        <a href="users.php" class="nav-link flex items-center <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
+            <i class="fas fa-users mr-3 text-lg"></i>
             <span>Users</span>
         </a>
-        <a href="activity_logs.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'activity_logs') ? 'active' : ''; ?>">
-            <i class="fas fa-clipboard-list mr-3"></i>
-            <span>Activity Logs</span>
+        <a href="newsletter.php" class="nav-link flex items-center <?php echo ($current_page == 'newsletter') ? 'active' : ''; ?>">
+            <i class="fas fa-envelope mr-3 text-lg"></i>
+            <span>Newsletter</span>
         </a>
-        <a href="team_chat.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white justify-between <?php echo ($current_page == 'team_chat') ? 'active' : ''; ?>">
+        <a href="team_chat.php" class="nav-link flex items-center justify-between <?php echo ($current_page == 'team_chat') ? 'active' : ''; ?>">
             <div class="flex items-center">
-                <i class="fas fa-comments mr-3"></i>
+                <i class="fas fa-comments mr-3 text-lg"></i>
                 <span>Team Chat</span>
             </div>
             <?php if ($unread_chat_count > 0): ?>
             <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg pulse-animation"><?php echo $unread_chat_count; ?></span>
             <?php endif; ?>
         </a>
-        <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</div>
-        <a href="softwares.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'softwares') ? 'active' : ''; ?>">
-            <i class="fas fa-laptop-code mr-3"></i>
-            <span>Manage Softwares</span>
+        <a href="activity_logs.php" class="nav-link flex items-center <?php echo ($current_page == 'activity_logs') ? 'active' : ''; ?>">
+            <i class="fas fa-clipboard-list mr-3 text-lg"></i>
+            <span>Activity Logs</span>
         </a>
-        <div class="px-6 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Careers</div>
-        <a href="jobs.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'jobs') ? 'active' : ''; ?>">
-            <i class="fas fa-briefcase mr-3"></i>
-            <span>Manage Jobs</span>
+        
+        <!-- App Content Section -->
+        <div class="px-6 py-2 mt-4 mb-1 text-[10px] font-bold text-white/30 uppercase tracking-[0.15em]">Content</div>
+        
+        <a href="softwares.php" class="nav-link flex items-center <?php echo ($current_page == 'softwares') ? 'active' : ''; ?>">
+            <i class="fas fa-laptop-code mr-3 text-lg"></i>
+            <span>Softwares</span>
         </a>
-        <a href="job_applications.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white <?php echo ($current_page == 'job_applications') ? 'active' : ''; ?>">
-            <i class="fas fa-file-alt mr-3"></i>
+        <a href="jobs.php" class="nav-link flex items-center <?php echo ($current_page == 'jobs') ? 'active' : ''; ?>">
+            <i class="fas fa-briefcase mr-3 text-lg"></i>
+            <span>Jobs</span>
+        </a>
+        <a href="job_applications.php" class="nav-link flex items-center <?php echo ($current_page == 'job_applications') ? 'active' : ''; ?>">
+            <i class="fas fa-file-alt mr-3 text-lg"></i>
             <span>Applications</span>
         </a>
     </nav>
     
-    <div class="p-6 border-t border-gray-800">
-        <a href="profile.php" class="flex items-center hover:bg-gray-800 p-2 rounded-lg transition-colors -mx-2 mb-2">
+    <div class="p-4 border-t border-white/10 mt-auto bg-black/50 backdrop-blur-md">
+        <a href="profile.php" class="flex items-center p-2.5 rounded-[14px] hover:bg-white/10 transition-colors mb-2 border border-transparent hover:border-white/5 cursor-pointer">
             <?php if ($admin_profile_image): ?>
-                <div class="w-10 h-10 rounded-full mr-3 overflow-hidden border border-gray-600 bg-dark shrink-0">
+                <div class="w-11 h-11 rounded-full mr-3 overflow-hidden border border-white/20 bg-black shrink-0 shadow-sm">
                     <img src="../<?php echo htmlspecialchars($admin_profile_image); ?>" class="w-full h-full object-cover">
                 </div>
             <?php else: ?>
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 shadow-lg shrink-0 text-white font-bold">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mr-3 shadow-md shrink-0 text-white font-bold text-lg border border-white/10">
                     <?php echo substr(htmlspecialchars($admin_username), 0, 1); ?>
                 </div>
             <?php endif; ?>
             
             <div class="overflow-hidden">
-                <p class="font-medium text-white truncate"><?php echo htmlspecialchars($admin_username); ?></p>
-                <p class="text-xs text-indigo-400 mt-0.5">Edit Profile</p>
+                <p class="font-bold text-[13px] text-white truncate"><?php echo htmlspecialchars($admin_username); ?></p>
+                <p class="text-[11px] text-white/50 font-medium mt-0.5 uppercase tracking-wide">Edit Profile</p>
             </div>
         </a>
-        <a href="logout.php" class="flex items-center text-gray-400 hover:text-red-400 transition-colors p-2 -mx-2 rounded-lg hover:bg-gray-800/50">
-            <i class="fas fa-sign-out-alt mr-3"></i>
-            <span class="text-sm font-medium">Logout</span>
+        <a href="logout.php" class="flex items-center text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all p-2.5 rounded-[12px] group">
+            <i class="fas fa-sign-out-alt mr-3 ml-1 group-hover:-translate-x-0.5 transition-transform"></i>
+            <span class="text-xs font-bold uppercase tracking-wider">Logout</span>
         </a>
     </div>
 </div>
+
+<style>
+/* Hide scrollbar for nav */
+nav::-webkit-scrollbar {
+    display: none;
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -130,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const titleElement = header.querySelector('h1, h2, h3');
         
         const hamburgerBtn = document.createElement('button');
-        // Use text-gray-800 for Apple UI light theme
+        // Use text-gray-800 for Apple UI light theme header (since the header is light)
         hamburgerBtn.className = 'md:hidden text-gray-800 hover:text-primary transition-colors mr-4 focus:outline-none z-50 relative flex-shrink-0';
         hamburgerBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
         hamburgerBtn.onclick = toggleSidebar;

@@ -1,14 +1,47 @@
+/* Dark AMOLED Apple UI */
 .sidebar {
-    background: rgba(30, 41, 59, 0.85);
-    backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    background: #000000 !important; /* True AMOLED Black */
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-link {
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 4px 16px;
+    border-radius: 12px; /* Apple-style rounded selection */
+    padding: 10px 16px;
+    font-weight: 500;
+    color: #a1a1aa !important; /* zinc-400 */
 }
 
-.nav-link:hover, .nav-link.active {
-    background: rgba(99, 102, 241, 0.1);
-    color: #6366f1 !important;
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1); /* Frosted glass hover */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff !important;
+}
+
+.nav-link.active {
+    background: #0066cc; /* Apple Blue for active */
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+.nav-link i {
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-link:hover i, .nav-link.active i {
+    color: #ffffff;
+}
+
+.pulse-animation {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
 }
