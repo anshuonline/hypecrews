@@ -117,245 +117,406 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Add Software - Hypecrews Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#6366f1', dark: '#0f172a', light: '#1e293b' }
+                    colors: {
+                        primary: '#0066cc',
+                        apple_bg: '#f5f5f7',
+                        apple_text: '#1d1d1f',
+                        apple_muted: '#86868b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style>
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); font-family: 'Inter', sans-serif; min-height: 100vh; }
-        input[type="text"], input[type="number"], textarea, select { background-color: #0f172a !important; border-color: #334155 !important; color: #fff !important; }
-        input:focus, textarea:focus, select:focus { border-color: #6366f1 !important; outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+        body { background-color: #f5f5f7; font-family: 'Inter', sans-serif; color: #1d1d1f; }
+        .glass-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .apple-input {
+            background-color: #f5f5f7;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 14px;
+            color: #1d1d1f;
+            transition: all 0.2s ease;
+        }
+        .apple-input:focus {
+            background-color: #ffffff;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+            outline: none;
+        }
+        .upload-area {
+            border: 2px dashed rgba(0,0,0,0.1);
+            border-radius: 16px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #0066cc;
+            background-color: #f0f7ff;
+        }
+        
+        /* Custom UI Checkboxes/Radio */
+        .platform-checkbox:checked + div {
+            background-color: #0066cc;
+            color: white;
+            border-color: #0066cc;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+        .radio-card:checked + div {
+            border-color: #0066cc;
+            background-color: #f8fbff;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+        }
+        .radio-card:checked + div .icon-main {
+            color: #0066cc;
+        }
+        .radio-card:checked + div .radio-indicator {
+            border-color: #0066cc;
+            background-color: #0066cc;
+        }
+        .radio-card:checked + div .radio-indicator::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px; height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+        .radio-indicator {
+            width: 20px; height: 20px;
+            border: 2px solid #d1d1d6;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d1d6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #86868b; }
+        
+        .header-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(245, 245, 247, 0.8);
+        }
     </style>
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
+<body class="flex h-screen overflow-hidden">
+    
+    <!-- Sidebar -->
+    <div class="h-full flex-shrink-0 z-50">
         <?php include 'components/sidebar.php'; ?>
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-dark border-b border-gray-800 p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold">Add New Software</h2>
-                <a href="softwares.php" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg"><i class="fas fa-arrow-left mr-2"></i> Back</a>
-            </header>
-            
-            <div class="flex-1 overflow-y-auto bg-[#0f172a] relative pb-24">
-                <div class="max-w-5xl mx-auto p-6">
-                    <?php if (!empty($error)): ?>
-                    <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/50 flex items-center gap-3">
-                        <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
-                        <p class="text-red-400 font-medium"><?php echo htmlspecialchars($error); ?></p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col relative w-full min-w-0">
+        
+        <!-- Header -->
+        <header class="header-blur border-b border-black/5 p-6 flex justify-between items-center z-40 absolute top-0 w-full">
+            <div>
+                <h1 class="text-2xl font-bold text-apple_text tracking-tight">Add New Software</h1>
+                <p class="text-xs text-apple_muted font-medium mt-1 uppercase tracking-wider">Create a new product listing</p>
+            </div>
+            <a href="softwares.php" class="bg-white border border-black/10 hover:bg-gray-50 text-apple_text font-semibold px-5 py-2.5 rounded-full shadow-sm transition-all flex items-center text-sm">
+                <i class="fas fa-arrow-left mr-2"></i> Cancel
+            </a>
+        </header>
+        
+        <!-- Form Area -->
+        <div class="flex-1 overflow-y-auto pt-28 pb-24 px-6 md:px-12 bg-apple_bg relative scroll-smooth">
+            <div class="max-w-6xl mx-auto">
+                
+                <?php if (!empty($error)): ?>
+                <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 flex items-center gap-3 shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500 shrink-0">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
-                    <?php endif; ?>
+                    <div>
+                        <h4 class="text-sm font-bold text-red-800">Error</h4>
+                        <p class="text-sm text-red-600 font-medium"><?php echo htmlspecialchars($error); ?></p>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <form method="POST" action="" enctype="multipart/form-data" id="addSoftwareForm" class="flex flex-col lg:flex-row gap-8">
                     
-                    <form method="POST" action="" enctype="multipart/form-data" id="addSoftwareForm">
+                    <!-- Left Column: Main Content (70%) -->
+                    <div class="flex-[2] space-y-8">
                         
                         <!-- 1. App Details Card -->
-                        <div class="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-8 mb-6 shadow-lg shadow-black/20">
-                            <div class="flex items-center gap-3 mb-6 border-b border-slate-700/50 pb-4">
-                                <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl">
-                                    <i class="fas fa-info-circle"></i>
-                                </div>
+                        <div class="glass-card p-8">
+                            <h3 class="text-lg font-bold text-apple_text mb-6 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-blue-50 text-primary flex items-center justify-center mr-3 text-sm"><i class="fas fa-info"></i></span>
+                                Basic Information
+                            </h3>
+                            
+                            <div class="space-y-5">
                                 <div>
-                                    <h3 class="text-xl font-bold text-slate-100">App details</h3>
-                                    <p class="text-sm text-slate-400">Basic information about your software.</p>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div class="space-y-2 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Software Name <span class="text-red-400">*</span></label>
-                                    <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-100 transition-all placeholder-slate-500" placeholder="Enter app name">
-                                </div>
-                                <div class="space-y-2 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Short description <span class="text-red-400">*</span></label>
-                                    <textarea name="description" rows="4" required class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-100 transition-all placeholder-slate-500" placeholder="Briefly describe what your software does"></textarea>
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Version</label>
-                                    <input type="text" name="version" placeholder="1.0.0" class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-100 transition-all">
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Tags / Keywords</label>
-                                    <input type="text" name="keywords" placeholder="e.g. video editor, tools" class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-100 transition-all">
-                                </div>
-                                <div class="space-y-3 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Supported Platforms</label>
-                                    <div class="flex flex-wrap gap-3">
-                                        <label class="cursor-pointer">
-                                            <input type="checkbox" name="platforms[]" value="Windows" class="peer sr-only" checked>
-                                            <div class="px-5 py-2.5 rounded-full border border-slate-600 text-slate-300 peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-checked:text-white transition-all hover:bg-slate-700 flex items-center gap-2">
-                                                <i class="fab fa-windows"></i> Windows
-                                            </div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="checkbox" name="platforms[]" value="Mac/Apple" class="peer sr-only">
-                                            <div class="px-5 py-2.5 rounded-full border border-slate-600 text-slate-300 peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-checked:text-white transition-all hover:bg-slate-700 flex items-center gap-2">
-                                                <i class="fab fa-apple"></i> Mac
-                                            </div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="checkbox" name="platforms[]" value="Android" class="peer sr-only">
-                                            <div class="px-5 py-2.5 rounded-full border border-slate-600 text-slate-300 peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-checked:text-white transition-all hover:bg-slate-700 flex items-center gap-2">
-                                                <i class="fab fa-android"></i> Android
-                                            </div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="checkbox" name="platforms[]" value="Web" class="peer sr-only">
-                                            <div class="px-5 py-2.5 rounded-full border border-slate-600 text-slate-300 peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-checked:text-white transition-all hover:bg-slate-700 flex items-center gap-2">
-                                                <i class="fas fa-globe"></i> Web
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 2. Graphics Card -->
-                        <div class="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-8 mb-6 shadow-lg shadow-black/20">
-                            <div class="flex items-center gap-3 mb-6 border-b border-slate-700/50 pb-4">
-                                <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
-                                    <i class="fas fa-image"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-100">Graphics</h3>
-                                    <p class="text-sm text-slate-400">App icon, feature graphic, and screenshots.</p>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300">App Icon (512x512)</label>
-                                    <div class="relative group cursor-pointer">
-                                        <input type="file" name="logo" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                        <div class="w-full h-32 border-2 border-dashed border-slate-600 rounded-xl bg-[#0f172a] flex flex-col items-center justify-center text-slate-400 group-hover:border-emerald-500 group-hover:text-emerald-400 transition-all">
-                                            <i class="fas fa-cloud-upload-alt text-2xl mb-2"></i>
-                                            <span class="text-sm">Upload Icon</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Feature Graphic (1024x500)</label>
-                                    <div class="relative group cursor-pointer">
-                                        <input type="file" name="banner" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                        <div class="w-full h-32 border-2 border-dashed border-slate-600 rounded-xl bg-[#0f172a] flex flex-col items-center justify-center text-slate-400 group-hover:border-emerald-500 group-hover:text-emerald-400 transition-all">
-                                            <i class="fas fa-cloud-upload-alt text-2xl mb-2"></i>
-                                            <span class="text-sm">Upload Banner</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="space-y-2 md:col-span-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Screenshots (Select multiple)</label>
-                                    <div class="relative group cursor-pointer">
-                                        <input type="file" name="screenshots[]" multiple accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                        <div class="w-full h-40 border-2 border-dashed border-slate-600 rounded-xl bg-[#0f172a] flex flex-col items-center justify-center text-slate-400 group-hover:border-emerald-500 group-hover:text-emerald-400 transition-all">
-                                            <i class="fas fa-images text-3xl mb-2"></i>
-                                            <span class="text-sm font-medium">Drag & drop or browse to upload screenshots</span>
-                                            <span class="text-xs text-slate-500 mt-1">JPEG or PNG, max 8MB per image</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. App Release / Delivery -->
-                        <div class="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-8 mb-6 shadow-lg shadow-black/20">
-                            <div class="flex items-center gap-3 mb-6 border-b border-slate-700/50 pb-4">
-                                <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl">
-                                    <i class="fas fa-box-open"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-100">App Release</h3>
-                                    <p class="text-sm text-slate-400">Setup how users will download the software file.</p>
-                                </div>
-                            </div>
-
-                            <div class="space-y-6">
-                                <div class="flex flex-col sm:flex-row gap-4">
-                                    <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="file_type" value="google_drive" checked class="peer sr-only" onclick="document.getElementById('gd_input').style.display='block'; document.getElementById('up_input').style.display='none';">
-                                        <div class="p-4 rounded-xl border-2 border-slate-700 bg-[#0f172a] text-slate-300 peer-checked:border-purple-500 peer-checked:bg-purple-500/10 transition-all flex items-center gap-3">
-                                            <i class="fab fa-google-drive text-2xl text-slate-500 peer-checked:text-purple-400"></i>
-                                            <div>
-                                                <h4 class="font-bold">External URL</h4>
-                                                <p class="text-xs text-slate-500">Google Drive, Mega, etc.</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="file_type" value="upload" class="peer sr-only" onclick="document.getElementById('gd_input').style.display='none'; document.getElementById('up_input').style.display='block';">
-                                        <div class="p-4 rounded-xl border-2 border-slate-700 bg-[#0f172a] text-slate-300 peer-checked:border-purple-500 peer-checked:bg-purple-500/10 transition-all flex items-center gap-3">
-                                            <i class="fas fa-file-upload text-2xl text-slate-500 peer-checked:text-purple-400"></i>
-                                            <div>
-                                                <h4 class="font-bold">Direct Upload</h4>
-                                                <p class="text-xs text-slate-500">Host on this server</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <div id="gd_input" class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300">Download URL</label>
-                                    <input type="text" name="external_link" placeholder="https://" class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-slate-100 transition-all">
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Software Name <span class="text-red-500">*</span></label>
+                                    <input type="text" name="name" required class="apple-input w-full px-4 py-3 text-base font-semibold" placeholder="e.g. Hypecrews Studio">
                                 </div>
                                 
-                                <div id="up_input" class="space-y-2" style="display:none;">
-                                    <label class="block text-sm font-semibold text-slate-300">Software File (.zip, .exe, .apk)</label>
-                                    <div class="relative group cursor-pointer">
-                                        <input type="file" name="software_file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                        <div class="w-full h-20 border-2 border-dashed border-slate-600 rounded-xl bg-[#0f172a] flex items-center justify-center text-slate-400 group-hover:border-purple-500 group-hover:text-purple-400 transition-all">
-                                            <i class="fas fa-file-archive text-xl mr-3"></i>
-                                            <span class="text-sm">Select file to upload</span>
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Description <span class="text-red-500">*</span></label>
+                                    <textarea name="description" rows="5" required class="apple-input w-full px-4 py-3 text-sm leading-relaxed" placeholder="Write a comprehensive description about the software's features and benefits..."></textarea>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">SEO Keywords / Tags</label>
+                                        <input type="text" name="keywords" class="apple-input w-full px-4 py-3 text-sm" placeholder="video editor, tools, utility">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Supported Platforms</label>
+                                        <div class="flex flex-wrap gap-2">
+                                            <label class="cursor-pointer">
+                                                <input type="checkbox" name="platforms[]" value="Windows" class="platform-checkbox sr-only" checked>
+                                                <div class="px-4 py-2 rounded-xl border border-black/10 text-apple_text bg-white text-sm font-medium transition-all hover:bg-gray-50 flex items-center gap-1.5">
+                                                    <i class="fab fa-windows"></i> Windows
+                                                </div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="checkbox" name="platforms[]" value="Mac/Apple" class="platform-checkbox sr-only">
+                                                <div class="px-4 py-2 rounded-xl border border-black/10 text-apple_text bg-white text-sm font-medium transition-all hover:bg-gray-50 flex items-center gap-1.5">
+                                                    <i class="fab fa-apple"></i> Mac
+                                                </div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="checkbox" name="platforms[]" value="Android" class="platform-checkbox sr-only">
+                                                <div class="px-4 py-2 rounded-xl border border-black/10 text-apple_text bg-white text-sm font-medium transition-all hover:bg-gray-50 flex items-center gap-1.5">
+                                                    <i class="fab fa-android"></i> Android
+                                                </div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="checkbox" name="platforms[]" value="Web" class="platform-checkbox sr-only">
+                                                <div class="px-4 py-2 rounded-xl border border-black/10 text-apple_text bg-white text-sm font-medium transition-all hover:bg-gray-50 flex items-center gap-1.5">
+                                                    <i class="fas fa-globe"></i> Web
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 4. Store Presence -->
-                        <div class="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-8 mb-6 shadow-lg shadow-black/20">
-                            <div class="flex items-center gap-3 mb-6 border-b border-slate-700/50 pb-4">
-                                <div class="w-10 h-10 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-xl">
-                                    <i class="fas fa-store"></i>
+                        <!-- 2. Graphics & Media Card -->
+                        <div class="glass-card p-8">
+                            <h3 class="text-lg font-bold text-apple_text mb-6 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mr-3 text-sm"><i class="fas fa-image"></i></span>
+                                Media & Graphics
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">App Icon (512x512)</label>
+                                    <div class="relative group cursor-pointer upload-area h-32 flex flex-col items-center justify-center" id="iconUploadBox">
+                                        <input type="file" name="logo" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewSingleImage(this, 'iconPreview', 'iconUploadBox')">
+                                        <div class="text-center transition-opacity" id="iconPreviewContainer">
+                                            <div class="w-10 h-10 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-2 text-apple_muted group-hover:text-primary transition-colors"><i class="fas fa-cloud-upload-alt"></i></div>
+                                            <span class="text-sm font-medium text-apple_text">Upload Icon</span>
+                                        </div>
+                                        <img id="iconPreview" src="" class="absolute inset-0 w-full h-full object-contain p-2 hidden rounded-2xl z-0">
+                                    </div>
                                 </div>
                                 <div>
-                                    <h3 class="text-xl font-bold text-slate-100">Store Presence</h3>
-                                    <p class="text-sm text-slate-400">Links to official app stores (Optional).</p>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Feature Banner (1024x500)</label>
+                                    <div class="relative group cursor-pointer upload-area h-32 flex flex-col items-center justify-center" id="bannerUploadBox">
+                                        <input type="file" name="banner" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewSingleImage(this, 'bannerPreview', 'bannerUploadBox')">
+                                        <div class="text-center transition-opacity" id="bannerPreviewContainer">
+                                            <div class="w-10 h-10 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-2 text-apple_muted group-hover:text-primary transition-colors"><i class="fas fa-image"></i></div>
+                                            <span class="text-sm font-medium text-apple_text">Upload Banner</span>
+                                        </div>
+                                        <img id="bannerPreview" src="" class="absolute inset-0 w-full h-full object-cover p-1 hidden rounded-xl z-0 opacity-80">
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300"><i class="fab fa-google-play mr-1 text-green-400"></i> Google Play</label>
-                                    <input type="text" name="playstore_link" placeholder="https://play.google.com/..." class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 text-slate-100 transition-all">
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Screenshots (Multiple)</label>
+                                <div class="relative group cursor-pointer upload-area h-40 flex flex-col items-center justify-center" id="ssUploadBox">
+                                    <input type="file" name="screenshots[]" multiple accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewScreenshots(this)">
+                                    <div class="text-center transition-opacity" id="ssPreviewContainer">
+                                        <div class="w-12 h-12 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-3 text-apple_muted group-hover:text-primary transition-colors text-xl"><i class="fas fa-images"></i></div>
+                                        <span class="text-sm font-bold text-apple_text block mb-1">Drag & Drop Screenshots</span>
+                                        <span class="text-xs text-apple_muted">JPEG or PNG up to 8MB</span>
+                                    </div>
                                 </div>
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300"><i class="fab fa-apple mr-1 text-slate-300"></i> App Store</label>
-                                    <input type="text" name="appstore_link" placeholder="https://apps.apple.com/..." class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 text-slate-100 transition-all">
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-semibold text-slate-300"><i class="fab fa-windows mr-1 text-blue-400"></i> MS Store</label>
-                                    <input type="text" name="windows_store_link" placeholder="https://apps.microsoft.com/..." class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-slate-700 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 text-slate-100 transition-all">
-                                </div>
+                                <!-- Screenshot thumbnails will appear here -->
+                                <div id="screenshotsPreviewRow" class="flex gap-3 overflow-x-auto mt-4 py-2 hidden"></div>
                             </div>
                         </div>
+                    </div>
+                    
+                    <!-- Right Column: Settings (30%) -->
+                    <div class="flex-1 space-y-8">
                         
-                        <!-- Sticky Footer Action Bar -->
-                        <div class="fixed bottom-0 left-0 md:left-64 right-0 bg-[#0f172a]/90 backdrop-blur-md border-t border-slate-800 p-4 px-6 md:px-10 flex justify-end z-30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-                            <button type="button" onclick="window.location.href='softwares.php'" class="px-6 py-2.5 text-slate-300 hover:text-white font-medium mr-4">Discard</button>
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-2.5 rounded-lg font-bold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2">
-                                <i class="fas fa-check"></i> Save & Publish
-                            </button>
+                        <!-- 3. Publishing Settings -->
+                        <div class="glass-card p-6">
+                            <h3 class="text-sm font-bold text-apple_text uppercase tracking-wider border-b border-black/5 pb-3 mb-5 flex items-center">
+                                <i class="fas fa-cog text-apple_muted mr-2"></i> Settings
+                            </h3>
+                            
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Current Version</label>
+                                    <input type="text" name="version" placeholder="1.0.0" class="apple-input w-full px-4 py-3 text-sm font-mono bg-black/5">
+                                </div>
+                            </div>
                         </div>
 
-                    </form>
-                </div>
+                        <!-- 4. Delivery Method -->
+                        <div class="glass-card p-6">
+                            <h3 class="text-sm font-bold text-apple_text uppercase tracking-wider border-b border-black/5 pb-3 mb-5 flex items-center">
+                                <i class="fas fa-download text-apple_muted mr-2"></i> Delivery Method
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <label class="block cursor-pointer relative">
+                                    <input type="radio" name="file_type" value="google_drive" checked class="radio-card sr-only" onclick="document.getElementById('gd_input').style.display='block'; document.getElementById('up_input').style.display='none';">
+                                    <div class="p-4 rounded-xl border-2 border-black/5 bg-white transition-all flex items-center gap-4">
+                                        <div class="radio-indicator"></div>
+                                        <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 icon-main"><i class="fas fa-link"></i></div>
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-bold text-apple_text">External URL</h4>
+                                            <p class="text-xs text-apple_muted mt-0.5">Google Drive, OneDrive</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="block cursor-pointer relative">
+                                    <input type="radio" name="file_type" value="upload" class="radio-card sr-only" onclick="document.getElementById('gd_input').style.display='none'; document.getElementById('up_input').style.display='block';">
+                                    <div class="p-4 rounded-xl border-2 border-black/5 bg-white transition-all flex items-center gap-4">
+                                        <div class="radio-indicator"></div>
+                                        <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center shrink-0 icon-main"><i class="fas fa-cloud-upload-alt"></i></div>
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-bold text-apple_text">Direct Upload</h4>
+                                            <p class="text-xs text-apple_muted mt-0.5">Host on this server</p>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <div id="gd_input" class="pt-2 animate-fade-in">
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Download Link URL</label>
+                                    <input type="url" name="external_link" placeholder="https://..." class="apple-input w-full px-4 py-3 text-sm">
+                                </div>
+                                
+                                <div id="up_input" class="pt-2 hidden animate-fade-in">
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Upload File (.zip, .exe)</label>
+                                    <div class="relative group cursor-pointer upload-area h-16 flex items-center justify-center">
+                                        <input type="file" name="software_file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="document.getElementById('fileNameLabel').innerText = this.files[0]?.name || 'Select File'">
+                                        <div class="flex items-center text-apple_text text-sm font-medium">
+                                            <i class="fas fa-file-archive text-apple_muted mr-2"></i>
+                                            <span id="fileNameLabel">Choose File...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. App Stores -->
+                        <div class="glass-card p-6">
+                            <h3 class="text-sm font-bold text-apple_text uppercase tracking-wider border-b border-black/5 pb-3 mb-5 flex items-center">
+                                <i class="fas fa-store text-apple_muted mr-2"></i> App Stores
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2 flex items-center"><i class="fab fa-apple mr-1.5 text-black"></i> App Store</label>
+                                    <input type="url" name="appstore_link" placeholder="https://apps.apple.com/..." class="apple-input w-full px-4 py-2.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2 flex items-center"><i class="fab fa-google-play mr-1.5 text-emerald-500"></i> Google Play</label>
+                                    <input type="url" name="playstore_link" placeholder="https://play.google.com/..." class="apple-input w-full px-4 py-2.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2 flex items-center"><i class="fab fa-windows mr-1.5 text-blue-500"></i> Windows Store</label>
+                                    <input type="url" name="windows_store_link" placeholder="https://apps.microsoft.com/..." class="apple-input w-full px-4 py-2.5 text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </form>
             </div>
         </div>
+        
+        <!-- Sticky Footer -->
+        <div class="absolute bottom-0 w-full glass-card rounded-none rounded-t-[32px] p-4 px-8 border-t border-black/5 flex justify-end items-center z-40 bg-white/80 backdrop-blur-xl">
+            <p class="text-xs text-apple_muted font-medium mr-auto hidden sm:block">Please ensure all required fields are filled before saving.</p>
+            <button type="button" onclick="window.location.href='softwares.php'" class="px-6 py-3 text-apple_muted hover:text-apple_text font-bold text-sm mr-2 transition-colors">Discard</button>
+            <button type="button" onclick="document.getElementById('addSoftwareForm').submit()" class="bg-primary hover:bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105 flex items-center gap-2 text-sm">
+                <i class="fas fa-cloud-upload-alt"></i> Publish Software
+            </button>
+        </div>
+
     </div>
+
+    <!-- Scripts for Image Preview -->
+    <script>
+        function previewSingleImage(input, imgId, containerId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById(imgId);
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    document.getElementById(containerId).querySelector('div').style.opacity = '0';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewScreenshots(input) {
+            const container = document.getElementById('screenshotsPreviewRow');
+            const mainBox = document.getElementById('ssPreviewContainer');
+            
+            if (input.files && input.files.length > 0) {
+                container.innerHTML = '';
+                container.classList.remove('hidden');
+                mainBox.style.display = 'none'; // hide the drag drop text to make room
+                
+                for(let i=0; i<input.files.length; i++) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'w-24 h-32 shrink-0 rounded-lg overflow-hidden border border-black/10 shadow-sm relative';
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                        container.appendChild(div);
+                    }
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+        
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
