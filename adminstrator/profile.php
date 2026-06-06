@@ -269,9 +269,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="flex flex-col items-center mb-10">
                             <div class="relative w-36 h-36 rounded-full overflow-hidden border-[6px] border-white mb-5 bg-white flex items-center justify-center shadow-md group">
                                 <?php if(!empty($admin['profile_image'])): ?>
-                                    <img src="../<?php echo htmlspecialchars($admin['profile_image']); ?>" class="w-full h-full object-cover">
+                                    <img id="profile_preview" src="../<?php echo htmlspecialchars($admin['profile_image']); ?>" class="w-full h-full object-cover">
                                 <?php else: ?>
-                                    <i class="fas fa-user text-6xl text-gray-300"></i>
+                                    <img id="profile_preview" src="" class="w-full h-full object-cover hidden">
+                                    <i id="profile_icon" class="fas fa-user text-6xl text-gray-300"></i>
                                 <?php endif; ?>
                                 
                                 <label for="profile_upload" class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity backdrop-blur-sm">
@@ -345,5 +346,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('profile_upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('profile_preview');
+                    const icon = document.getElementById('profile_icon');
+                    
+                    if (preview) {
+                        preview.src = e.target.result;
+                        preview.classList.remove('hidden');
+                    }
+                    if (icon) {
+                        icon.classList.add('hidden');
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>
