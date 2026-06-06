@@ -67,20 +67,22 @@ try {
     <title>Newsletter Subscribers - Hypecrews Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        primary: '#0066cc', // Apple Blue
+                        apple_text: '#1d1d1f', // Apple Dark text
+                        apple_muted: '#86868b', // Apple Muted text
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -88,89 +90,167 @@ try {
     </script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+        
+        /* The colorful blurred background that makes the glassmorphism visible */
+        .glass-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #f5f5f9;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        
+        .glass-bg::before {
+            background: #dbeafe; /* Light blue */
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .glass-bg::after {
+            background: #f3e8ff; /* Light purple */
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            left: 10%;
+        }
+        
+        .glass-blob {
+            background: #e0f2fe; /* Sky blue */
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Apple-style thin, invisible scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        /* Glass panel utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
+<body class="text-apple_text">
+
+    <!-- Abstract blurred colorful background -->
+    <div class="glass-bg">
+        <div class="glass-blob"></div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
         <!-- Sidebar -->
-        <?php include 'components/sidebar.php'; ?>
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl text-white">
+            <?php include 'components/sidebar.php'; ?>
+        </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="bg-dark border-b border-gray-800 p-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold">Newsletter Subscribers</h2>
-                    <?php if (!empty($subscribers)): ?>
-                    <div class="flex space-x-2">
-                        <a href="?export=xls<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
-                            <i class="fas fa-file-excel mr-2"></i> Export to Excel
-                        </a>
-                    </div>
-                    <?php endif; ?>
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Apple-style Glass Header -->
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-apple_text tracking-tight">Newsletter Subscribers</h1>
                 </div>
+                <?php if (!empty($subscribers)): ?>
+                <div class="flex items-center space-x-4">
+                    <a href="?export=xls<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2.5 px-5 rounded-full flex items-center transition-colors border border-green-200 shadow-sm">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        Export to Excel
+                    </a>
+                </div>
+                <?php endif; ?>
             </header>
             
             <!-- Content -->
-            <div class="flex-1 overflow-y-auto p-6">
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 <?php if (isset($error)): ?>
-                <div class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-red-300"><?php echo htmlspecialchars($error); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-red-50/50 border-red-200 shadow-sm text-red-700 font-medium flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($error); ?></p>
                 </div>
                 <?php endif; ?>
                 
-                <div class="bg-light rounded-xl p-6">
-                    <!-- Search Form -->
-                    <div class="mb-6">
-                        <form method="GET" class="flex">
-                            <input type="text" name="search" placeholder="Search by email..." value="<?php echo htmlspecialchars($search); ?>" class="flex-1 px-4 py-2 bg-dark border border-gray-700 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary text-white">
-                            <button type="submit" class="bg-primary hover:bg-indigo-700 px-4 rounded-r-lg">
-                                <i class="fas fa-search text-white"></i>
-                            </button>
-                            <?php if (!empty($search)): ?>
-                                <a href="newsletter.php" class="ml-2 bg-gray-600 hover:bg-gray-700 px-4 rounded-lg flex items-center">
-                                    <i class="fas fa-times mr-2"></i> Clear
-                                </a>
-                            <?php endif; ?>
-                        </form>
-                    </div>
-                    
+                <!-- Search Form -->
+                <div class="mb-8">
+                    <form method="GET" class="flex max-w-2xl">
+                        <input type="text" name="search" placeholder="Search by email..." value="<?php echo htmlspecialchars($search); ?>" class="flex-1 px-5 py-3 glass-panel border border-white/60 rounded-l-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-apple_text shadow-sm placeholder-gray-400 font-medium">
+                        <button type="submit" class="bg-primary/10 hover:bg-primary/20 text-primary px-6 rounded-r-full border border-primary/20 border-l-0 shadow-sm transition-colors">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <?php if (!empty($search)): ?>
+                            <a href="newsletter.php" class="ml-3 glass-panel bg-gray-50/50 hover:bg-gray-100/50 px-5 rounded-full flex items-center text-apple_muted transition-colors shadow-sm font-medium">
+                                <i class="fas fa-times mr-2"></i> Clear
+                            </a>
+                        <?php endif; ?>
+                    </form>
+                </div>
+                
+                <div class="glass-panel rounded-[2rem] p-8 shadow-sm flex flex-col">
                     <?php if (empty($subscribers)): ?>
-                    <div class="text-center py-12">
-                        <i class="fas fa-envelope text-4xl text-gray-500 mb-4"></i>
-                        <p class="text-gray-400">No subscribers found</p>
+                    <div class="text-center py-16">
+                        <div class="w-20 h-20 bg-gray-100/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white">
+                            <i class="fas fa-envelope text-4xl text-gray-400"></i>
+                        </div>
+                        <p class="text-apple_muted text-lg font-medium">No subscribers found.</p>
                     </div>
                     <?php else: ?>
                     <div class="overflow-x-auto">
-                        <table class="w-full">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800">
-                                    <th class="pb-3">Email</th>
-                                    <th class="pb-3">Subscribed At</th>
-                                    <th class="pb-3">IP Address</th>
+                                <tr class="text-apple_muted border-b border-black/5 text-sm uppercase tracking-wider">
+                                    <th class="pb-4 font-semibold px-4">Email</th>
+                                    <th class="pb-4 font-semibold px-4">Subscribed At</th>
+                                    <th class="pb-4 font-semibold px-4">IP Address</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="divide-y divide-black/5">
                                 <?php foreach ($subscribers as $subscriber): ?>
-                                <tr class="border-b border-gray-800 hover:bg-dark/50">
-                                    <td class="py-4">
-                                        <p class="font-medium"><?php echo htmlspecialchars($subscriber['email']); ?></p>
+                                <tr class="hover:bg-white/30 transition-colors group">
+                                    <td class="py-5 px-4 rounded-l-2xl">
+                                        <div class="flex items-center">
+                                            <div class="w-9 h-9 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-primary/70 mr-3 shadow-inner">
+                                                <i class="fas fa-at text-xs"></i>
+                                            </div>
+                                            <p class="font-bold text-apple_text"><?php echo htmlspecialchars($subscriber['email']); ?></p>
+                                        </div>
                                     </td>
-                                    <td class="py-4 text-gray-400">
+                                    <td class="py-5 px-4 text-apple_muted font-medium">
                                         <?php echo date('M j, Y g:i A', strtotime($subscriber['subscribed_at'])); ?>
                                     </td>
-                                    <td class="py-4 text-gray-400">
-                                        <?php echo htmlspecialchars($subscriber['ip_address'] ?? 'N/A'); ?>
+                                    <td class="py-5 px-4 rounded-r-2xl">
+                                        <span class="text-xs text-apple_muted font-mono bg-white/50 px-2.5 py-1 rounded-md border border-white/60 shadow-sm">
+                                            <?php echo htmlspecialchars($subscriber['ip_address'] ?? 'N/A'); ?>
+                                        </span>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -179,6 +259,11 @@ try {
                     </div>
                     <?php endif; ?>
                 </div>
+                
+                <div class="mt-12 text-center text-sm font-medium text-apple_muted mb-6">
+                    &copy; <?php echo date('Y'); ?> Hypecrews. All rights reserved.
+                </div>
+                
             </div>
         </div>
     </div>
