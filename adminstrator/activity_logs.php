@@ -52,20 +52,22 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
     <title>Activity Logs - Hypecrews Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        primary: '#0066cc', // Apple Blue
+                        apple_text: '#1d1d1f', // Apple Dark text
+                        apple_muted: '#86868b', // Apple Muted text
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -73,38 +75,110 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
     </script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+        
+        /* The colorful blurred background that makes the glassmorphism visible */
+        .glass-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #f5f5f9;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        
+        .glass-bg::before {
+            background: #dbeafe; /* Light blue */
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .glass-bg::after {
+            background: #f3e8ff; /* Light purple */
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            left: 10%;
+        }
+        
+        .glass-blob {
+            background: #e0f2fe; /* Sky blue */
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Apple-style thin, invisible scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        /* Glass panel utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
+<body class="text-apple_text">
+
+    <!-- Abstract blurred colorful background -->
+    <div class="glass-bg">
+        <div class="glass-blob"></div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
         <!-- Sidebar -->
-        <?php include 'components/sidebar.php'; ?>
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl text-white">
+            <?php include 'components/sidebar.php'; ?>
+        </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="bg-dark border-b border-gray-800 p-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold">Activity Logs</h2>
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Apple-style Glass Header -->
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-apple_text tracking-tight">Activity Logs</h1>
                 </div>
             </header>
             
             <!-- Content -->
-            <div class="flex-1 overflow-y-auto p-6">
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 
                 <!-- Filters -->
-                <div class="bg-light p-4 rounded-xl mb-6 shadow-md border border-gray-800">
+                <div class="glass-panel p-6 rounded-[2rem] mb-8 shadow-sm">
                     <form method="GET" class="flex flex-col md:flex-row gap-4">
                         <div class="flex-1">
-                            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search by Admin name or details..." class="w-full px-4 py-2 bg-dark border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white">
+                            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search by Admin name or details..." class="w-full px-5 py-3 glass-panel bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-apple_text placeholder-gray-400 font-medium shadow-sm">
                         </div>
                         <div>
-                            <select name="action_filter" class="w-full md:w-64 px-4 py-2 bg-dark border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white">
+                            <select name="action_filter" class="w-full md:w-64 px-5 py-3 glass-panel bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-apple_text font-medium appearance-none shadow-sm">
                                 <option value="">All Actions</option>
                                 <?php foreach($actions as $action): ?>
                                     <option value="<?php echo htmlspecialchars($action); ?>" <?php echo $action === $action_filter ? 'selected' : ''; ?>>
@@ -113,88 +187,92 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <button type="submit" class="bg-primary hover:bg-indigo-600 px-6 py-2 rounded-lg font-medium transition-colors">
+                        <button type="submit" class="bg-primary hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center">
                             Filter
                         </button>
                         <?php if(!empty($search) || !empty($action_filter)): ?>
-                            <a href="activity_logs.php" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg font-medium text-center transition-colors">Clear</a>
+                            <a href="activity_logs.php" class="bg-black/5 hover:bg-black/10 text-apple_text px-6 py-3 rounded-xl font-semibold text-center transition-colors shadow-sm flex items-center justify-center">Clear</a>
                         <?php endif; ?>
                     </form>
                 </div>
 
-                <div class="bg-light rounded-xl p-6 shadow-lg border border-gray-800">
+                <div class="glass-panel rounded-[2rem] p-8 shadow-sm flex flex-col">
                     <?php if (empty($logs)): ?>
-                    <div class="text-center py-12">
-                        <i class="fas fa-clipboard-list text-5xl text-gray-600 mb-4"></i>
-                        <p class="text-gray-400 text-lg">No activity logs found.</p>
+                    <div class="text-center py-16">
+                        <div class="w-20 h-20 bg-gray-100/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white">
+                            <i class="fas fa-clipboard-list text-4xl text-gray-400"></i>
+                        </div>
+                        <p class="text-apple_muted text-lg font-medium">No activity logs found.</p>
                     </div>
                     <?php else: ?>
                     <div class="overflow-x-auto">
-                        <table class="w-full">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800 text-xs uppercase tracking-wider">
-                                    <th class="pb-3 font-semibold min-w-[150px]">Timestamp</th>
-                                    <th class="pb-3 font-semibold min-w-[200px]">Admin</th>
-                                    <th class="pb-3 font-semibold min-w-[150px]">Action</th>
-                                    <th class="pb-3 font-semibold">Details</th>
+                                <tr class="text-apple_muted border-b border-black/5 text-sm uppercase tracking-wider">
+                                    <th class="pb-4 font-semibold px-4 min-w-[150px]">Timestamp</th>
+                                    <th class="pb-4 font-semibold px-4 min-w-[200px]">Admin</th>
+                                    <th class="pb-4 font-semibold px-4 min-w-[150px]">Action</th>
+                                    <th class="pb-4 font-semibold px-4">Details</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-800/50">
+                            <tbody class="divide-y divide-black/5">
                                 <?php foreach ($logs as $log): ?>
-                                <tr class="border-b border-gray-800/50 hover:bg-dark/40 transition-colors">
-                                    <td class="py-4 whitespace-nowrap text-sm text-gray-400 flex items-center h-full mt-2">
-                                        <i class="far fa-clock mr-2 text-gray-500"></i>
-                                        <div>
-                                            <div class="text-gray-300"><?php echo date('M j, Y', strtotime($log['created_at'])); ?></div>
-                                            <div class="text-xs text-gray-500"><?php echo date('h:i A', strtotime($log['created_at'])); ?></div>
+                                <tr class="hover:bg-white/30 transition-colors group">
+                                    <td class="py-5 px-4 rounded-l-2xl">
+                                        <div class="flex items-center text-sm font-medium text-apple_muted">
+                                            <i class="far fa-clock mr-2.5 text-black/20"></i>
+                                            <div>
+                                                <div class="text-apple_text font-semibold"><?php echo date('M j, Y', strtotime($log['created_at'])); ?></div>
+                                                <div class="text-xs text-primary/60"><?php echo date('h:i A', strtotime($log['created_at'])); ?></div>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td class="py-4">
+                                    <td class="py-5 px-4">
                                         <div class="flex items-center">
                                             <?php if (!empty($log['profile_image'])): ?>
-                                                <div class="w-10 h-10 rounded-full mr-3 overflow-hidden border-2 border-gray-700 bg-dark shrink-0 cursor-pointer hover:border-primary transition-colors shadow-lg" onclick="zoomImage(this.querySelector('img').src)">
+                                                <div class="w-10 h-10 rounded-full mr-3 overflow-hidden border border-white/60 bg-white/50 shrink-0 cursor-pointer hover:border-primary transition-colors shadow-sm" onclick="zoomImage(this.querySelector('img').src)">
                                                     <img src="../<?php echo htmlspecialchars($log['profile_image']); ?>" class="w-full h-full object-cover">
                                                 </div>
                                             <?php else: ?>
-                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 text-sm font-bold shadow-lg shrink-0 border-2 border-gray-700 text-white">
+                                                <div class="w-10 h-10 rounded-full bg-blue-50 text-primary border border-blue-100 flex items-center justify-center mr-3 text-sm font-bold shadow-inner shrink-0">
                                                     <?php echo substr(htmlspecialchars($log['admin_username']), 0, 1); ?>
                                                 </div>
                                             <?php endif; ?>
                                             <div>
-                                                <span class="font-bold text-white text-sm"><?php echo htmlspecialchars($log['admin_username']); ?></span>
-                                                <p class="text-xs text-gray-500">Administrator</p>
+                                                <span class="font-bold text-apple_text text-sm"><?php echo htmlspecialchars($log['admin_username']); ?></span>
+                                                <p class="text-[11px] font-semibold text-apple_muted uppercase tracking-wider mt-0.5">Administrator</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="py-4">
+                                    <td class="py-5 px-4">
                                         <?php
                                             $action = htmlspecialchars($log['action_type']);
-                                            $badgeClass = 'bg-gray-800 text-gray-300 border-gray-700';
+                                            $badgeClass = 'bg-gray-100 text-gray-700 border-gray-200';
                                             $icon = 'fa-dot-circle';
                                             
                                             if ($action === 'LOGIN') {
-                                                $badgeClass = 'bg-green-900/40 text-green-400 border-green-800/50';
+                                                $badgeClass = 'bg-green-50 text-green-700 border-green-200';
                                                 $icon = 'fa-sign-in-alt';
                                             } elseif ($action === 'LOGOUT') {
-                                                $badgeClass = 'bg-red-900/40 text-red-400 border-red-800/50';
+                                                $badgeClass = 'bg-red-50 text-red-700 border-red-200';
                                                 $icon = 'fa-sign-out-alt';
                                             } elseif (strpos($action, 'UPDATE') !== false || strpos($action, 'EDIT') !== false) {
-                                                $badgeClass = 'bg-blue-900/40 text-blue-400 border-blue-800/50';
+                                                $badgeClass = 'bg-blue-50 text-blue-700 border-blue-200';
                                                 $icon = 'fa-edit';
                                             } elseif (strpos($action, 'CREATE') !== false || strpos($action, 'ADD') !== false) {
-                                                $badgeClass = 'bg-indigo-900/40 text-indigo-400 border-indigo-800/50';
+                                                $badgeClass = 'bg-indigo-50 text-indigo-700 border-indigo-200';
                                                 $icon = 'fa-plus-circle';
                                             } elseif (strpos($action, 'DELETE') !== false) {
-                                                $badgeClass = 'bg-rose-900/40 text-rose-400 border-rose-800/50';
+                                                $badgeClass = 'bg-rose-50 text-rose-700 border-rose-200';
                                                 $icon = 'fa-trash-alt';
                                             }
                                         ?>
-                                        <span class="<?php echo $badgeClass; ?> px-3 py-1.5 rounded-full text-xs font-semibold border flex items-center w-max shadow-sm">
-                                            <i class="fas <?php echo $icon; ?> mr-2 opacity-70"></i>
+                                        <span class="<?php echo $badgeClass; ?> px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border shadow-sm flex items-center w-max">
+                                            <i class="fas <?php echo $icon; ?> mr-2 opacity-70 text-[10px]"></i>
                                             <?php echo $action; ?>
                                         </span>
                                     </td>
-                                    <td class="py-4 text-gray-300 text-sm leading-relaxed max-w-md">
+                                    <td class="py-5 px-4 text-apple_text text-sm leading-relaxed max-w-md font-medium rounded-r-2xl">
                                         <?php echo htmlspecialchars($log['description']); ?>
                                     </td>
                                 </tr>
@@ -205,10 +283,10 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
                     
                     <!-- Pagination -->
                     <?php if ($total_pages > 1): ?>
-                    <div class="mt-6 flex justify-center space-x-2">
+                    <div class="mt-8 flex justify-center space-x-2">
                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                             <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&action_filter=<?php echo urlencode($action_filter); ?>" 
-                               class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $page === $i ? 'bg-primary text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'; ?>">
+                               class="w-10 h-10 flex items-center justify-center rounded-full text-sm font-bold shadow-sm transition-all <?php echo $page === $i ? 'bg-primary text-white shadow-md transform scale-105' : 'bg-white/50 text-apple_text hover:bg-white/80 border border-black/5'; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
@@ -217,14 +295,18 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
                     
                     <?php endif; ?>
                 </div>
+                
+                <div class="mt-12 text-center text-sm font-medium text-apple_muted mb-6">
+                    &copy; <?php echo date('Y'); ?> Hypecrews. All rights reserved.
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Zoom Modal -->
-    <div id="imageZoomModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden items-center justify-center p-4 transition-opacity" onclick="closeZoom()">
-        <button class="absolute top-6 right-6 text-white hover:text-red-500 text-3xl focus:outline-none" onclick="closeZoom()">&times;</button>
-        <img id="zoomedImage" src="" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain border-4 border-gray-800" onclick="event.stopPropagation()">
+    <div id="imageZoomModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] hidden items-center justify-center p-4 transition-opacity" onclick="closeZoom()">
+        <button class="absolute top-6 right-6 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full text-white text-2xl flex items-center justify-center transition-colors shadow-lg focus:outline-none backdrop-blur-lg" onclick="closeZoom()"><i class="fas fa-times"></i></button>
+        <img id="zoomedImage" src="" class="max-w-full max-h-[90vh] rounded-[2rem] shadow-2xl object-contain border-4 border-white/80" onclick="event.stopPropagation()">
     </div>
 
     <script>
