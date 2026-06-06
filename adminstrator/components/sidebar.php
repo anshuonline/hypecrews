@@ -180,17 +180,17 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
 }
 </style>
 
-<script>
-    // Apply collapsed state immediately to prevent FOUC (Flash of Unstyled Content)
-    if (localStorage.getItem('sidebar_collapsed') === 'true') {
-        document.write('<style>#admin-sidebar { width: 80px !important; } #admin-sidebar .admin-nav-link span:not(.chat-badge), #admin-sidebar .nav-section-title, #admin-sidebar .profile-text, #admin-sidebar .logo-container { display: none !important; } #admin-sidebar .sidebar-header { justify-content: center !important; padding-left: 0 !important; padding-right: 0 !important; } #admin-sidebar .desktop-toggle { margin: 0 !important; } #admin-sidebar .admin-nav-link { margin: 4px 12px; padding: 12px 0; justify-content: center; } #admin-sidebar .admin-nav-link i { margin-right: 0 !important; font-size: 1.25rem; } #admin-sidebar .profile-container { padding: 10px; justify-content: center; } #admin-sidebar .profile-avatar { margin-right: 0 !important; } </style>');
-    }
-</script>
+
 
 <!-- Mobile Overlay -->
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-md transition-opacity" onclick="toggleSidebar()"></div>
 
 <div id="admin-sidebar" class="admin-sidebar-wrapper w-64 flex-shrink-0 flex flex-col absolute md:relative z-50 h-full transform -translate-x-full md:translate-x-0">
+    <script>
+        if (localStorage.getItem('sidebar_collapsed') === 'true') {
+            document.getElementById('admin-sidebar').classList.add('collapsed');
+        }
+    </script>
     
     <!-- Header with Logo and Collapse Toggle -->
     <div class="sidebar-header p-6 border-b border-white/10 flex items-center justify-between min-h-[80px] transition-all">
