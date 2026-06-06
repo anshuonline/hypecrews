@@ -79,13 +79,15 @@ try {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        primary: '#0066cc', // Apple Blue
+                        apple_text: '#1d1d1f', // Apple Dark text
+                        apple_muted: '#86868b', // Apple Muted text
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -93,205 +95,269 @@ try {
     </script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
         }
         
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 500;
+        /* The colorful blurred background that makes the glassmorphism visible */
+        .glass-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #f5f5f9;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        
+        .glass-bg::before {
+            background: #dbeafe; /* Light blue */
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .glass-bg::after {
+            background: #f3e8ff; /* Light purple */
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            left: 10%;
+        }
+        
+        .glass-blob {
+            background: #e0f2fe; /* Sky blue */
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Apple-style thin, invisible scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        /* Glass panel utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
+<body class="text-apple_text">
+
+    <!-- Abstract blurred colorful background -->
+    <div class="glass-bg">
+        <div class="glass-blob"></div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
         <!-- Sidebar -->
-        <?php include 'components/sidebar.php'; ?>
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl text-white">
+            <?php include 'components/sidebar.php'; ?>
+        </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="bg-dark border-b border-gray-800 p-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold">Manage Orders</h2>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="window.location.href='add_order.php'" class="bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                            <i class="fas fa-plus mr-2"></i>
-                            Add Order
-                        </button>
-                    </div>
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Apple-style Glass Header -->
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-apple_text tracking-tight">Manage Orders</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='add_order.php'" class="bg-primary/10 hover:bg-primary/20 text-primary font-bold py-2.5 px-5 rounded-full flex items-center transition-colors border border-primary/20 shadow-sm">
+                        <i class="fas fa-plus mr-2"></i>
+                        New Order
+                    </button>
                 </div>
             </header>
             
             <!-- Content -->
-            <div class="flex-1 overflow-y-auto p-6">
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 <?php if (isset($success)): ?>
-                <div class="mb-6 p-4 rounded-lg bg-green-900/50 border border-green-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-green-300"><?php echo htmlspecialchars($success); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-green-50/50 border-green-200 shadow-sm text-green-700 font-medium flex items-center">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($success); ?></p>
                 </div>
                 <?php endif; ?>
                 
                 <?php if (isset($error)): ?>
-                <div class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-red-300"><?php echo htmlspecialchars($error); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-red-50/50 border-red-200 shadow-sm text-red-700 font-medium flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($error); ?></p>
                 </div>
                 <?php endif; ?>
                 
-                <div class="bg-light rounded-xl p-6">
-                    <!-- Search Form -->
-                    <div class="mb-6">
-                        <form method="GET" class="flex">
-                            <input type="text" name="search" placeholder="Search by username, email, mobile, or tracking ID..." value="<?php echo htmlspecialchars($search); ?>" class="flex-1 px-4 py-2 bg-dark border border-gray-700 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary text-white">
-                            <button type="submit" class="bg-primary hover:bg-indigo-700 px-4 rounded-r-lg">
-                                <i class="fas fa-search text-white"></i>
-                            </button>
-                            <?php if (!empty($search)): ?>
-                                <a href="orders.php" class="ml-2 bg-gray-600 hover:bg-gray-700 px-4 rounded-lg flex items-center">
-                                    <i class="fas fa-times mr-2"></i> Clear
-                                </a>
-                            <?php endif; ?>
-                        </form>
-                    </div>
-                    
-                    <?php if (empty($orders)): ?>
-                    <div class="text-center py-12">
-                        <i class="fas fa-box-open text-4xl text-gray-500 mb-4"></i>
-                        <p class="text-gray-400">No orders found</p>
-                        <button onclick="window.location.href='add_order.php'" class="mt-4 bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg">
-                            Create Your First Order
+                <!-- Search Form -->
+                <div class="mb-8">
+                    <form method="GET" class="flex max-w-2xl">
+                        <input type="text" name="search" placeholder="Search by username, email, mobile, or tracking ID..." value="<?php echo htmlspecialchars($search); ?>" class="flex-1 px-5 py-3 glass-panel border border-white/60 rounded-l-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-apple_text shadow-sm placeholder-gray-400">
+                        <button type="submit" class="bg-primary/10 hover:bg-primary/20 text-primary px-6 rounded-r-full border border-primary/20 border-l-0 shadow-sm transition-colors">
+                            <i class="fas fa-search"></i>
                         </button>
+                        <?php if (!empty($search)): ?>
+                            <a href="orders.php" class="ml-3 glass-panel bg-gray-50/50 hover:bg-gray-100/50 px-5 rounded-full flex items-center text-apple_muted transition-colors shadow-sm">
+                                <i class="fas fa-times mr-2"></i> Clear
+                            </a>
+                        <?php endif; ?>
+                    </form>
+                </div>
+                
+                <?php if (empty($orders)): ?>
+                <div class="text-center py-20 glass-panel rounded-3xl max-w-2xl mx-auto shadow-sm">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                        <i class="fas fa-box-open text-4xl text-gray-400"></i>
                     </div>
-                    <?php else: ?>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <?php foreach ($orders as $order): ?>
-                        <?php
-                            $statusClasses = [
-                                'pending' => 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
-                                'in_review' => 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
-                                'approved' => 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20',
-                                'processing' => 'bg-purple-500/10 text-purple-500 border border-purple-500/20',
-                                'in_production' => 'bg-cyan-500/10 text-cyan-500 border border-cyan-500/20',
-                                'quality_check' => 'bg-teal-500/10 text-teal-500 border border-teal-500/20',
-                                'ready_for_delivery' => 'bg-green-500/10 text-green-500 border border-green-500/20',
-                                'shipped' => 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
-                                'delivered' => 'bg-green-500/10 text-green-500 border border-green-500/20',
-                                'revision_requested' => 'bg-orange-500/10 text-orange-500 border border-orange-500/20',
-                                'on_hold' => 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
-                                'completed' => 'bg-green-500/10 text-green-500 border border-green-500/20',
-                                'cancelled' => 'bg-red-500/10 text-red-500 border border-red-500/20'
-                            ];
-                        ?>
-                        <div class="bg-[#1e293b]/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 hover:shadow-[0_0_25px_rgba(99,102,241,0.15)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 flex flex-col h-full group relative overflow-hidden">
-                            <!-- Top Decorator -->
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            
-                            <!-- Header -->
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="flex-1 mr-3">
-                                    <h3 class="font-bold text-lg text-white mb-2 leading-tight group-hover:text-primary transition-colors"><?php echo htmlspecialchars($order['order_title']); ?></h3>
-                                    <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider <?php echo $statusClasses[$order['status']] ?? 'bg-gray-500/10 text-gray-400 border border-gray-500/20'; ?> inline-flex items-center">
-                                        <?php if($order['status'] === 'completed'): ?>
-                                            <i class="fas fa-check-circle mr-1.5"></i>
-                                        <?php elseif($order['status'] === 'pending'): ?>
-                                            <i class="fas fa-clock mr-1.5"></i>
-                                        <?php else: ?>
-                                            <i class="fas fa-circle text-[8px] mr-1.5"></i>
-                                        <?php endif; ?>
-                                        <?php echo ucfirst(str_replace('_', ' ', $order['status'])); ?>
-                                    </span>
-                                </div>
-                                <div class="text-right shrink-0 mt-1">
-                                    <?php if ($order['tracking_id']): ?>
-                                        <p class="text-[10px] text-gray-400 font-mono bg-black/40 px-2 py-1 rounded border border-white/5 flex items-center gap-1.5" title="Tracking ID">
-                                            <i class="fas fa-hashtag text-gray-500"></i> <?php echo htmlspecialchars($order['tracking_id']); ?>
-                                        </p>
+                    <p class="text-apple_muted text-lg font-medium mb-6">No orders found.</p>
+                    <button onclick="window.location.href='add_order.php'" class="bg-primary text-white hover:bg-blue-600 font-bold py-3 px-6 rounded-full transition-colors shadow-md">
+                        Create Your First Order
+                    </button>
+                </div>
+                <?php else: ?>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <?php foreach ($orders as $order): ?>
+                    <?php
+                        $statusClasses = [
+                            'pending' => 'bg-yellow-500/10 text-yellow-700 border border-yellow-500/20',
+                            'in_review' => 'bg-blue-500/10 text-blue-700 border border-blue-500/20',
+                            'approved' => 'bg-indigo-500/10 text-indigo-700 border border-indigo-500/20',
+                            'processing' => 'bg-purple-500/10 text-purple-700 border border-purple-500/20',
+                            'in_production' => 'bg-cyan-500/10 text-cyan-700 border border-cyan-500/20',
+                            'quality_check' => 'bg-teal-500/10 text-teal-700 border border-teal-500/20',
+                            'ready_for_delivery' => 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20',
+                            'shipped' => 'bg-blue-500/10 text-blue-700 border border-blue-500/20',
+                            'delivered' => 'bg-green-500/10 text-green-700 border border-green-500/20',
+                            'revision_requested' => 'bg-orange-500/10 text-orange-700 border border-orange-500/20',
+                            'on_hold' => 'bg-amber-500/10 text-amber-700 border border-amber-500/20',
+                            'completed' => 'bg-green-500/10 text-green-700 border border-green-500/20',
+                            'cancelled' => 'bg-red-500/10 text-red-700 border border-red-500/20'
+                        ];
+                    ?>
+                    
+                    <!-- Order Card - Apple Glass Style -->
+                    <div class="glass-panel rounded-3xl p-6 hover:bg-white/70 transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full relative overflow-hidden group">
+                        
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1 mr-3">
+                                <h3 class="font-bold text-lg text-apple_text mb-2 leading-tight group-hover:text-primary transition-colors"><?php echo htmlspecialchars($order['order_title']); ?></h3>
+                                <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider <?php echo $statusClasses[$order['status']] ?? 'bg-gray-100 text-gray-600 border border-gray-200'; ?> inline-flex items-center shadow-sm">
+                                    <?php if($order['status'] === 'completed'): ?>
+                                        <i class="fas fa-check-circle mr-1.5"></i>
+                                    <?php elseif($order['status'] === 'pending'): ?>
+                                        <i class="fas fa-clock mr-1.5"></i>
                                     <?php else: ?>
-                                        <p class="text-[10px] text-gray-600 font-mono bg-black/20 px-2 py-1 rounded border border-white/5 italic">
-                                            No Tracking
-                                        </p>
+                                        <i class="fas fa-circle text-[8px] mr-1.5"></i>
                                     <?php endif; ?>
-                                </div>
-                            </div>
-                            
-                            <!-- Description -->
-                            <div class="mb-5 flex-1">
-                                <p class="text-sm text-gray-400 line-clamp-2 leading-relaxed"><?php echo htmlspecialchars($order['order_description']); ?></p>
-                            </div>
-                            
-                            <!-- User Details -->
-                            <div class="flex items-center mb-5 bg-[#0f172a]/80 p-3 rounded-xl border border-white/5 group-hover:bg-[#0f172a] transition-colors">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-600/20 border border-indigo-500/30 flex items-center justify-center mr-3 shrink-0">
-                                    <i class="fas fa-user text-indigo-400"></i>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <?php if ($order['user_id']): ?>
-                                        <p class="text-sm font-semibold text-white truncate"><?php echo htmlspecialchars($order['first_name'] . ' ' . $order['last_name']); ?></p>
-                                        <p class="text-xs text-indigo-400 truncate">@<?php echo htmlspecialchars($order['username']); ?></p>
-                                    <?php else: ?>
-                                        <p class="text-sm text-gray-500 italic">No user assigned</p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            
-                            <!-- Footer Actions -->
-                            <div class="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
-                                <span class="text-xs text-gray-500 font-medium flex items-center bg-white/5 px-2 py-1 rounded">
-                                    <i class="far fa-calendar-alt mr-1.5 text-gray-400"></i> <?php echo date('M j, Y', strtotime($order['created_at'])); ?>
+                                    <?php echo str_replace('_', ' ', $order['status']); ?>
                                 </span>
-                                <div class="flex space-x-1.5">
-                                    <button onclick="showStatusModal(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>', '<?php echo addslashes(htmlspecialchars($order['custom_status'] ?? '')); ?>')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-secondary/20 hover:text-secondary text-gray-400 flex items-center justify-center transition-colors" title="Update Status">
-                                        <i class="fas fa-tasks text-[13px]"></i>
-                                    </button>
-                                    <a href="edit_order.php?id=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-primary/20 hover:text-primary text-gray-400 flex items-center justify-center transition-colors" title="Edit Order">
-                                        <i class="fas fa-edit text-[13px]"></i>
-                                    </a>
-                                    <a href="view_order.php?id=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 hover:text-white text-gray-400 flex items-center justify-center transition-colors" title="View Order">
-                                        <i class="fas fa-eye text-[13px]"></i>
-                                    </a>
-                                    <a href="?delete=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500/20 hover:text-red-500 text-gray-400 flex items-center justify-center transition-colors" onclick="return confirm('Are you sure you want to delete this order?')" title="Delete Order">
-                                        <i class="fas fa-trash text-[13px]"></i>
-                                    </a>
-                                </div>
+                            </div>
+                            <div class="text-right shrink-0 mt-1">
+                                <?php if ($order['tracking_id']): ?>
+                                    <p class="text-[10px] text-apple_muted font-mono bg-white/50 backdrop-blur-md px-2 py-1 rounded-md border border-white/60 shadow-sm flex items-center gap-1.5" title="Tracking ID">
+                                        <i class="fas fa-hashtag text-gray-400"></i> <?php echo htmlspecialchars($order['tracking_id']); ?>
+                                    </p>
+                                <?php else: ?>
+                                    <p class="text-[10px] text-gray-400 font-mono bg-white/30 backdrop-blur-md px-2 py-1 rounded-md border border-white/60 shadow-sm italic">
+                                        No Tracking
+                                    </p>
+                                <?php endif; ?>
                             </div>
                         </div>
-                        <?php endforeach; ?>
+                        
+                        <!-- Description -->
+                        <div class="mb-5 flex-1">
+                            <p class="text-sm text-apple_muted line-clamp-2 leading-relaxed"><?php echo htmlspecialchars($order['order_description']); ?></p>
+                        </div>
+                        
+                        <!-- User Details -->
+                        <div class="flex items-center mb-5 bg-white/40 p-3 rounded-2xl border border-white/60 shadow-sm group-hover:bg-white/60 transition-colors">
+                            <div class="w-10 h-10 rounded-full bg-blue-50/50 border border-blue-100 flex items-center justify-center mr-3 shrink-0 shadow-inner">
+                                <i class="fas fa-user text-primary/70"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <?php if ($order['user_id']): ?>
+                                    <p class="text-sm font-semibold text-apple_text truncate"><?php echo htmlspecialchars($order['first_name'] . ' ' . $order['last_name']); ?></p>
+                                    <p class="text-xs text-primary/70 font-medium truncate">@<?php echo htmlspecialchars($order['username']); ?></p>
+                                <?php else: ?>
+                                    <p class="text-sm text-gray-500 italic">Guest / No user</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer Actions -->
+                        <div class="flex items-center justify-between pt-4 border-t border-black/5 mt-auto">
+                            <span class="text-xs text-apple_muted font-medium flex items-center bg-black/5 px-2.5 py-1.5 rounded-lg">
+                                <i class="far fa-calendar-alt mr-1.5 opacity-70"></i> <?php echo date('M j, Y', strtotime($order['created_at'])); ?>
+                            </span>
+                            <div class="flex space-x-2">
+                                <button onclick="showStatusModal(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>', '<?php echo addslashes(htmlspecialchars($order['custom_status'] ?? '')); ?>')" class="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 text-apple_muted flex items-center justify-center transition-colors shadow-sm" title="Update Status">
+                                    <i class="fas fa-tasks text-[13px]"></i>
+                                </button>
+                                <a href="edit_order.php?id=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-black/5 hover:bg-primary/10 hover:text-primary text-apple_muted flex items-center justify-center transition-colors shadow-sm" title="Edit Order">
+                                    <i class="fas fa-edit text-[13px]"></i>
+                                </a>
+                                <a href="view_order.php?id=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 text-apple_muted flex items-center justify-center transition-colors shadow-sm" title="View Order">
+                                    <i class="fas fa-eye text-[13px]"></i>
+                                </a>
+                                <a href="?delete=<?php echo $order['id']; ?>" class="w-8 h-8 rounded-full bg-black/5 hover:bg-red-500/10 hover:text-red-600 text-apple_muted flex items-center justify-center transition-colors shadow-sm" onclick="return confirm('Are you sure you want to delete this order?')" title="Delete Order">
+                                    <i class="fas fa-trash text-[13px]"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
+                <?php endif; ?>
+                
+                <div class="mt-12 text-center text-sm font-medium text-apple_muted mb-6">
+                    &copy; <?php echo date('Y'); ?> Hypecrews. All rights reserved.
+                </div>
+                
             </div>
         </div>
     </div>
 
     <!-- Status Update Modal -->
-    <div id="statusModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-dark rounded-xl shadow-lg max-w-md w-full">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold">Quick Update Status</h3>
-                    <button onclick="closeStatusModal()" class="text-gray-400 hover:text-white focus:outline-none">
+    <div id="statusModal" class="fixed inset-0 bg-black/20 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel bg-white/80 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white max-w-md w-full transform transition-all">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-apple_text">Update Status</h3>
+                    <button onclick="closeStatusModal()" class="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-apple_muted transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <form id="statusForm" method="POST">
                     <input type="hidden" name="update_status" value="1">
                     <input type="hidden" id="orderIdInput" name="order_id" value="">
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Select Status</label>
-                        <select name="status" id="statusSelect" class="w-full px-4 py-2 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white">
+                    
+                    <div class="mb-5">
+                        <label class="block text-sm font-semibold text-apple_muted mb-2">Select Status</label>
+                        <select name="status" id="statusSelect" class="w-full px-4 py-3 bg-white/50 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-apple_text font-medium appearance-none shadow-sm">
                             <option value="pending">Pending</option>
                             <option value="in_review">In Review</option>
                             <option value="approved">Approved</option>
@@ -307,16 +373,18 @@ try {
                             <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Custom Status (Optional)</label>
-                        <input type="text" name="custom_status" id="customStatusInput" class="w-full px-4 py-2 bg-dark/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="E.g., Developer Assigned">
-                        <p class="text-xs text-gray-500 mt-1">This will be shown in the timeline to the user.</p>
+                    
+                    <div class="mb-8">
+                        <label class="block text-sm font-semibold text-apple_muted mb-2">Custom Note (Optional)</label>
+                        <input type="text" name="custom_status" id="customStatusInput" class="w-full px-4 py-3 bg-white/50 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-apple_text placeholder-gray-400 shadow-sm" placeholder="E.g., Developer Assigned">
+                        <p class="text-xs text-apple_muted mt-2">This will be shown in the timeline to the user.</p>
                     </div>
-                    <div class="flex justify-end space-x-4">
-                        <button type="button" onclick="closeStatusModal()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
+                    
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <button type="button" onclick="closeStatusModal()" class="px-5 py-2.5 rounded-full bg-black/5 hover:bg-black/10 font-semibold text-apple_text transition-colors">
                             Cancel
                         </button>
-                        <button type="submit" class="bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+                        <button type="submit" class="px-5 py-2.5 rounded-full bg-primary hover:bg-blue-600 text-white font-bold transition-colors shadow-md">
                             Update Status
                         </button>
                     </div>
