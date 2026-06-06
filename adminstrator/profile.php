@@ -112,20 +112,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Admin Profile - Hypecrews</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        primary: '#0066cc', // Apple Blue
+                        apple_text: '#1d1d1f', // Apple Dark text
+                        apple_muted: '#86868b', // Apple Muted text
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -133,117 +135,212 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+        
+        /* The colorful blurred background that makes the glassmorphism visible */
+        .glass-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #f5f5f9;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        
+        .glass-bg::before {
+            background: #dbeafe; /* Light blue */
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .glass-bg::after {
+            background: #f3e8ff; /* Light purple */
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            left: 10%;
+        }
+        
+        .glass-blob {
+            background: #e0f2fe; /* Sky blue */
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Apple-style thin, invisible scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        /* Glass panel utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
+        }
+
+        input[type="text"], input[type="password"] { 
+            background-color: rgba(255, 255, 255, 0.8) !important; 
+            border-color: rgba(0, 0, 0, 0.1) !important; 
+            color: #1d1d1f !important; 
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) inset;
+        }
+        input:focus { 
+            border-color: #0066cc !important; 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.15) !important; 
+            background-color: #ffffff !important;
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
+<body class="text-apple_text">
+
+    <!-- Abstract blurred colorful background -->
+    <div class="glass-bg">
+        <div class="glass-blob"></div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
         <!-- Sidebar -->
-        <?php include 'components/sidebar.php'; ?>
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl text-white">
+            <?php include 'components/sidebar.php'; ?>
+        </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="bg-dark border-b border-gray-800 p-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold">Admin Profile</h2>
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Apple-style Glass Header -->
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-apple_text tracking-tight">Admin Profile</h1>
                 </div>
             </header>
             
             <!-- Content -->
-            <div class="flex-1 overflow-y-auto p-6">
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 
                 <?php if ($error): ?>
-                <div class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-red-300"><?php echo htmlspecialchars($error); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-red-50/50 border-red-200 shadow-sm text-red-700 font-medium flex items-center max-w-3xl mx-auto">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($error); ?></p>
                 </div>
                 <?php endif; ?>
                 
                 <?php if ($success): ?>
-                <div class="mb-6 p-4 rounded-lg bg-green-900/50 border border-green-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-green-300"><?php echo htmlspecialchars($success); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-green-50/50 border-green-200 shadow-sm text-green-700 font-medium flex items-center max-w-3xl mx-auto">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($success); ?></p>
                 </div>
                 <?php endif; ?>
                 
-                <div class="max-w-2xl mx-auto bg-light rounded-xl p-8 shadow-xl border border-gray-800">
-                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div class="max-w-3xl mx-auto glass-panel rounded-[2rem] p-8 md:p-12 shadow-sm relative overflow-hidden">
+                    <!-- Background Decorator -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-100 rounded-bl-full opacity-40 blur-2xl pointer-events-none"></div>
+                    
+                    <form method="POST" enctype="multipart/form-data" class="space-y-8 relative z-10">
                         
                         <!-- Profile Image Section -->
-                        <div class="flex flex-col items-center mb-8">
-                            <div class="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-700 mb-4 bg-dark flex items-center justify-center shadow-lg">
+                        <div class="flex flex-col items-center mb-10">
+                            <div class="relative w-36 h-36 rounded-full overflow-hidden border-[6px] border-white mb-5 bg-white flex items-center justify-center shadow-md group">
                                 <?php if(!empty($admin['profile_image'])): ?>
                                     <img src="../<?php echo htmlspecialchars($admin['profile_image']); ?>" class="w-full h-full object-cover">
                                 <?php else: ?>
-                                    <i class="fas fa-user text-5xl text-gray-500"></i>
+                                    <i class="fas fa-user text-6xl text-gray-300"></i>
                                 <?php endif; ?>
                                 
-                                <label for="profile_upload" class="absolute bottom-0 left-0 right-0 bg-black/60 text-center py-2 cursor-pointer hover:bg-primary/80 transition-colors">
-                                    <i class="fas fa-camera text-sm"></i>
+                                <label for="profile_upload" class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity backdrop-blur-sm">
+                                    <i class="fas fa-camera text-2xl mb-1"></i>
+                                    <span class="text-xs font-bold uppercase tracking-wider">Change</span>
                                 </label>
                             </div>
                             <input type="file" id="profile_upload" name="profile_image" accept="image/*" class="hidden">
-                            <p class="text-sm text-gray-400">Click camera icon to change picture</p>
+                            <p class="text-xs font-bold text-apple_muted uppercase tracking-wider">Click image to upload new</p>
                         </div>
                         
-                        <!-- Username -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Username *</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-user text-gray-500"></i>
-                                </div>
-                                <input type="text" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>" required class="w-full bg-dark border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-                        
-                        <div class="border-t border-gray-700 my-6 pt-6">
-                            <h3 class="text-lg font-medium text-white mb-4">Change Password</h3>
-                            <p class="text-sm text-gray-400 mb-4">Leave blank if you don't want to change your password.</p>
-                            
-                            <!-- New Password -->
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-300 mb-2">New Password</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-lock text-gray-500"></i>
-                                    </div>
-                                    <input type="password" name="new_password" class="w-full bg-dark border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter new password">
-                                </div>
-                            </div>
-                            
-                            <!-- Confirm Password -->
+                        <div class="bg-white/40 p-8 rounded-2xl border border-white/60 shadow-inner">
+                            <h3 class="text-lg font-bold text-apple_text mb-6 flex items-center border-b border-black/5 pb-3">
+                                <i class="fas fa-user-edit text-primary mr-3"></i> Profile Details
+                            </h3>
+                            <!-- Username -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-300 mb-2">Confirm New Password</label>
+                                <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Username *</label>
                                 <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-lock text-gray-500"></i>
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-apple_muted opacity-70"></i>
                                     </div>
-                                    <input type="password" name="confirm_password" class="w-full bg-dark border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Confirm new password">
+                                    <input type="text" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>" required class="w-full rounded-xl pl-12 pr-4 py-3.5 border transition-all text-[15px]">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white/40 p-8 rounded-2xl border border-white/60 shadow-inner">
+                            <h3 class="text-lg font-bold text-apple_text mb-4 flex items-center border-b border-black/5 pb-3">
+                                <i class="fas fa-shield-alt text-primary mr-3"></i> Change Password
+                            </h3>
+                            <p class="text-xs font-semibold text-apple_muted mb-6 bg-white/60 inline-block px-3 py-1.5 rounded-lg border border-black/5">Leave blank if you don't want to change your password.</p>
+                            
+                            <div class="space-y-5">
+                                <!-- New Password -->
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">New Password</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <i class="fas fa-lock text-apple_muted opacity-70"></i>
+                                        </div>
+                                        <input type="password" name="new_password" class="w-full rounded-xl pl-12 pr-4 py-3.5 border transition-all text-[15px]" placeholder="Enter new password">
+                                    </div>
+                                </div>
+                                
+                                <!-- Confirm Password -->
+                                <div>
+                                    <label class="block text-xs font-bold text-apple_muted uppercase tracking-wider mb-2">Confirm New Password</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <i class="fas fa-lock text-apple_muted opacity-70"></i>
+                                        </div>
+                                        <input type="password" name="confirm_password" class="w-full rounded-xl pl-12 pr-4 py-3.5 border transition-all text-[15px]" placeholder="Confirm new password">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Submit Button -->
-                        <div class="pt-4">
-                            <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-transform hover:-translate-y-1 shadow-lg">
-                                Update Profile
+                        <div class="pt-4 flex justify-end">
+                            <button type="submit" class="bg-primary hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-xl transition-all transform hover:-translate-y-0.5 shadow-md hover:shadow-lg w-full md:w-auto text-[15px] flex items-center justify-center">
+                                <i class="fas fa-check-circle mr-2"></i> Save Profile Changes
                             </button>
                         </div>
                     </form>
+                </div>
+                
+                <div class="mt-12 text-center text-sm font-medium text-apple_muted mb-6">
+                    &copy; <?php echo date('Y'); ?> Hypecrews. All rights reserved.
                 </div>
             </div>
         </div>

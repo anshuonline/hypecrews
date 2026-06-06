@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'job_applications';
 
 // Handle deletion
@@ -19,6 +20,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
         
         $stmt = $pdo->prepare("DELETE FROM job_applications WHERE id = ?");
         $stmt->execute([$_GET['delete']]);
+        logAdminActivity($pdo, 'DELETE_JOB_APP', "Deleted job application ID: " . $_GET['delete']);
         $success = "Application deleted successfully.";
     } catch (PDOException $e) {
         $error = "Error deleting application: " . $e->getMessage();

@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 require_once '../config/db.php';
+require_once 'components/logger.php';
 $current_page = 'job_applications';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -14,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['status'])) {
     try {
         $stmt = $pdo->prepare("UPDATE job_applications SET status = ? WHERE id = ?");
         $stmt->execute([$_POST['status'], $app_id]);
+        logAdminActivity($pdo, 'UPDATE_JOB_APP_STATUS', "Updated status to " . $_POST['status'] . " for application ID: " . $app_id);
         $success = "Application status updated.";
     } catch (PDOException $e) {
         $error = "Error updating status: " . $e->getMessage();
