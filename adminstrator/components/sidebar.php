@@ -167,7 +167,7 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
         pointer-events: none;
     }
 }
-</script>
+</style>
 
 <script>
     // Apply collapsed state immediately to prevent FOUC (Flash of Unstyled Content)
