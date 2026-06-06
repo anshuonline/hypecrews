@@ -127,24 +127,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dynamically inject hamburger menu into the main content header
     const header = document.querySelector('header');
     if (header) {
-        const headerFlex = header.querySelector('.flex.justify-between.items-center') || header.querySelector('.flex') || header;
-        if (headerFlex) {
-            const titleElement = headerFlex.querySelector('h2');
+        const titleElement = header.querySelector('h1, h2, h3');
+        
+        const hamburgerBtn = document.createElement('button');
+        // Use text-gray-800 for Apple UI light theme
+        hamburgerBtn.className = 'md:hidden text-gray-800 hover:text-primary transition-colors mr-4 focus:outline-none z-50 relative flex-shrink-0';
+        hamburgerBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+        hamburgerBtn.onclick = toggleSidebar;
+        
+        if (titleElement) {
+            const titleParent = titleElement.parentElement;
             
-            const hamburgerBtn = document.createElement('button');
-            hamburgerBtn.className = 'md:hidden text-white mr-4 focus:outline-none hover:text-primary transition-colors';
-            hamburgerBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
-            hamburgerBtn.onclick = toggleSidebar;
+            // Ensure the parent is a flex container to align the button and title horizontally
+            if (!titleParent.classList.contains('flex')) {
+                titleParent.classList.add('flex', 'items-center');
+            }
             
-            if (titleElement) {
-                // Group hamburger and title
-                const titleWrapper = document.createElement('div');
-                titleWrapper.className = 'flex items-center';
-                headerFlex.insertBefore(titleWrapper, titleElement);
-                titleWrapper.appendChild(hamburgerBtn);
-                titleWrapper.appendChild(titleElement);
+            titleParent.insertBefore(hamburgerBtn, titleElement);
+        } else {
+            // Fallback if no heading found
+            const firstChild = header.firstChild;
+            if (firstChild) {
+                header.insertBefore(hamburgerBtn, firstChild);
             } else {
-                headerFlex.insertBefore(hamburgerBtn, headerFlex.firstChild);
+                header.appendChild(hamburgerBtn);
             }
         }
     }
