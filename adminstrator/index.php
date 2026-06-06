@@ -56,18 +56,14 @@ try {
                 extend: {
                     colors: {
                         primary: '#0066cc', // Apple Blue
-                        apple_bg: '#f5f5f7', // Apple Light Gray background
-                        apple_card: '#ffffff', // White cards
                         apple_text: '#1d1d1f', // Apple Dark text
                         apple_muted: '#86868b', // Apple Muted text
-                        apple_border: 'rgba(0,0,0,0.05)'
                     },
                     fontFamily: {
                         sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
                     },
                     boxShadow: {
-                        'apple': '0 4px 24px rgba(0, 0, 0, 0.04)',
-                        'apple-hover': '0 10px 40px rgba(0, 0, 0, 0.08)'
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -75,47 +71,110 @@ try {
     </script>
     <style>
         body {
-            background-color: #0f172a; /* Keep dark context for sidebar if needed */
+            background-color: #f5f5f7; 
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            position: relative;
         }
+        
+        /* The colorful blurred background that makes the glassmorphism visible */
+        .glass-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #f5f5f9;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        
+        .glass-bg::before {
+            background: #dbeafe; /* Light blue */
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .glass-bg::after {
+            background: #f3e8ff; /* Light purple */
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            left: 10%;
+        }
+        
+        .glass-blob {
+            background: #e0f2fe; /* Sky blue */
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         /* Apple-style thin, invisible scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        /* Glass panel utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
+        }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
 <body class="text-white">
-    <div class="flex h-screen overflow-hidden">
+    
+    <!-- Abstract blurred colorful background -->
+    <div class="glass-bg">
+        <div class="glass-blob"></div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
         
-        <!-- Sidebar Wrapper - Ensure dark context is maintained for sidebar component -->
-        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl border-r border-white/5">
+        <!-- Sidebar Wrapper -->
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl">
             <?php include 'components/sidebar.php'; ?>
         </div>
         
-        <!-- Main Content - Apple Light UI Theme -->
-        <div class="flex-1 flex flex-col h-full bg-apple_bg text-apple_text overflow-hidden relative">
+        <!-- Main Content - Apple Glass UI Theme -->
+        <div class="flex-1 flex flex-col h-full text-apple_text overflow-hidden relative">
             
-            <!-- Apple-style Header (Clean, blurry if possible, simple) -->
-            <header class="bg-white/80 backdrop-blur-xl border-b border-apple_border px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+            <!-- Apple-style Glass Header -->
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
                 <div>
                     <h1 class="text-3xl font-bold text-apple_text tracking-tight">Dashboard</h1>
                     <p class="text-sm text-apple_muted mt-1 font-medium">Welcome back to Hypecrews</p>
                 </div>
-                <div class="hidden md:flex items-center gap-3 bg-black/5 px-5 py-2.5 rounded-full">
+                <div class="hidden md:flex items-center gap-3 bg-white/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/60 shadow-sm">
                     <i class="far fa-calendar text-apple_text"></i>
                     <span class="text-sm font-semibold text-apple_text"><?php echo date('l, F j'); ?></span>
                 </div>
             </header>
             
             <!-- Scrollable Content Area -->
-            <div class="flex-1 overflow-y-auto p-10">
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 
                 <?php if (isset($error)): ?>
-                <div class="mb-8 p-4 rounded-2xl bg-red-50 border border-red-100 shadow-apple text-red-600 font-medium">
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-red-50/50 border-red-200 shadow-sm text-red-600 font-medium">
                     <i class="fas fa-exclamation-circle mr-2"></i> <?php echo htmlspecialchars($error); ?>
                 </div>
                 <?php endif; ?>
@@ -126,8 +185,8 @@ try {
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         
                         <!-- Metric Card 1 -->
-                        <div class="bg-apple_card rounded-[2rem] p-7 shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center mb-4">
+                        <div class="glass-panel rounded-3xl p-7 hover:bg-white/80 transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-600 flex items-center justify-center mb-4 shadow-inner">
                                 <i class="fas fa-box text-xl"></i>
                             </div>
                             <p class="text-sm font-semibold text-apple_muted mb-1">Total Orders</p>
@@ -135,8 +194,8 @@ try {
                         </div>
                         
                         <!-- Metric Card 2 -->
-                        <div class="bg-apple_card rounded-[2rem] p-7 shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center mb-4">
+                        <div class="glass-panel rounded-3xl p-7 hover:bg-white/80 transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 flex items-center justify-center mb-4 shadow-inner">
                                 <i class="fas fa-users text-xl"></i>
                             </div>
                             <p class="text-sm font-semibold text-apple_muted mb-1">Total Users</p>
@@ -144,8 +203,8 @@ try {
                         </div>
                         
                         <!-- Metric Card 3 -->
-                        <div class="bg-apple_card rounded-[2rem] p-7 shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mb-4">
+                        <div class="glass-panel rounded-3xl p-7 hover:bg-white/80 transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center mb-4 shadow-inner">
                                 <i class="fas fa-star text-xl"></i>
                             </div>
                             <p class="text-sm font-semibold text-apple_muted mb-1">Total Reviews</p>
@@ -153,8 +212,8 @@ try {
                         </div>
                         
                         <!-- Metric Card 4 -->
-                        <div class="bg-apple_card rounded-[2rem] p-7 shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center mb-4">
+                        <div class="glass-panel rounded-3xl p-7 hover:bg-white/80 transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-600 flex items-center justify-center mb-4 shadow-inner">
                                 <i class="fas fa-question-circle text-xl"></i>
                             </div>
                             <p class="text-sm font-semibold text-apple_muted mb-1">Active Queries</p>
@@ -168,50 +227,50 @@ try {
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
                     
                     <!-- Recent Orders Table -->
-                    <div class="bg-apple_card rounded-[2rem] shadow-apple p-7">
+                    <div class="glass-panel rounded-3xl p-7 flex flex-col h-full">
                         <div class="flex justify-between items-end mb-6">
                             <h3 class="text-xl font-bold text-apple_text">Recent Orders</h3>
-                            <a href="orders.php" class="text-sm font-medium text-primary hover:underline">See All</a>
+                            <a href="orders.php" class="text-sm font-medium text-primary hover:underline bg-white/40 px-3 py-1.5 rounded-full border border-white/60">See All</a>
                         </div>
-                        <div class="overflow-hidden">
+                        <div class="overflow-x-auto flex-grow">
                             <table class="w-full text-left border-collapse">
                                 <tbody class="divide-y divide-black/5">
                                     <?php if (empty($recent_orders)): ?>
                                         <tr><td class="py-8 text-center text-apple_muted">No orders found.</td></tr>
                                     <?php else: ?>
                                         <?php foreach ($recent_orders as $order): ?>
-                                        <tr class="group">
-                                            <td class="py-4 pr-4">
+                                        <tr class="group hover:bg-white/30 transition-colors rounded-xl">
+                                            <td class="py-4 pr-4 pl-2 rounded-l-xl">
                                                 <div class="flex items-center gap-4">
-                                                    <div class="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center text-apple_muted group-hover:bg-primary group-hover:text-white transition-colors">
+                                                    <div class="w-11 h-11 rounded-full bg-white/50 border border-white/60 flex items-center justify-center text-apple_muted shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
                                                         <i class="fas fa-file-invoice"></i>
                                                     </div>
                                                     <div>
                                                         <div class="font-semibold text-apple_text text-sm"><?php echo htmlspecialchars($order['order_title']); ?></div>
-                                                        <div class="text-xs text-apple_muted mt-0.5">ORD-<?php echo str_pad($order['id'], 5, '0', STR_PAD_LEFT); ?> &bull; <?php echo $order['user_id'] ? htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) : "Guest"; ?></div>
+                                                        <div class="text-xs text-apple_muted mt-0.5 font-medium">ORD-<?php echo str_pad($order['id'], 5, '0', STR_PAD_LEFT); ?> &bull; <?php echo $order['user_id'] ? htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) : "Guest"; ?></div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="py-4 text-right">
+                                            <td class="py-4 text-right pr-2 rounded-r-xl">
                                                 <?php
                                                 $statusClasses = [
-                                                    'pending' => 'bg-yellow-50 text-yellow-600',
-                                                    'in_review' => 'bg-blue-50 text-blue-600',
-                                                    'approved' => 'bg-indigo-50 text-indigo-600',
-                                                    'processing' => 'bg-purple-50 text-purple-600',
-                                                    'in_production' => 'bg-cyan-50 text-cyan-600',
-                                                    'quality_check' => 'bg-teal-50 text-teal-600',
-                                                    'ready_for_delivery' => 'bg-emerald-50 text-emerald-600',
-                                                    'shipped' => 'bg-blue-50 text-blue-600',
-                                                    'delivered' => 'bg-green-50 text-green-600',
-                                                    'revision_requested' => 'bg-orange-50 text-orange-600',
-                                                    'on_hold' => 'bg-amber-50 text-amber-600',
-                                                    'completed' => 'bg-green-50 text-green-600',
-                                                    'cancelled' => 'bg-red-50 text-red-600'
+                                                    'pending' => 'bg-yellow-500/10 text-yellow-700 border-yellow-500/20',
+                                                    'in_review' => 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+                                                    'approved' => 'bg-indigo-500/10 text-indigo-700 border-indigo-500/20',
+                                                    'processing' => 'bg-purple-500/10 text-purple-700 border-purple-500/20',
+                                                    'in_production' => 'bg-cyan-500/10 text-cyan-700 border-cyan-500/20',
+                                                    'quality_check' => 'bg-teal-500/10 text-teal-700 border-teal-500/20',
+                                                    'ready_for_delivery' => 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
+                                                    'shipped' => 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+                                                    'delivered' => 'bg-green-500/10 text-green-700 border-green-500/20',
+                                                    'revision_requested' => 'bg-orange-500/10 text-orange-700 border-orange-500/20',
+                                                    'on_hold' => 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+                                                    'completed' => 'bg-green-500/10 text-green-700 border-green-500/20',
+                                                    'cancelled' => 'bg-red-500/10 text-red-700 border-red-500/20'
                                                 ];
                                                 ?>
-                                                <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full <?php echo $statusClasses[$order['status']]; ?>">
-                                                    <?php echo ucfirst(str_replace('_', ' ', $order['status'])); ?>
+                                                <span class="inline-flex items-center px-3 py-1 text-[11px] uppercase tracking-wider font-bold rounded-full border <?php echo $statusClasses[$order['status']]; ?> shadow-sm">
+                                                    <?php echo str_replace('_', ' ', $order['status']); ?>
                                                 </span>
                                             </td>
                                         </tr>
@@ -223,48 +282,50 @@ try {
                     </div>
                     
                     <!-- Recent Queries Table -->
-                    <div class="bg-apple_card rounded-[2rem] shadow-apple p-7">
+                    <div class="glass-panel rounded-3xl p-7 flex flex-col h-full">
                         <div class="flex justify-between items-end mb-6">
                             <h3 class="text-xl font-bold text-apple_text">Recent Queries</h3>
-                            <a href="queries.php" class="text-sm font-medium text-primary hover:underline">See All</a>
+                            <a href="queries.php" class="text-sm font-medium text-primary hover:underline bg-white/40 px-3 py-1.5 rounded-full border border-white/60">See All</a>
                         </div>
-                        <div class="overflow-hidden">
+                        <div class="overflow-x-auto flex-grow">
                             <table class="w-full text-left border-collapse">
                                 <tbody class="divide-y divide-black/5">
                                     <?php if (empty($recent_queries)): ?>
                                         <tr><td class="py-8 text-center text-apple_muted">No queries found.</td></tr>
                                     <?php else: ?>
                                         <?php foreach ($recent_queries as $query): ?>
-                                        <tr class="group">
-                                            <td class="py-4 pr-4">
+                                        <tr class="group hover:bg-white/30 transition-colors rounded-xl">
+                                            <td class="py-4 pr-4 pl-2 rounded-l-xl">
                                                 <div class="flex items-center gap-4">
-                                                    <div class="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center text-apple_muted group-hover:bg-primary group-hover:text-white transition-colors">
+                                                    <div class="w-11 h-11 rounded-full bg-white/50 border border-white/60 flex items-center justify-center text-apple_muted shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
                                                         <i class="fas fa-inbox"></i>
                                                     </div>
                                                     <div>
                                                         <div class="font-semibold text-apple_text text-sm"><?php echo htmlspecialchars($query['service_name']); ?></div>
-                                                        <div class="text-xs text-apple_muted mt-0.5"><?php echo htmlspecialchars($query['name']); ?></div>
+                                                        <div class="text-xs text-apple_muted mt-0.5 font-medium"><?php echo htmlspecialchars($query['name']); ?></div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="py-4 text-right text-xs font-medium text-apple_muted">
-                                                <?php 
-                                                $query_time = strtotime($query['created_at']);
-                                                $current_time = time();
-                                                $time_diff = $current_time - $query_time;
-                                                
-                                                if ($time_diff < 60) {
-                                                    echo "Just now";
-                                                } elseif ($time_diff < 3600) {
-                                                    $minutes = floor($time_diff / 60);
-                                                    echo $minutes . "m ago";
-                                                } elseif ($time_diff < 86400) {
-                                                    $hours = floor($time_diff / 3600);
-                                                    echo $hours . "h ago";
-                                                } else {
-                                                    echo date('M j', $query_time);
-                                                }
-                                                ?>
+                                            <td class="py-4 text-right pr-2 rounded-r-xl">
+                                                <div class="inline-flex items-center px-3 py-1 text-[11px] uppercase tracking-wider font-bold rounded-full border bg-black/5 border-black/5 text-apple_muted shadow-sm">
+                                                    <?php 
+                                                    $query_time = strtotime($query['created_at']);
+                                                    $current_time = time();
+                                                    $time_diff = $current_time - $query_time;
+                                                    
+                                                    if ($time_diff < 60) {
+                                                        echo "JUST NOW";
+                                                    } elseif ($time_diff < 3600) {
+                                                        $minutes = floor($time_diff / 60);
+                                                        echo $minutes . "M AGO";
+                                                    } elseif ($time_diff < 86400) {
+                                                        $hours = floor($time_diff / 3600);
+                                                        echo $hours . "H AGO";
+                                                    } else {
+                                                        echo strtoupper(date('M j', $query_time));
+                                                    }
+                                                    ?>
+                                                </div>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
@@ -277,7 +338,7 @@ try {
                 </div>
                 
                 <!-- Footer within content -->
-                <div class="mt-12 text-center text-sm font-medium text-apple_muted">
+                <div class="mt-12 text-center text-sm font-medium text-apple_muted mb-6">
                     &copy; <?php echo date('Y'); ?> Hypecrews. All rights reserved.
                 </div>
                 
