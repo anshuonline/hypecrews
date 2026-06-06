@@ -379,7 +379,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
                             </button>
                         </div>
                         
-                        <input type="text" id="messageInput" autocomplete="off" placeholder="iMessage..." class="flex-1 bg-white/80 border border-black/10 rounded-full px-5 md:px-6 py-3 md:py-3.5 text-sm md:text-base text-apple_text focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all placeholder-gray-400 font-medium">
+                        <input type="text" id="messageInput" autocomplete="off" placeholder="Type a message..." class="flex-1 bg-white/80 border border-black/10 rounded-full px-5 md:px-6 py-3 md:py-3.5 text-sm md:text-base text-apple_text focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all placeholder-gray-400 font-medium">
                         
                         <button type="submit" class="bg-primary hover:bg-blue-600 text-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shadow-md transition-transform hover:scale-105 shrink-0">
                             <i class="fas fa-arrow-up text-sm md:text-base"></i>
