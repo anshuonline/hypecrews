@@ -113,8 +113,19 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
         display: none !important;
     }
 
-    .admin-sidebar-wrapper.collapsed .logo-icon-only {
-        display: flex !important;
+    /* Fix header overflow when collapsed */
+    .admin-sidebar-wrapper.collapsed .logo-container {
+        display: none !important;
+    }
+    
+    .admin-sidebar-wrapper.collapsed .sidebar-header {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    
+    .admin-sidebar-wrapper.collapsed .desktop-toggle {
+        margin: 0 !important;
     }
 
     .admin-sidebar-wrapper.collapsed .admin-nav-link {
@@ -172,7 +183,7 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
 <script>
     // Apply collapsed state immediately to prevent FOUC (Flash of Unstyled Content)
     if (localStorage.getItem('sidebar_collapsed') === 'true') {
-        document.write('<style>#admin-sidebar { width: 80px !important; } #admin-sidebar .admin-nav-link span:not(.chat-badge), #admin-sidebar .nav-section-title, #admin-sidebar .profile-text, #admin-sidebar .logo-img { display: none !important; } #admin-sidebar .logo-icon-only { display: flex !important; } #admin-sidebar .admin-nav-link { margin: 4px 12px; padding: 12px 0; justify-content: center; } #admin-sidebar .admin-nav-link i { margin-right: 0 !important; font-size: 1.25rem; } #admin-sidebar .profile-container { padding: 10px; justify-content: center; } #admin-sidebar .profile-avatar { margin-right: 0 !important; } </style>');
+        document.write('<style>#admin-sidebar { width: 80px !important; } #admin-sidebar .admin-nav-link span:not(.chat-badge), #admin-sidebar .nav-section-title, #admin-sidebar .profile-text, #admin-sidebar .logo-container { display: none !important; } #admin-sidebar .sidebar-header { justify-content: center !important; padding-left: 0 !important; padding-right: 0 !important; } #admin-sidebar .desktop-toggle { margin: 0 !important; } #admin-sidebar .admin-nav-link { margin: 4px 12px; padding: 12px 0; justify-content: center; } #admin-sidebar .admin-nav-link i { margin-right: 0 !important; font-size: 1.25rem; } #admin-sidebar .profile-container { padding: 10px; justify-content: center; } #admin-sidebar .profile-avatar { margin-right: 0 !important; } </style>');
     }
 </script>
 
@@ -182,15 +193,13 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
 <div id="admin-sidebar" class="admin-sidebar-wrapper w-64 flex-shrink-0 flex flex-col absolute md:relative z-50 h-full transform -translate-x-full md:translate-x-0">
     
     <!-- Header with Logo and Collapse Toggle -->
-    <div class="p-6 border-b border-white/10 flex items-center justify-between min-h-[80px]">
-        <div class="flex items-center justify-center flex-1">
+    <div class="sidebar-header p-6 border-b border-white/10 flex items-center justify-between min-h-[80px] transition-all">
+        <div class="logo-container flex items-center justify-center flex-1 transition-all">
             <!-- Full Logo -->
             <img src="../graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews Admin" class="logo-img h-9 w-auto hover:opacity-80 transition-opacity">
-            <!-- Icon Only Logo (shown when collapsed) -->
-            <div class="logo-icon-only hidden w-8 h-8 bg-primary text-white rounded-xl items-center justify-center font-bold text-xl shadow-lg">H</div>
         </div>
         <!-- Desktop Toggle Button -->
-        <button onclick="toggleDesktopSidebar()" class="hidden md:flex text-white/50 hover:text-white transition-colors focus:outline-none w-8 h-8 rounded-full hover:bg-white/10 items-center justify-center -mr-2 flex-shrink-0">
+        <button onclick="toggleDesktopSidebar()" class="desktop-toggle hidden md:flex text-white/50 hover:text-white transition-colors focus:outline-none w-8 h-8 rounded-full hover:bg-white/10 items-center justify-center -mr-2 flex-shrink-0">
             <i class="fas fa-bars"></i>
         </button>
     </div>
