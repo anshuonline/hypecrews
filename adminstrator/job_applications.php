@@ -47,17 +47,22 @@ try {
     <title>Job Applications - Hypecrews Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        primary: '#0066cc', // Apple Blue
+                        apple_text: '#1d1d1f', // Apple Dark text
+                        apple_muted: '#86868b', // Apple Muted text
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
             }
@@ -65,87 +70,189 @@ try {
     </script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+        
+        /* The colorful blurred background that makes the glassmorphism visible */
+        .glass-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #f5f5f9;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        
+        .glass-bg::before {
+            background: #dbeafe; /* Light blue */
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .glass-bg::after {
+            background: #f3e8ff; /* Light purple */
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            left: 10%;
+        }
+        
+        .glass-blob {
+            background: #e0f2fe; /* Sky blue */
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Apple-style thin, invisible scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        /* Glass panel utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
-        <?php include 'components/sidebar.php'; ?>
+<body class="text-apple_text">
+
+    <!-- Abstract blurred colorful background -->
+    <div class="glass-bg">
+        <div class="glass-blob"></div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
+        <!-- Sidebar -->
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl text-white">
+            <?php include 'components/sidebar.php'; ?>
+        </div>
         
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-dark border-b border-gray-800 p-6">
-                <h2 class="text-2xl font-bold">Job Applications</h2>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Apple-style Glass Header -->
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-apple_text tracking-tight">Job Applications</h1>
+                </div>
             </header>
             
-            <div class="flex-1 overflow-y-auto p-6">
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 <?php if (isset($error)): ?>
-                <div class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-700 backdrop-blur-sm">
-                    <p class="text-red-300"><i class="fas fa-exclamation-circle mr-2"></i> <?php echo htmlspecialchars($error); ?></p>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-red-50/50 border-red-200 shadow-sm text-red-700 font-medium flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($error); ?></p>
                 </div>
                 <?php endif; ?>
                 
                 <?php if (isset($success)): ?>
-                <div class="mb-6 p-4 rounded-lg bg-green-900/50 border border-green-700 backdrop-blur-sm">
-                    <p class="text-green-300"><i class="fas fa-check-circle mr-2"></i> <?php echo htmlspecialchars($success); ?></p>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-green-50/50 border-green-200 shadow-sm text-green-700 font-medium flex items-center">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($success); ?></p>
                 </div>
                 <?php endif; ?>
                 
-                <div class="bg-light rounded-xl p-6">
+                <div class="glass-panel rounded-[2rem] p-8 shadow-sm flex flex-col">
                     <?php if (empty($applications)): ?>
-                    <div class="text-center py-12">
-                        <i class="fas fa-file-alt text-4xl text-gray-500 mb-4"></i>
-                        <p class="text-gray-400">No applications received yet</p>
+                    <div class="text-center py-16">
+                        <div class="w-20 h-20 bg-gray-100/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white">
+                            <i class="fas fa-file-alt text-4xl text-gray-400"></i>
+                        </div>
+                        <p class="text-apple_muted text-lg font-medium">No applications received yet.</p>
                     </div>
                     <?php else: ?>
                     <div class="overflow-x-auto">
-                        <table class="w-full">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="text-left text-gray-400 border-b border-gray-800">
-                                    <th class="pb-3">Applicant</th>
-                                    <th class="pb-3">Applied For</th>
-                                    <th class="pb-3">Status</th>
-                                    <th class="pb-3">Date</th>
-                                    <th class="pb-3 text-right">Actions</th>
+                                <tr class="text-apple_muted border-b border-black/5 text-sm uppercase tracking-wider">
+                                    <th class="pb-4 font-semibold px-4">Applicant</th>
+                                    <th class="pb-4 font-semibold px-4">Applied For</th>
+                                    <th class="pb-4 font-semibold px-4">Status</th>
+                                    <th class="pb-4 font-semibold px-4">Date</th>
+                                    <th class="pb-4 font-semibold px-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="divide-y divide-black/5">
                                 <?php foreach ($applications as $app): ?>
-                                <tr class="border-b border-gray-800 hover:bg-dark/50">
-                                    <td class="py-4">
-                                        <p class="font-medium"><?php echo htmlspecialchars($app['applicant_name']); ?></p>
-                                        <p class="text-sm text-gray-400"><?php echo htmlspecialchars($app['email']); ?></p>
+                                <tr class="hover:bg-white/30 transition-colors group">
+                                    <td class="py-5 px-4 rounded-l-2xl">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-primary mr-3 shadow-inner">
+                                                <span class="font-bold text-sm"><?php echo strtoupper(substr($app['applicant_name'], 0, 1)); ?></span>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-[15px] text-apple_text"><?php echo htmlspecialchars($app['applicant_name']); ?></p>
+                                                <p class="text-xs font-semibold text-primary/70"><a href="mailto:<?php echo htmlspecialchars($app['email']); ?>" class="hover:underline"><?php echo htmlspecialchars($app['email']); ?></a></p>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td class="py-4">
-                                        <p><?php echo htmlspecialchars($app['job_title'] ?? 'Unknown Job'); ?></p>
+                                    <td class="py-5 px-4">
+                                        <p class="font-bold text-[14px] text-apple_text bg-white/50 inline-block px-3 py-1.5 rounded-lg border border-black/5 shadow-sm"><?php echo htmlspecialchars($app['job_title'] ?? 'Unknown Job'); ?></p>
                                     </td>
-                                    <td class="py-4">
+                                    <td class="py-5 px-4">
                                         <?php 
                                             $status_colors = [
-                                                'new' => 'bg-blue-900 text-blue-300',
-                                                'reviewed' => 'bg-yellow-900 text-yellow-300',
-                                                'shortlisted' => 'bg-green-900 text-green-300',
-                                                'rejected' => 'bg-red-900 text-red-300'
+                                                'new' => 'bg-blue-50 text-blue-700 border border-blue-200',
+                                                'reviewed' => 'bg-amber-50 text-amber-700 border border-amber-200',
+                                                'shortlisted' => 'bg-green-50 text-green-700 border border-green-200',
+                                                'rejected' => 'bg-red-50 text-red-700 border border-red-200'
                                             ];
-                                            $color = $status_colors[$app['status']] ?? 'bg-gray-700 text-gray-300';
+                                            $icons = [
+                                                'new' => 'fa-star',
+                                                'reviewed' => 'fa-eye',
+                                                'shortlisted' => 'fa-check-circle',
+                                                'rejected' => 'fa-times-circle'
+                                            ];
+                                            $color = $status_colors[$app['status']] ?? 'bg-gray-100 text-gray-700 border border-gray-200';
+                                            $icon = $icons[$app['status']] ?? 'fa-circle';
                                         ?>
-                                        <span class="<?php echo $color; ?> px-3 py-1 rounded-full text-xs uppercase tracking-wider font-semibold">
+                                        <span class="<?php echo $color; ?> px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider shadow-sm flex items-center w-max">
+                                            <i class="fas <?php echo $icon; ?> mr-1.5 opacity-70"></i>
                                             <?php echo htmlspecialchars($app['status']); ?>
                                         </span>
                                     </td>
-                                    <td class="py-4 text-gray-400 text-sm">
-                                        <?php echo date('M j, Y H:i', strtotime($app['created_at'])); ?>
+                                    <td class="py-5 px-4">
+                                        <span class="text-sm font-medium text-apple_text flex flex-col">
+                                            <span><i class="far fa-calendar-alt mr-1.5 text-apple_muted"></i><?php echo date('M j, Y', strtotime($app['created_at'])); ?></span>
+                                            <span class="text-[11px] text-apple_muted font-semibold mt-0.5 ml-5"><?php echo date('h:i A', strtotime($app['created_at'])); ?></span>
+                                        </span>
                                     </td>
-                                    <td class="py-4 text-right space-x-3">
-                                        <a href="view_application.php?id=<?php echo $app['id']; ?>" class="text-primary hover:text-indigo-300 font-medium">
-                                            View Details
-                                        </a>
-                                        <a href="?delete=<?php echo $app['id']; ?>" onclick="return confirm('Are you sure you want to delete this application?');" class="text-red-400 hover:text-red-300">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
+                                    <td class="py-5 px-4 text-right rounded-r-2xl">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <a href="view_application.php?id=<?php echo $app['id']; ?>" class="bg-primary/10 hover:bg-primary hover:text-white text-primary font-bold py-2 px-4 rounded-full text-xs transition-colors shadow-sm" title="View Details">
+                                                View Details
+                                            </a>
+                                            <a href="?delete=<?php echo $app['id']; ?>" onclick="return confirm('Are you sure you want to delete this application?');" class="w-8 h-8 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-apple_muted hover:text-red-500 hover:bg-red-50 transition-colors shadow-sm" title="Delete Application">
+                                                <i class="fas fa-trash text-[13px]"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -153,6 +260,10 @@ try {
                         </table>
                     </div>
                     <?php endif; ?>
+                </div>
+                
+                <div class="mt-12 text-center text-sm font-medium text-apple_muted mb-6">
+                    &copy; <?php echo date('Y'); ?> Hypecrews. All rights reserved.
                 </div>
             </div>
         </div>
