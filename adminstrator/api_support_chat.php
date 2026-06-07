@@ -81,8 +81,38 @@ if ($action === 'get_messages') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send_message') {
     $session_id = $_POST['session_id'] ?? 0;
     $message = trim($_POST['message'] ?? '');
+    $attachment_path = null;
     
-    if (empty($message) || empty($session_id)) {
+    // Handle attachment
+    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['attachment'];
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        
+        if ($file['size'] > 2 * 1024 * 1024) {
+            echo json_encode(['status' => 'error', 'message' => 'Image size must be less than 2MB']);
+            exit();
+        }
+        
+        if (!in_array($file['type'], $allowed_types)) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, GIF, and WEBP are allowed.']);
+            exit();
+        }
+        
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('chat_admin_') . '.' . $ext;
+        // Upload path relative to root
+        $upload_dir = '../uploads/chat_attachments/';
+        
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        
+        if (move_uploaded_file($file['tmp_name'], $upload_dir . $filename)) {
+            $attachment_path = 'uploads/chat_attachments/' . $filename;
+        }
+    }
+    
+    if (empty($message) && empty($session_id) && !$attachment_path) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit();
     }
@@ -98,8 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send_message') {
             exit();
         }
         
-        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message, session_id) VALUES (?, 'admin', ?, ?, ?)");
-        $stmt->execute([$session['user_id'], $admin_id, $message, $session_id]);
+        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message, session_id, attachment) VALUES (?, 'admin', ?, ?, ?, ?)");
+        $stmt->execute([$session['user_id'], $admin_id, $message, $session_id, $attachment_path]);
         
         // Update session timestamp
         $pdo->prepare("UPDATE support_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session_id]);

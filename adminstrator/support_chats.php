@@ -171,11 +171,21 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6">
                         <form id="chatForm" class="flex gap-3">
                             <input type="hidden" id="chatSession" value="<?php echo htmlspecialchars($chat_with); ?>">
-                            <input type="text" id="messageInput" autocomplete="off" placeholder="Type reply as Admin..." class="flex-1 bg-white border border-black/10 rounded-full px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all font-medium">
+                            <div class="relative flex-1">
+                                <input type="text" id="messageInput" autocomplete="off" placeholder="Type reply as Admin..." class="w-full bg-white border border-black/10 rounded-full pl-5 pr-10 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all font-medium">
+                                <label class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-primary transition-colors p-2">
+                                    <i class="fas fa-paperclip"></i>
+                                    <input type="file" id="attachmentInput" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
+                                </label>
+                            </div>
                             <button type="submit" class="bg-primary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md transition-transform hover:scale-105 shrink-0">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </form>
+                        <div id="attachmentPreview" class="hidden mt-3 text-sm text-primary font-medium items-center gap-2">
+                            <i class="fas fa-image"></i> <span id="attachmentName"></span>
+                            <button type="button" id="removeAttachment" class="text-red-500 hover:text-red-600 ml-2"><i class="fas fa-times"></i></button>
+                        </div>
                     </div>
                     <?php else: ?>
                     <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6 text-center text-apple_muted bg-gray-50/50">
@@ -194,6 +204,10 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         const messagesDiv = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         const messageInput = document.getElementById('messageInput');
+        const attachmentInput = document.getElementById('attachmentInput');
+        const attachmentPreview = document.getElementById('attachmentPreview');
+        const attachmentName = document.getElementById('attachmentName');
+        const removeAttachment = document.getElementById('removeAttachment');
         
         let isScrolledToBottom = true;
         if(messagesDiv) {
@@ -214,6 +228,15 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 .catch(err => console.error("Error fetching messages:", err));
         }
 
+        function formatMessage(text) {
+            if(!text) return '';
+            // Escape HTML first
+            let html = escapeHtml(text);
+            // Make links clickable
+            html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-500 hover:text-blue-600 hover:underline break-all">$1</a>');
+            return html;
+        }
+
         function renderMessages(messages) {
             if(!messagesDiv) return;
             if (messages.length === 0) {
@@ -227,6 +250,11 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 let html = '';
                 
                 messages.forEach(msg => {
+                    let attachmentHtml = '';
+                    if (msg.attachment) {
+                        attachmentHtml = `<div class="mt-2 rounded-lg overflow-hidden border border-black/10"><img src="../${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>`;
+                    }
+                    
                     if (msg.is_mine) {
                         // Admin sent it
                         html += `
@@ -234,7 +262,8 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             <div class="max-w-[75%]">
                                 <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">You, ${msg.time}</div>
                                 <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
-                                    ${escapeHtml(msg.message)}
+                                    ${formatMessage(msg.message)}
+                                    ${attachmentHtml}
                                 </div>
                             </div>
                         </div>`;
@@ -248,7 +277,8 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             <div class="max-w-[75%]">
                                 <div class="text-[10px] text-gray-500 mb-1.5 ml-2">${escapeHtml(msg.sender_name)}, ${msg.time}</div>
                                 <div class="bg-white border border-black/5 text-apple_text px-5 py-3 rounded-2xl rounded-tl-sm shadow-sm break-words">
-                                    ${escapeHtml(msg.message)}
+                                    ${formatMessage(msg.message)}
+                                    ${attachmentHtml}
                                 </div>
                             </div>
                         </div>`;
@@ -262,31 +292,62 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             }
         }
 
+        if (attachmentInput) {
+            attachmentInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    if(this.files[0].size > 2 * 1024 * 1024) {
+                        alert('Image size must be less than 2MB');
+                        this.value = '';
+                        return;
+                    }
+                    attachmentName.textContent = this.files[0].name;
+                    attachmentPreview.classList.remove('hidden');
+                    attachmentPreview.classList.add('flex');
+                }
+            });
+        }
+
+        if (removeAttachment) {
+            removeAttachment.addEventListener('click', function() {
+                attachmentInput.value = '';
+                attachmentPreview.classList.add('hidden');
+                attachmentPreview.classList.remove('flex');
+            });
+        }
+
         if(chatForm) {
             chatForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const msg = messageInput.value.trim();
-                if (!msg) return;
+                const hasAttachment = attachmentInput.files && attachmentInput.files.length > 0;
+                
+                if (!msg && !hasAttachment) return;
                 
                 // Optimistic update
-                const tempHtml = `
-                <div class="flex justify-end mb-4 group opacity-50">
-                    <div class="max-w-[75%]">
-                        <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
-                        <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
-                            ${escapeHtml(msg)}
+                if (msg) {
+                    const tempHtml = `
+                    <div class="flex justify-end mb-4 group opacity-50">
+                        <div class="max-w-[75%]">
+                            <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
+                            <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
+                                ${escapeHtml(msg)}
+                            </div>
                         </div>
-                    </div>
-                </div>`;
-                messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    </div>`;
+                    messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
                 
                 const formData = new FormData();
                 formData.append('action', 'send_message');
                 formData.append('session_id', chatSession);
                 formData.append('message', msg);
+                if (hasAttachment) {
+                    formData.append('attachment', attachmentInput.files[0]);
+                }
                 
                 messageInput.value = '';
+                if (removeAttachment) removeAttachment.click();
                 
                 fetch('api_support_chat.php', {
                     method: 'POST',
@@ -297,6 +358,8 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     if (data.status === 'success') {
                         isScrolledToBottom = true;
                         fetchMessages();
+                    } else {
+                        alert(data.message || 'Error sending message');
                     }
                 });
             });

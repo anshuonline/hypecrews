@@ -12,10 +12,52 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $message = trim($_POST['message'] ?? '');
+    $action = $_POST['action'] ?? 'send_message';
     
-    if (empty($message)) {
-        echo json_encode(['status' => 'error', 'message' => 'Message is empty']);
+    if ($action === 'export_session') {
+        $session_id = $_POST['session_id'] ?? 0;
+        try {
+            $pdo->prepare("UPDATE support_sessions SET exported_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?")->execute([$session_id, $user_id]);
+            echo json_encode(['status' => 'success']);
+        } catch (PDOException $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Database error']);
+        }
+        exit();
+    }
+    
+    $message = trim($_POST['message'] ?? '');
+    $attachment_path = null;
+    
+    // Handle attachment
+    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['attachment'];
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        
+        if ($file['size'] > 2 * 1024 * 1024) {
+            echo json_encode(['status' => 'error', 'message' => 'Image size must be less than 2MB']);
+            exit();
+        }
+        
+        if (!in_array($file['type'], $allowed_types)) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, GIF, and WEBP are allowed.']);
+            exit();
+        }
+        
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('chat_') . '.' . $ext;
+        $upload_dir = 'uploads/chat_attachments/';
+        
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        
+        if (move_uploaded_file($file['tmp_name'], $upload_dir . $filename)) {
+            $attachment_path = $upload_dir . $filename;
+        }
+    }
+    
+    if (empty($message) && !$attachment_path) {
+        echo json_encode(['status' => 'error', 'message' => 'Message and attachment cannot both be empty']);
         exit();
     }
     
@@ -30,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
         
-        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message, session_id) VALUES (?, 'user', ?, ?, ?)");
-        $stmt->execute([$user_id, $user_id, $message, $session['id']]);
+        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message, session_id, attachment) VALUES (?, 'user', ?, ?, ?, ?)");
+        $stmt->execute([$user_id, $user_id, $message, $session['id'], $attachment_path]);
         
         // Update session timestamp
         $pdo->prepare("UPDATE support_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session['id']]);

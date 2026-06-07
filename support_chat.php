@@ -34,10 +34,22 @@ try {
         }
     }
 
+    // Auto delete exported sessions older than 1 hour
+    $pdo->exec("DELETE FROM support_sessions WHERE exported_at IS NOT NULL AND exported_at < NOW() - INTERVAL 1 HOUR");
+
     // Check for active session
     $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $active_session = $stmt->fetch();
+
+    // Check for resolved session to show export
+    $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'resolved' AND exported_at IS NULL ORDER BY created_at DESC LIMIT 1");
+    $stmt->execute([$user_id]);
+    $resolved_session = $stmt->fetch();
+    
+    if(!$active_session && $resolved_session) {
+        $active_session = $resolved_session; // Allow viewing it to export
+    }
 
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
@@ -53,6 +65,7 @@ try {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -212,16 +225,37 @@ try {
                             </div>
                         </div>
                         
+                        <?php if($active_session['status'] === 'open'): ?>
                         <!-- Chat Input -->
                         <div class="p-5 border-t border-white/5 bg-black/20 shrink-0 z-10">
                             <form id="chatForm" class="flex gap-3">
                                 <input type="hidden" id="sessionId" value="<?php echo $active_session['id']; ?>">
-                                <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message here..." class="flex-1 chat-input rounded-full px-6 py-3.5 text-sm font-medium">
+                                <div class="relative flex-1">
+                                    <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message here..." class="w-full chat-input rounded-full pl-6 pr-12 py-3.5 text-sm font-medium">
+                                    <label class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-secondary transition-colors p-2">
+                                        <i class="fas fa-paperclip"></i>
+                                        <input type="file" id="attachmentInput" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
+                                    </label>
+                                </div>
                                 <button type="submit" class="bg-secondary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-transform hover:scale-105 shrink-0">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
                             </form>
+                            <div id="attachmentPreview" class="hidden mt-3 text-sm text-green-400 font-medium items-center gap-2">
+                                <i class="fas fa-image"></i> <span id="attachmentName"></span>
+                                <button type="button" id="removeAttachment" class="text-red-400 hover:text-red-300 ml-2"><i class="fas fa-times"></i></button>
+                            </div>
                         </div>
+                        <?php else: ?>
+                        <!-- Export Area -->
+                        <div class="p-8 border-t border-white/5 bg-black/20 shrink-0 z-10 text-center">
+                            <h4 class="text-lg font-bold text-white mb-2">This session has been resolved.</h4>
+                            <p class="text-gray-400 text-sm mb-6">You can export the chat history as a PDF. After exporting, the history will be permanently deleted after 1 hour.</p>
+                            <button id="exportPdfBtn" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-transform hover:scale-[1.02]">
+                                <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
+                            </button>
+                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -234,12 +268,19 @@ try {
             const messagesDiv = document.getElementById('chatMessages');
             const chatForm = document.getElementById('chatForm');
             const messageInput = document.getElementById('messageInput');
+            const attachmentInput = document.getElementById('attachmentInput');
+            const attachmentPreview = document.getElementById('attachmentPreview');
+            const attachmentName = document.getElementById('attachmentName');
+            const removeAttachment = document.getElementById('removeAttachment');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
             
             let isScrolledToBottom = true;
 
-            messagesDiv.addEventListener('scroll', () => {
-                isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
-            });
+            if(messagesDiv) {
+                messagesDiv.addEventListener('scroll', () => {
+                    isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
+                });
+            }
 
             function fetchMessages() {
                 fetch('api_support_chat.php')
@@ -252,7 +293,17 @@ try {
                     .catch(err => console.error("Error fetching messages:", err));
             }
 
+            function formatMessage(text) {
+                if(!text) return '';
+                // Escape HTML first
+                let html = escapeHtml(text);
+                // Make links clickable
+                html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline break-all">$1</a>');
+                return html;
+            }
+
             function renderMessages(messages) {
+                if(!messagesDiv) return;
                 if (messages.length === 0) {
                     messagesDiv.innerHTML = '<div class="text-center text-gray-500 font-medium text-sm mt-10"><i class="fas fa-hand-sparkles text-3xl mb-3 opacity-50"></i><br>No messages yet. Send a message to start chatting!</div>';
                     return;
@@ -264,13 +315,19 @@ try {
                     let html = '';
                     
                     messages.forEach(msg => {
+                        let attachmentHtml = '';
+                        if (msg.attachment) {
+                            attachmentHtml = `<div class="mt-2 rounded-lg overflow-hidden border border-white/10"><img src="${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>`;
+                        }
+                        
                         if (msg.is_mine) {
                             html += `
                             <div class="flex justify-end mb-4 group">
                                 <div class="max-w-[80%]">
                                     <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">${msg.time}</div>
                                     <div class="bg-primary/20 border border-primary/30 text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words">
-                                        ${escapeHtml(msg.message)}
+                                        ${formatMessage(msg.message)}
+                                        ${attachmentHtml}
                                     </div>
                                 </div>
                             </div>`;
@@ -287,7 +344,8 @@ try {
                                 <div class="max-w-[80%]">
                                     <div class="text-[10px] text-gray-500 mb-1.5 ml-2">${msg.sender_name} (Admin), ${msg.time}</div>
                                     <div class="bg-white/5 border border-white/10 text-gray-200 px-5 py-3 rounded-2xl rounded-tl-sm shadow-sm break-words">
-                                        ${escapeHtml(msg.message)}
+                                        ${formatMessage(msg.message)}
+                                        ${attachmentHtml}
                                     </div>
                                 </div>
                             </div>`;
@@ -302,41 +360,118 @@ try {
                 }
             }
 
-            chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const msg = messageInput.value.trim();
-            if (!msg) return;
-            
-            // Optimistic update
-            const tempHtml = `
-            <div class="flex justify-end mb-4 group opacity-50">
-                <div class="max-w-[85%]">
-                    <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
-                    <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
-                        ${escapeHtml(msg)}
-                    </div>
-                </div>
-            </div>`;
-            messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            
-            const formData = new FormData();
-            formData.append('message', msg);
-            
-            messageInput.value = '';
-            
-            fetch('api_support_chat.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        isScrolledToBottom = true;
-                        fetchMessages();
+            if (attachmentInput) {
+                attachmentInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        if(this.files[0].size > 2 * 1024 * 1024) {
+                            alert('Image size must be less than 2MB');
+                            this.value = '';
+                            return;
+                        }
+                        attachmentName.textContent = this.files[0].name;
+                        attachmentPreview.classList.remove('hidden');
+                        attachmentPreview.classList.add('flex');
                     }
                 });
-            });
+            }
+
+            if (removeAttachment) {
+                removeAttachment.addEventListener('click', function() {
+                    attachmentInput.value = '';
+                    attachmentPreview.classList.add('hidden');
+                    attachmentPreview.classList.remove('flex');
+                });
+            }
+
+            if (chatForm) {
+                chatForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const msg = messageInput.value.trim();
+                    const hasAttachment = attachmentInput.files && attachmentInput.files.length > 0;
+                    
+                    if (!msg && !hasAttachment) return;
+                    
+                    // Optimistic update (text only)
+                    if (msg) {
+                        const tempHtml = `
+                        <div class="flex justify-end mb-4 group opacity-50">
+                            <div class="max-w-[85%]">
+                                <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
+                                <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
+                                    ${escapeHtml(msg)}
+                                </div>
+                            </div>
+                        </div>`;
+                        messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    }
+                    
+                    const formData = new FormData();
+                    formData.append('message', msg);
+                    if (hasAttachment) {
+                        formData.append('attachment', attachmentInput.files[0]);
+                    }
+                    
+                    messageInput.value = '';
+                    if (removeAttachment) removeAttachment.click();
+                    
+                    fetch('api_support_chat.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                isScrolledToBottom = true;
+                                fetchMessages();
+                            } else {
+                                alert(data.message || 'Error sending message');
+                            }
+                        });
+                });
+            }
+            
+            if (exportPdfBtn) {
+                exportPdfBtn.addEventListener('click', () => {
+                    const sessionId = messagesDiv.dataset.sessionId;
+                    
+                    exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating PDF...';
+                    exportPdfBtn.disabled = true;
+                    
+                    // Clone the messages div to format it for PDF
+                    const clone = messagesDiv.cloneNode(true);
+                    clone.style.height = 'auto';
+                    clone.style.maxHeight = 'none';
+                    clone.style.overflow = 'visible';
+                    clone.style.backgroundColor = '#1e293b'; // slate-800
+                    clone.style.padding = '20px';
+                    
+                    const opt = {
+                      margin:       10,
+                      filename:     'Support_Chat_History_' + sessionId + '.pdf',
+                      image:        { type: 'jpeg', quality: 0.98 },
+                      html2canvas:  { scale: 2, useCORS: true, logging: false },
+                      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+                    
+                    html2pdf().set(opt).from(clone).save().then(() => {
+                        exportPdfBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Downloaded';
+                        
+                        // Tell server it was exported
+                        const formData = new FormData();
+                        formData.append('action', 'export_session');
+                        formData.append('session_id', sessionId);
+                        fetch('api_support_chat.php', {
+                            method: 'POST',
+                            body: formData
+                        }).then(() => {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 3000);
+                        });
+                    });
+                });
+            }
 
             function escapeHtml(unsafe) {
                 return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
