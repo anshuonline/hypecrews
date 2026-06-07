@@ -49,7 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tracking_id = $order['tracking_id'];
     
     // Validation
-    if (empty($order_title)) {
+    if (empty($user_id)) {
+        $error = 'Assigning to a user is required';
+    } elseif (empty($order_title)) {
         $error = 'Order title is required';
     } elseif (empty($order_description)) {
         $error = 'Order description is required';
@@ -155,6 +157,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-color: #0066cc;
             box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
         }
+        
+        .user-search-results {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 1rem;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            width: 100%;
+            display: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+        }
+        
+        .user-search-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background 0.2s;
+        }
+        
+        .user-search-item:hover {
+            background: rgba(0, 102, 204, 0.08);
+        }
+        
+        .user-search-item:last-child {
+            border-bottom: none;
+        }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
@@ -204,12 +237,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <form method="POST" class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
-                                <label for="user_id" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Assign to User (Optional)</label>
+                                <label for="user_id" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Assign to User <span class="text-red-500">*</span></label>
+                                
+                                <!-- User Search -->
+                                <div class="mb-3 relative">
+                                    <input type="text" id="user_search" placeholder="Search by email, phone, username, or ID..." class="flex-1 px-5 py-3 bg-white/60 border border-black/10 rounded-xl text-apple_text focus:outline-none focus:ring-2 focus:ring-primary/50 w-full shadow-sm placeholder-gray-400 font-medium">
+                                    <p class="text-[11px] text-apple_muted mt-2 font-medium">START TYPING TO SEARCH</p>
+                                </div>
+                                
                                 <select 
                                     id="user_id" 
                                     name="user_id" 
+                                    required
                                     class="w-full input-field bg-white/60 border border-black/10 rounded-xl px-5 py-3 text-apple_text focus:outline-none shadow-sm font-medium">
-                                    <option value="">Select a user (optional)</option>
+                                    <option value="">Select a user...</option>
                                     <?php foreach ($users as $user): ?>
                                     <option value="<?php echo $user['id']; ?>" <?php echo ($order['user_id'] == $user['id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name'] . ' (@' . $user['username'] . ')'); ?>
@@ -315,5 +356,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+    <script>
+        // AJAX user search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const userSearchInput = document.getElementById('user_search');
+            const userSelect = document.getElementById('user_id');
+            const searchResultsContainer = document.createElement('div');
+            searchResultsContainer.className = 'user-search-results';
+            userSearchInput.parentNode.appendChild(searchResultsContainer);
+            
+            let searchTimeout;
+            
+            userSearchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const searchTerm = this.value.trim();
+                
+                if (searchTerm.length < 2) {
+                    searchResultsContainer.style.display = 'none';
+                    return;
+                }
+                
+                searchTimeout = setTimeout(function() {
+                    fetch('search_users.php?term=' + encodeURIComponent(searchTerm))
+                        .then(response => response.json())
+                        .then(users => {
+                            displaySearchResults(users);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching users:', error);
+                            searchResultsContainer.style.display = 'none';
+                        });
+                }, 300);
+            });
+            
+            function displaySearchResults(users) {
+                if (users.length === 0) {
+                    searchResultsContainer.style.display = 'none';
+                    return;
+                }
+                
+                searchResultsContainer.innerHTML = '';
+                
+                users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-search-item text-sm text-apple_text';
+                    userItem.innerHTML = `
+                        <div class="font-bold">${user.first_name} ${user.last_name} <span class="text-apple_muted font-medium">(@${user.username})</span></div>
+                        <div class="text-[11px] text-apple_muted mt-0.5">${user.email} &bull; ${user.mobile_number}</div>
+                    `;
+                    
+                    userItem.addEventListener('click', function() {
+                        userSelect.value = user.id;
+                        searchResultsContainer.style.display = 'none';
+                        userSearchInput.value = '';
+                    });
+                    
+                    searchResultsContainer.appendChild(userItem);
+                });
+                
+                searchResultsContainer.style.display = 'block';
+            }
+            
+            document.addEventListener('click', function(event) {
+                if (!userSearchInput.contains(event.target) && !searchResultsContainer.contains(event.target)) {
+                    searchResultsContainer.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
