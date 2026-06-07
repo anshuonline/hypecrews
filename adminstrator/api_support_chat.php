@@ -238,6 +238,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'reopen_session') {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'save_note') {
+    $session_id = $_POST['session_id'] ?? 0;
+    $note = trim($_POST['note'] ?? '');
+    
+    try {
+        $stmt = $pdo->prepare("SELECT assigned_admin_id FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session_id]);
+        $session = $stmt->fetch();
+        
+        if (!$session) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid session']);
+            exit();
+        }
+        
+        // Only assigned admin can add notes? Let's allow any admin to add notes since notes are for internal communication
+        $pdo->prepare("UPDATE support_sessions SET admin_note = ? WHERE id = ?")->execute([$note, $session_id]);
+        echo json_encode(['status' => 'success', 'message' => 'Note saved successfully']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
 if ($action === 'get_user_profile') {
     $user_id = $_GET['user_id'] ?? 0;
     

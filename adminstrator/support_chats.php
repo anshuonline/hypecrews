@@ -216,16 +216,23 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 </button>
                                 <?php endif; ?>
                             <?php endif; ?>
+                            
+                            <button onclick="promptAddNote(<?php echo $session_data['id']; ?>)" class="bg-yellow-50 text-yellow-600 hover:bg-yellow-500 hover:text-white border border-yellow-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5" title="Add Admin Note">
+                                <i class="fas fa-sticky-note"></i> Note
+                            </button>
                         </div>
                     </div>
                     
                     <!-- Top Admin Notes Banner -->
-                    <div id="topAdminNotes" class="hidden px-6 py-3 bg-yellow-50/80 border-b border-yellow-200 shrink-0 z-10 shadow-sm backdrop-blur-sm">
-                        <div class="flex items-start gap-3">
+                    <div id="topAdminNotes" class="<?php echo $session_data['admin_note'] ? 'flex' : 'hidden'; ?> px-6 py-3 bg-yellow-50/80 border-b border-yellow-200 shrink-0 z-10 shadow-sm backdrop-blur-sm relative group">
+                        <div class="flex items-start gap-3 w-full">
                             <i class="fas fa-sticky-note text-yellow-500 mt-1"></i>
                             <div class="flex-1" id="topAdminNotesContent">
-                                <!-- Notes will be populated here by JS -->
+                                <p class="text-sm text-yellow-800 font-medium"><?php echo nl2br(htmlspecialchars($session_data['admin_note'] ?? '')); ?></p>
                             </div>
+                            <button onclick="removeNote(<?php echo $session_data['id']; ?>)" title="Remove Note" class="opacity-0 group-hover:opacity-100 transition-opacity text-yellow-600 hover:text-red-500 p-1">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     </div>
                     
@@ -599,8 +606,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 const formData = new FormData();
                 formData.append('action', 'reopen_session');
                 formData.append('session_id', sessionId);
-                
-                fetch('api_support_chat.php', {
+                               fetch('api_support_chat.php', {
                     method: 'POST',
                     body: formData
                 }).then(res => res.json()).then(data => {
@@ -612,8 +618,51 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 });
             }
         }
+        
+        function promptAddNote(sessionId) {
+            const note = prompt("Enter your note for this chat. It will only be visible to Admins:");
+            if(note !== null) {
+                const formData = new FormData();
+                formData.append('action', 'save_note');
+                formData.append('session_id', sessionId);
+                formData.append('note', note);
+                
+                fetch('api_support_chat.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(res => res.json()).then(data => {
+                    if(data.status === 'success') {
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Error saving note');
+                    }
+                });
+            }
+        }
+        
+        function removeNote(sessionId) {
+            if(confirm('Are you sure you want to remove this note?')) {
+                const formData = new FormData();
+                formData.append('action', 'save_note');
+                formData.append('session_id', sessionId);
+                formData.append('note', '');
+                
+                fetch('api_support_chat.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(res => res.json()).then(data => {
+                    if(data.status === 'success') {
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Error removing note');
+                    }
+                });
+            }
+        }
 
-            if (exportPdfBtn) {
+        // Search and Filter functionality
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        if (exportPdfBtn) {
                 exportPdfBtn.addEventListener('click', () => {
                     const sessionId = chatSession;
                     
