@@ -23,7 +23,7 @@ try {
         FROM support_sessions s
         JOIN users u ON s.user_id = u.id
         $whereClause
-        ORDER BY s.status ASC, unread_count DESC, s.updated_at DESC
+        ORDER BY CASE WHEN s.status = 'open' THEN 1 ELSE 2 END ASC, unread_count DESC, s.updated_at DESC, s.id DESC
     ");
     $stmt->execute();
     $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
