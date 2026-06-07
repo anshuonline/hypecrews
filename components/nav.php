@@ -247,14 +247,12 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
 
             
             <?php if ($isLoggedIn): ?>
+                <div class="h-px bg-white/10 my-2 mx-4"></div>
                 <a href="track_orders.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">
                     <i class="fas fa-truck mr-2"></i> Track Orders
                 </a>
                 <a href="profile.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300">
                     <i class="fas fa-user-circle mr-2"></i> My Profile
-                </a>
-                <a href="logout.php" class="px-4 py-2 rounded-lg font-medium text-white hover:bg-light/10 transition-all duration-300 text-red-500">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
                 </a>
             <?php else: ?>
                 <a href="login.php" class="bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-lg font-medium hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg text-center">Login</a>
