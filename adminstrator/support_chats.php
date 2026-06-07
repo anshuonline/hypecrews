@@ -368,7 +368,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         const chatSession = "<?php echo $chat_with ? htmlspecialchars($chat_with) : ''; ?>";
-        const chatUserId = "<?php echo $chat_with ? htmlspecialchars($session_data['user_id']) : ''; ?>";
+        const chatUserId = "<?php echo $chat_with ? htmlspecialchars($session_data['user_id'] ?? 'GUEST') : ''; ?>";
         let currentFilter = "<?php echo htmlspecialchars($filter); ?>";
         let searchQuery = "<?php echo htmlspecialchars($search); ?>";
         const messagesDiv = document.getElementById('chatMessages');
