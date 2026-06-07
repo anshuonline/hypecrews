@@ -99,7 +99,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     </div>
                 </div>
                 
-                <div class="flex-1 overflow-y-auto chat-scroll px-3 py-2 space-y-1">
+                <div id="threadsSidebar" class="flex-1 overflow-y-auto chat-scroll px-3 py-2 space-y-1">
                     <?php if (empty($threads)): ?>
                         <div class="text-center p-6 text-apple_muted">No support chats yet.</div>
                     <?php else: ?>
@@ -250,9 +250,10 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <?php if ($chat_with): ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
-        const chatSession = "<?php echo htmlspecialchars($chat_with); ?>";
+        const chatSession = "<?php echo $chat_with ? htmlspecialchars($chat_with) : ''; ?>";
+        const currentFilter = "<?php echo htmlspecialchars($filter); ?>";
         const messagesDiv = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         const messageInput = document.getElementById('messageInput');
@@ -264,10 +265,69 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         
         let currentMessages = [];
         let isScrolledToBottom = true;
+        let currentSessionStatus = '<?php echo isset($session_data) ? htmlspecialchars($session_data['status']) : ''; ?>';
+        
         if(messagesDiv) {
             messagesDiv.addEventListener('scroll', () => {
                 isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
             });
+        }
+        
+        function fetchThreads() {
+            fetch('api_support_chat.php?action=list_threads&filter=' + currentFilter)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const sidebar = document.getElementById('threadsSidebar');
+                        if (!sidebar) return;
+                        
+                        let html = '';
+                        if (data.data.length === 0) {
+                            html = '<div class="text-center p-6 text-apple_muted">No support chats yet.</div>';
+                        } else {
+                            data.data.forEach(t => {
+                                const isActive = (t.session_id == chatSession);
+                                const bgClass = isActive ? 'bg-primary/10 border-primary/20 shadow-sm' : 'hover:bg-white/50 border-transparent';
+                                const opacityClass = t.status === 'resolved' ? 'opacity-60' : '';
+                                
+                                const initial = t.first_name ? t.first_name.charAt(0) : '?';
+                                const unreadBadge = t.unread_count > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">${t.unread_count}</span>` : '';
+                                
+                                const urgencyColor = t.urgency === 'urgent' ? 'text-red-500' : (t.urgency === 'normal' ? 'text-emerald-500' : 'text-blue-500');
+                                const resolvedBadge = t.status === 'resolved' ? '<span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span>' : '';
+                                const lastMsgBold = t.unread_count > 0 ? 'font-bold text-apple_text' : '';
+                                
+                                // Clean output using JS date formatting
+                                const dateObj = new Date(t.last_activity);
+                                const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                                
+                                html += `
+                                <a href="?session=${t.session_id}&filter=${currentFilter}" class="flex items-center p-3 rounded-2xl transition-all duration-300 border ${bgClass} ${opacityClass}">
+                                    <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
+                                        ${initial}
+                                        ${unreadBadge}
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-baseline mb-0.5">
+                                            <p class="font-bold text-[15px] truncate text-apple_text">${escapeHtml(t.first_name + ' ' + t.last_name)}</p>
+                                            <span class="text-[10px] font-medium text-apple_muted shrink-0">${formattedDate}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-[11px] font-medium ${urgencyColor}">${escapeHtml(t.topic)}</p>
+                                            ${resolvedBadge}
+                                        </div>
+                                        <p class="text-[12px] text-apple_muted truncate ${lastMsgBold}">${escapeHtml(t.last_message || '')}</p>
+                                    </div>
+                                </a>`;
+                            });
+                        }
+                        
+                        // only update if changed
+                        if (sidebar.innerHTML !== html) {
+                            sidebar.innerHTML = html;
+                        }
+                    }
+                });
         }
 
         function fetchMessages() {
@@ -276,6 +336,10 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
+                        if (data.session && data.session.status && data.session.status !== currentSessionStatus && currentSessionStatus !== '') {
+                            window.location.reload();
+                            return;
+                        }
                         renderMessages(data.data);
                     } else {
                         messagesDiv.innerHTML = '<div class="text-center text-red-500 mt-10">Error: ' + escapeHtml(data.message) + '</div>';
@@ -537,9 +601,13 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        fetchMessages();
-        setInterval(fetchMessages, 3000);
+        fetchThreads();
+        setInterval(fetchThreads, 5000);
+        
+        if (chatSession) {
+            fetchMessages();
+            setInterval(fetchMessages, 3000);
+        }
     </script>
-    <?php endif; ?>
 </body>
 </html>

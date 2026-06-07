@@ -36,6 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
+    if ($action === 'reopen_session') {
+        $session_id = $_POST['session_id'] ?? 0;
+        try {
+            $pdo->prepare("UPDATE support_sessions SET status = 'open', exported_at = NULL WHERE id = ? AND user_id = ?")->execute([$session_id, $user_id]);
+            echo json_encode(['status' => 'success']);
+        } catch (PDOException $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Database error']);
+        }
+        exit();
+    }
+    
     $message = trim($_POST['message'] ?? '');
     $attachment_path = null;
     
@@ -141,7 +152,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $msg['is_mine'] = ($msg['sender_type'] === 'user');
         }
         
-        echo json_encode(['status' => 'success', 'data' => $messages]);
+        // Fetch full session info
+        $stmt = $pdo->prepare("SELECT status FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session['id']]);
+        $session_info = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['status' => 'success', 'data' => $messages, 'session' => $session_info]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }

@@ -13,6 +13,14 @@ $admin_id = $_SESSION['admin_id'];
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
 if ($action === 'list_threads') {
+    $filter = $_GET['filter'] ?? 'all';
+    $whereClause = "";
+    if ($filter === 'open') {
+        $whereClause = "WHERE s.status = 'open'";
+    } else if ($filter === 'resolved') {
+        $whereClause = "WHERE s.status = 'resolved'";
+    }
+    
     // Get list of support sessions
     try {
         $stmt = $pdo->prepare("
@@ -22,7 +30,8 @@ if ($action === 'list_threads') {
             (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
             FROM support_sessions s
             JOIN users u ON s.user_id = u.id
-            ORDER BY s.status ASC, s.updated_at DESC
+            $whereClause
+            ORDER BY s.status ASC, COALESCE(s.updated_at, s.created_at) DESC
         ");
         $stmt->execute();
         $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);

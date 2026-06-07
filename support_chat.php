@@ -285,6 +285,9 @@ try {
                             <?php else: ?>
                                 <p class="text-gray-400 text-sm mb-6">You can export the chat history as a PDF. After exporting, the history will be permanently deleted after 1 hour.</p>
                                 <div class="flex items-center justify-center gap-4">
+                                    <button onclick="reopenSession()" class="bg-indigo-500/20 hover:bg-indigo-500 text-indigo-400 hover:text-white font-bold py-3 px-6 rounded-xl transition-all border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                                        <i class="fas fa-undo-alt mr-2"></i> Reopen Chat
+                                    </button>
                                     <button onclick="startNewChat()" class="bg-white/10 hover:bg-white/20 text-white font-bold py-3 px-6 rounded-xl transition-colors">
                                         Skip & Start New Chat
                                     </button>
@@ -315,6 +318,7 @@ try {
             
             let currentMessages = [];
             let isScrolledToBottom = true;
+            let currentSessionStatus = '<?php echo $active_session ? htmlspecialchars($active_session['status']) : ''; ?>';
 
             if(messagesDiv) {
                 messagesDiv.addEventListener('scroll', () => {
@@ -330,6 +334,10 @@ try {
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success') {
+                            if (data.session && data.session.status && data.session.status !== currentSessionStatus && currentSessionStatus !== '') {
+                                window.location.reload();
+                                return;
+                            }
                             renderMessages(data.data);
                         }
                     })
@@ -574,6 +582,23 @@ try {
                 
                 const formData = new FormData();
                 formData.append('action', 'dismiss_session');
+                formData.append('session_id', sessionId);
+                
+                fetch('api_support_chat.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+            
+            window.reopenSession = function() {
+                const messagesDiv = document.getElementById('chatMessages');
+                const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
+                if (!sessionId) return;
+                
+                const formData = new FormData();
+                formData.append('action', 'reopen_session');
                 formData.append('session_id', sessionId);
                 
                 fetch('api_support_chat.php', {

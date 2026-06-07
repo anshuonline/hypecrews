@@ -1,6 +1,11 @@
 <?php
 // Ensure $user and $current_user_page variables are available
 $current_user_page = isset($current_user_page) ? $current_user_page : 'profile';
+
+// Calculate unread support messages for user
+$unread_stmt = $pdo->prepare("SELECT COUNT(*) FROM support_chats c JOIN support_sessions s ON c.session_id = s.id WHERE s.user_id = ? AND c.sender_type = 'admin' AND c.is_read = 0");
+$unread_stmt->execute([$_SESSION['user_id']]);
+$support_unread = $unread_stmt->fetchColumn();
 ?>
 
 <div class="bg-white/5 border border-white/10 rounded-3xl p-5 relative overflow-hidden flex flex-col h-full shadow-2xl backdrop-blur-md">
@@ -36,9 +41,14 @@ $current_user_page = isset($current_user_page) ? $current_user_page : 'profile';
             <span class="text-sm">Security & Password</span>
         </a>
         
-        <a href="support_chat.php" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 <?php echo $current_user_page === 'support_chat' ? 'bg-white/10 text-white font-semibold' : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium'; ?>">
-            <i class="fas fa-comments w-5 text-center <?php echo $current_user_page === 'support_chat' ? 'text-purple-400' : ''; ?>"></i>
-            <span class="text-sm">Support Chat</span>
+        <a href="support_chat.php" class="flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-200 <?php echo $current_user_page === 'support_chat' ? 'bg-white/10 text-white font-semibold' : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium'; ?>">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-comments w-5 text-center <?php echo $current_user_page === 'support_chat' ? 'text-purple-400' : ''; ?>"></i>
+                <span class="text-sm">Support Chat</span>
+            </div>
+            <?php if($support_unread > 0): ?>
+                <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg border border-red-400 animate-pulse"><?php echo $support_unread; ?></span>
+            <?php endif; ?>
         </a>
     </div>
 
