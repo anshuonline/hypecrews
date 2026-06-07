@@ -50,19 +50,19 @@
             <form id="hc-init-form" onsubmit="startHcChat(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Full Name <span class="text-[#ff3b30]">*</span></label>
-                    <input type="text" id="hc-input-name" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
+                    <input type="text" id="hc-input-name" required class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Email Address <span class="text-[#ff3b30]">*</span></label>
-                    <input type="email" id="hc-input-email" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
+                    <input type="email" id="hc-input-email" required class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Phone Number</label>
-                    <input type="tel" id="hc-input-phone" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
+                    <input type="tel" id="hc-input-phone" class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">How can we help?</label>
-                    <select id="hc-input-topic" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm appearance-none">
+                    <select id="hc-input-topic" class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm appearance-none">
                         <option value="General Inquiry">General Inquiry</option>
                         <option value="Sales & Pricing">Sales & Pricing</option>
                         <option value="Technical Support">Technical Support</option>
