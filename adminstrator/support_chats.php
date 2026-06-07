@@ -874,11 +874,11 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         let topNotesHtml = '';
                         if (data.data.notes.length > 0) {
                             data.data.notes.forEach(n => {
+                                const isGuestNote = String(n.id).startsWith('guest_');
+                                const deleteBtn = isGuestNote ? '' : `<button onclick="deleteUserNote(${n.id})" class="absolute top-2 right-2 text-yellow-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>`;
                                 notesHtml += `
                                     <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm mb-2 relative group">
-                                        <button onclick="deleteUserNote(${n.id})" class="absolute top-2 right-2 text-yellow-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <i class="fas fa-times"></i>
-                                        </button>
+                                        ${deleteBtn}
                                         <p class="text-gray-800 whitespace-pre-wrap pr-4">${escapeHtml(n.note)}</p>
                                         <div class="text-[10px] text-gray-500 mt-2 flex justify-between">
                                             <span>By ${escapeHtml(n.admin_name)}</span>
@@ -958,14 +958,13 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             <div class="border-t border-gray-200 pt-5">
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-sticky-note text-yellow-500"></i> Admin Notes</h4>
                                 <div class="mb-4">
-                                    <textarea id="newAdminNote" rows="2" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-yellow-50/30" placeholder="Add a private note about this user..."></textarea>
+                                    <textarea id="newAdminNote" rows="2" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-yellow-50/30" placeholder="Add a private note about this user/session..."></textarea>
                                     <button onclick="addAdminNote()" class="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1.5 rounded-lg text-sm transition-colors shadow-sm">Save Note</button>
                                 </div>
                                 <div id="notesContainer" class="max-h-60 overflow-y-auto pr-1">
                                     ${notesHtml}
                                 </div>
                             </div>
-                            ` : ''}
                         `;
                     }
                 });
@@ -982,8 +981,13 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             btn.disabled = true;
             
             const formData = new FormData();
-            formData.append('action', 'add_user_note');
-            formData.append('user_id', chatUserId);
+            if (chatUserId === 'GUEST') {
+                formData.append('action', 'add_guest_note');
+                formData.append('session_id', currentChatSessionId);
+            } else {
+                formData.append('action', 'add_user_note');
+                formData.append('user_id', chatUserId);
+            }
             formData.append('note', note);
             
             fetch('api_support_chat.php', { method: 'POST', body: formData })

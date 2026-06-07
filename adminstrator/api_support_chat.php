@@ -393,8 +393,23 @@ if ($action === 'get_session_profile') {
                     'notes' => $notes
                 ]
             ]);
-        } else {
             // Guest Session
+            $notes = [];
+            if (!empty($session['admin_note'])) {
+                // Split by separator if multiple notes were appended
+                $note_parts = explode("\n---\n", $session['admin_note']);
+                foreach($note_parts as $idx => $part) {
+                    $notes[] = [
+                        'id' => 'guest_' . $idx,
+                        'note' => trim($part),
+                        'created_at' => $session['created_at'],
+                        'admin_name' => 'Admin'
+                    ];
+                }
+                // Reverse to show newest at top
+                $notes = array_reverse($notes);
+            }
+            
             echo json_encode([
                 'status' => 'success',
                 'data' => [
@@ -413,7 +428,7 @@ if ($action === 'get_session_profile') {
                     ],
                     'orders' => [],
                     'past_chats' => [],
-                    'notes' => []
+                    'notes' => $notes
                 ]
             ]);
         }
@@ -437,6 +452,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'add_user_note') {
         $stmt->execute([$user_id, $admin_id, $note]);
         
         logAdminActivity($pdo, 'User Management', "Added a note to user profile (User ID: $user_id)");
+        echo json_encode(['status' => 'success', 'message' => 'Note added successfully']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'add_guest_note') {
+    $session_id = $_POST['session_id'] ?? 0;
+    $note = trim($_POST['note'] ?? '');
+    
+    if (empty($note)) {
+        echo json_encode(['status' => 'error', 'message' => 'Note cannot be empty']);
+        exit();
+    }
+    
+    try {
+        // Append to existing admin_note
+        $stmt = $pdo->prepare("SELECT admin_note FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session_id]);
+        $session = $stmt->fetch();
+        
+        if (!$session) {
+            echo json_encode(['status' => 'error', 'message' => 'Session not found']);
+            exit();
+        }
+        
+        $new_note = $session['admin_note'] ? $session['admin_note'] . "\n---\n" . $note : $note;
+        $pdo->prepare("UPDATE support_sessions SET admin_note = ? WHERE id = ?")->execute([$new_note, $session_id]);
+        
+        logAdminActivity($pdo, 'Support Chat', "Added note to guest session #$session_id");
         echo json_encode(['status' => 'success', 'message' => 'Note added successfully']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
