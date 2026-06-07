@@ -1,5 +1,5 @@
 <!-- Live Chat Widget Component -->
-<div id="hc-live-chat" class="fixed bottom-6 left-6 z-[9999] font-sans">
+<div id="hc-live-chat" class="fixed bottom-6 right-6 z-[9999] font-sans">
     
     <!-- Chat Button -->
     <button id="hc-chat-btn" onclick="toggleHcChat()" class="w-14 h-14 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-2xl shadow-purple-600/30 flex items-center justify-center transition-transform hover:scale-110 relative group">
@@ -10,14 +10,14 @@
             <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
         </span>
         <!-- Tooltip -->
-        <span class="absolute left-full ml-4 whitespace-nowrap bg-gray-900 text-white text-xs font-bold py-1 px-3 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <span class="absolute right-full mr-4 whitespace-nowrap bg-gray-900 text-white text-xs font-bold py-1 px-3 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Live Chat Support
-            <div class="absolute right-full top-1/2 -mt-1 w-0 h-0 border-4 border-transparent border-r-gray-900"></div>
+            <div class="absolute left-full top-1/2 -mt-1 w-0 h-0 border-4 border-transparent border-l-gray-900"></div>
         </span>
     </button>
 
     <!-- Chat Window -->
-    <div id="hc-chat-window" class="absolute bottom-20 left-0 w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl shadow-purple-900/20 border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-left scale-0 opacity-0 pointer-events-none">
+    <div id="hc-chat-window" class="absolute bottom-20 right-0 w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl shadow-purple-900/20 border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0 pointer-events-none">
         
         <!-- Header -->
         <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 text-white shrink-0 shadow-md relative z-10">
