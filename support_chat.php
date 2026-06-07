@@ -316,7 +316,38 @@ try {
         </div>
     </div>
     
+    <!-- Image Lightbox -->
+    <div id="imageLightbox" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/50 hover:text-white text-3xl transition-colors focus:outline-none">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="lightboxImage" src="" alt="Zoomed Attachment" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl scale-95 transition-transform duration-300">
+    </div>
+
     <script>
+        function openLightbox(url) {
+            const lb = document.getElementById('imageLightbox');
+            const img = document.getElementById('lightboxImage');
+            img.src = url;
+            lb.classList.remove('hidden');
+            setTimeout(() => {
+                lb.classList.add('opacity-100');
+                img.classList.remove('scale-95');
+                img.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById('imageLightbox');
+            const img = document.getElementById('lightboxImage');
+            lb.classList.remove('opacity-100');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+            setTimeout(() => {
+                lb.classList.add('hidden');
+            }, 300);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const messagesDiv = document.getElementById('chatMessages');
             const chatForm = document.getElementById('chatForm');
@@ -380,7 +411,7 @@ try {
                     messages.forEach(msg => {
                         let attachmentHtml = '';
                         if (msg.attachment) {
-                            attachmentHtml = `<div class="mt-2 rounded-lg overflow-hidden border border-white/10"><img src="${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>`;
+                            attachmentHtml = `<div class="mt-2 rounded-lg overflow-hidden border border-white/10"><img src="${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox('${msg.attachment}')"></div>`;
                         }
                         
                         if (msg.sender_type === 'system') {
@@ -635,6 +666,29 @@ try {
             fetchMessages();
             setInterval(fetchMessages, 3000);
         });
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('imageLightbox');
+            const img = document.getElementById('lightboxImage');
+            img.src = src;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                img.classList.remove('scale-95');
+                img.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('imageLightbox');
+            const img = document.getElementById('lightboxImage');
+            lightbox.classList.add('opacity-0');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+            }, 300);
+        }
     </script>
 </body>
 </html>

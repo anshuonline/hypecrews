@@ -352,6 +352,14 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         </div>
     </div>
     
+    <!-- Image Lightbox -->
+    <div id="imageLightbox" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/50 hover:text-white text-3xl transition-colors focus:outline-none">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="lightboxImage" src="" alt="Zoomed Attachment" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl scale-95 transition-transform duration-300">
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         const chatSession = "<?php echo $chat_with ? htmlspecialchars($chat_with) : ''; ?>";
@@ -467,7 +475,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 let html = '';
                 
                 messages.forEach(msg => {
-                    let attachmentHtml = msg.attachment ? `<div class="mt-2 rounded-lg overflow-hidden border border-black/10"><img src="../${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>` : '';
+                    let attachmentHtml = msg.attachment ? `<div class="mt-2 rounded-lg overflow-hidden border border-black/10"><img src="../${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox('../${msg.attachment}')"></div>` : '';
                     
                     if (msg.sender_type === 'system') {
                         html += `
@@ -1001,6 +1009,29 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 sidebar.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
             }
+        }
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('imageLightbox');
+            const img = document.getElementById('lightboxImage');
+            img.src = src;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                img.classList.remove('scale-95');
+                img.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('imageLightbox');
+            const img = document.getElementById('lightboxImage');
+            lightbox.classList.add('opacity-0');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+            }, 300);
         }
     </script>
 </body>
