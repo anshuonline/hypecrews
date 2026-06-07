@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'resolve_session') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'export_session') {
     $session_id = $_POST['session_id'] ?? 0;
     try {
-        $pdo->prepare("UPDATE support_sessions SET exported_at = CURRENT_TIMESTAMP WHERE id = ? AND exported_at IS NULL")->execute([$session_id]);
+        $pdo->prepare("UPDATE support_sessions SET admin_exported = 1, exported_at = COALESCE(exported_at, CURRENT_TIMESTAMP) WHERE id = ?")->execute([$session_id]);
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);

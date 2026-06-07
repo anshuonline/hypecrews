@@ -213,6 +213,13 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <i class="fas fa-lock text-gray-400 text-3xl mb-3"></i>
                         <h4 class="text-lg font-bold text-gray-700 mb-2">This session is resolved and closed.</h4>
                         
+                        <?php if ($session_data['admin_exported'] != 1): ?>
+                            <p class="text-gray-500 text-sm mb-4">Export the chat history as a PDF. After exporting, a 1-hour deletion countdown will start for both you and the user.</p>
+                            <button id="exportPdfBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-sm transition-transform hover:scale-105 mb-4">
+                                <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
+                            </button>
+                        <?php endif; ?>
+                        
                         <?php if ($time_remaining >= 0): ?>
                             <p class="text-red-500 text-sm mb-3 font-bold">
                                 <i class="fas fa-exclamation-triangle"></i> Chat will be auto-deleted in:
@@ -236,11 +243,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                     }
                                 }, 1000);
                             </script>
-                        <?php else: ?>
-                            <p class="text-gray-500 text-sm mb-4">Export the chat history as a PDF. After exporting, a 1-hour deletion countdown will start for both you and the user.</p>
-                            <button id="exportPdfBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-sm transition-transform hover:scale-105">
-                                <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
-                            </button>
                         <?php endif; ?>
                     </div>
                     <?php endif; ?>
