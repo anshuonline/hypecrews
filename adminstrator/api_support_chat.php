@@ -190,6 +190,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'assign_session') {
     $session_id = $_POST['session_id'] ?? 0;
     try {
         $pdo->prepare("UPDATE support_sessions SET assigned_admin_id = ? WHERE id = ?")->execute([$admin_id, $session_id]);
+        
+        // Fetch session's user_id and admin's username to insert a system message
+        $stmt = $pdo->prepare("SELECT user_id FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session_id]);
+        $sess = $stmt->fetch();
+        
+        $a_stmt = $pdo->prepare("SELECT username FROM administrators WHERE id = ?");
+        $a_stmt->execute([$admin_id]);
+        $adm = $a_stmt->fetch();
+        
+        if ($sess && $adm) {
+            $msg = "Admin " . $adm['username'] . " has joined the chat and will assist you.";
+            $pdo->prepare("INSERT INTO support_chats (session_id, user_id, sender_type, sender_id, message) VALUES (?, ?, 'system', 0, ?)")
+                ->execute([$session_id, $sess['user_id'], $msg]);
+        }
+        
         echo json_encode(['status' => 'success', 'message' => 'Session assigned successfully']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);

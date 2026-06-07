@@ -432,7 +432,14 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 messages.forEach(msg => {
                     let attachmentHtml = msg.attachment ? `<div class="mt-2 rounded-lg overflow-hidden border border-black/10"><img src="../${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>` : '';
                     
-                    if (msg.is_mine) {
+                    if (msg.sender_type === 'system') {
+                        html += `
+                        <div class="flex justify-center my-6">
+                            <div class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-500 px-5 py-2.5 rounded-xl text-xs font-bold text-center shadow-sm">
+                                <i class="fas fa-info-circle mr-1.5"></i> ${formatMessage(msg.message)}
+                            </div>
+                        </div>`;
+                    } else if (msg.is_mine) {
                         html += `
                         <div class="flex justify-end mb-4 group">
                             <div class="max-w-[75%]">
