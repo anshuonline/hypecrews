@@ -19,27 +19,7 @@ try {
     if (!$order) {
         header('Location: orders.php');
         exit;
-<?php
-require_once 'auth.php';
-require_once '../config/db.php';
 
-// Get order ID from URL
-$order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if (!$order_id) {
-    header('Location: orders.php');
-    exit;
-}
-
-// Get the order details with user info
-try {
-    $stmt = $pdo->prepare("SELECT o.*, u.username, u.first_name, u.last_name, u.email FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id = ?");
-    $stmt->execute([$order_id]);
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$order) {
-        header('Location: orders.php');
-        exit;
     }
 } catch (PDOException $e) {
     $error = "Error fetching order: " . $e->getMessage();
