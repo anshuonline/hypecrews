@@ -85,10 +85,7 @@ if ($action === 'get_messages') {
                 WHEN c.sender_type = 'user' THEN (SELECT username FROM users WHERE id = c.sender_id)
                 ELSE (SELECT username FROM administrators WHERE id = c.sender_id)
             END as sender_name,
-            CASE 
-                WHEN c.sender_type = 'user' THEN NULL
-                ELSE (SELECT profile_image FROM administrators WHERE id = c.sender_id)
-            END as sender_avatar
+            NULL as sender_avatar
             FROM support_chats c 
             WHERE c.session_id = ? 
             ORDER BY c.created_at ASC");

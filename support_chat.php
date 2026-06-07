@@ -55,6 +55,11 @@ try {
     if ($active_session && $active_session['exported_at']) {
         $exported_time = strtotime($active_session['exported_at']);
         $time_remaining = max(0, 3600 - (time() - $exported_time));
+        if ($time_remaining <= 0) {
+            $pdo->prepare("DELETE FROM support_sessions WHERE id = ?")->execute([$active_session['id']]);
+            header("Location: support_chat.php");
+            exit;
+        }
     }
 
 } catch (PDOException $e) {

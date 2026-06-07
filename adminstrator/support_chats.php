@@ -8,6 +8,9 @@ $admin_id = $_SESSION['admin_id'];
 $filter = $_GET['filter'] ?? 'all';
 $search = $_GET['search'] ?? '';
 
+// Auto delete exported sessions older than 1 hour
+$pdo->exec("DELETE FROM support_sessions WHERE exported_at IS NOT NULL AND exported_at < NOW() - INTERVAL 1 HOUR");
+
 try {
     $whereClause = "WHERE 1=1";
     if ($filter === 'open') {
@@ -280,6 +283,11 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         if ($session_data['exported_at']) {
                             $exported_time = strtotime($session_data['exported_at']);
                             $time_remaining = max(0, 3600 - (time() - $exported_time));
+                            if ($time_remaining <= 0) {
+                                $pdo->prepare("DELETE FROM support_sessions WHERE id = ?")->execute([$session_data['id']]);
+                                echo "<script>window.location.href='support_chats.php';</script>";
+                                exit;
+                            }
                         }
                     ?>
                     <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6 text-center bg-gray-50/50">
