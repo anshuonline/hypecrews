@@ -219,10 +219,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 </button>
                                 <?php endif; ?>
                             <?php endif; ?>
-                            
-                            <button onclick="promptAddNote(<?php echo $session_data['id']; ?>)" class="bg-yellow-50 text-yellow-600 hover:bg-yellow-500 hover:text-white border border-yellow-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5" title="Add Admin Note">
-                                <i class="fas fa-sticky-note"></i> Note
-                            </button>
                         </div>
                     </div>
                     
