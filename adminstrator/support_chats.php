@@ -8,7 +8,7 @@ $admin_id = $_SESSION['admin_id'];
 // Fetch threads (users who have sent/received messages)
 try {
     $stmt = $pdo->prepare("
-        SELECT u.id, u.username, u.first_name, u.last_name, u.profile_image, 
+        SELECT u.id, u.username, u.first_name, u.last_name, 
         (SELECT message FROM support_chats WHERE user_id = u.id ORDER BY created_at DESC LIMIT 1) as last_message,
         (SELECT created_at FROM support_chats WHERE user_id = u.id ORDER BY created_at DESC LIMIT 1) as last_activity,
         (SELECT COUNT(*) FROM support_chats WHERE user_id = u.id AND sender_type = 'user' AND is_read = 0) as unread_count
@@ -91,11 +91,7 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
                         <?php foreach($threads as $t): ?>
                             <a href="?user=<?php echo $t['id']; ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?>">
                                 <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
-                                    <?php if ($t['profile_image']): ?>
-                                        <img src="../<?php echo htmlspecialchars($t['profile_image']); ?>" class="w-full h-full rounded-full object-cover">
-                                    <?php else: ?>
-                                        <?php echo substr(htmlspecialchars($t['first_name']), 0, 1); ?>
-                                    <?php endif; ?>
+                                    <?php echo substr(htmlspecialchars($t['first_name']), 0, 1); ?>
                                     
                                     <?php if ($t['unread_count'] > 0): ?>
                                         <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white"><?php echo $t['unread_count']; ?></span>
@@ -135,11 +131,7 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
                         </a>
                         <div class="flex items-center">
                             <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold mr-3 shrink-0">
-                                <?php if ($chat_user['profile_image']): ?>
-                                    <img src="../<?php echo htmlspecialchars($chat_user['profile_image']); ?>" class="w-full h-full rounded-full object-cover">
-                                <?php else: ?>
-                                    <?php echo substr(htmlspecialchars($chat_user['first_name']), 0, 1); ?>
-                                <?php endif; ?>
+                                <?php echo substr(htmlspecialchars($chat_user['first_name']), 0, 1); ?>
                             </div>
                             <div>
                                 <h2 class="text-lg font-bold leading-tight"><?php echo htmlspecialchars($chat_user['first_name'] . ' ' . $chat_user['last_name']); ?></h2>

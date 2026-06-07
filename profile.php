@@ -233,50 +233,53 @@ if (isset($_GET['logout'])) {
                         
                         <form method="POST">
                             <input type="hidden" name="update_profile" value="1">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">First Name</label>
-                                    <input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required class="w-full input-glass rounded-xl px-4 py-3">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Last Name</label>
-                                    <input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required class="w-full input-glass rounded-xl px-4 py-3">
-                                </div>
-                            </div>
                             
-                            <div class="mb-6">
-                                <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Primary Email</label>
-                                <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required class="w-full input-glass rounded-xl px-4 py-3">
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Mobile Directive</label>
-                                    <input type="tel" name="mobile_number" value="<?php echo htmlspecialchars($user['mobile_number']); ?>" required class="w-full input-glass rounded-xl px-4 py-3">
+                            <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden mb-8 backdrop-blur-sm shadow-lg">
+                                <!-- Row 1 -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">First Name</label>
+                                    <input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Age / Country</label>
-                                    <div class="flex gap-3">
-                                        <input type="number" name="age" value="<?php echo htmlspecialchars($user['age']); ?>" required min="13" max="120" class="w-1/3 input-glass rounded-xl px-4 py-3">
-                                        <input type="text" name="country" value="<?php echo htmlspecialchars($user['country']); ?>" required class="w-2/3 input-glass rounded-xl px-4 py-3">
+                                <!-- Row 2 -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Last Name</label>
+                                    <input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
+                                <!-- Row 3 -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Primary Email</label>
+                                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
+                                <!-- Row 4 -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Mobile Directive</label>
+                                    <input type="tel" name="mobile_number" value="<?php echo htmlspecialchars($user['mobile_number']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
+                                <!-- Row 5 (Age/Country) -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Age / Country</label>
+                                    <div class="w-full sm:w-2/3 flex gap-4">
+                                        <input type="number" name="age" value="<?php echo htmlspecialchars($user['age']); ?>" required min="13" max="120" class="w-16 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium border-r border-white/10 pr-3">
+                                        <input type="text" name="country" value="<?php echo htmlspecialchars($user['country']); ?>" required class="flex-1 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium pl-1">
                                     </div>
                                 </div>
+                                <!-- Row 6 -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Enterprise Name <span class="text-[10px] text-gray-500 font-normal ml-1">(Opt)</span></label>
+                                    <input type="text" name="company_name" value="<?php echo htmlspecialchars($user['company_name']); ?>" placeholder="Leave blank if none" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
+                                <!-- Row 7 -->
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Enterprise URL <span class="text-[10px] text-gray-500 font-normal ml-1">(Opt)</span></label>
+                                    <input type="url" name="company_website" value="<?php echo htmlspecialchars($user['company_website']); ?>" placeholder="https://" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Enterprise Name (Opt)</label>
-                                    <input type="text" name="company_name" value="<?php echo htmlspecialchars($user['company_name']); ?>" class="w-full input-glass rounded-xl px-4 py-3">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Enterprise URL (Opt)</label>
-                                    <input type="url" name="company_website" value="<?php echo htmlspecialchars($user['company_website']); ?>" placeholder="https://" class="w-full input-glass rounded-xl px-4 py-3">
-                                </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-full bg-white text-dark font-bold hover:scale-105 hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center justify-center gap-2">
+                                    Sync Data <i class="fas fa-sync-alt text-sm"></i>
+                                </button>
                             </div>
-                            
-                            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-dark font-bold hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                                Sync Data <i class="fas fa-sync-alt ml-2"></i>
-                            </button>
                         </form>
                     </div>
                     
@@ -289,25 +292,27 @@ if (isset($_GET['logout'])) {
                         
                         <form method="POST">
                             <input type="hidden" name="change_password" value="1">
-                            <div class="mb-5">
-                                <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Current Key</label>
-                                <input type="password" name="current_password" required class="w-full input-glass rounded-xl px-4 py-3">
+                            
+                            <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden mb-6 backdrop-blur-sm shadow-lg">
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-rose-400 transition-colors mb-2 sm:mb-0">Current Key</label>
+                                    <input type="password" name="current_password" required placeholder="••••••••" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-rose-400 transition-colors mb-2 sm:mb-0">New Key</label>
+                                    <input type="password" name="new_password" required minlength="6" placeholder="••••••••" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 group transition-colors hover:bg-white/[0.02]">
+                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-rose-400 transition-colors mb-2 sm:mb-0">Verify Key</label>
+                                    <input type="password" name="confirm_password" required minlength="6" placeholder="••••••••" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
+                                </div>
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">New Key</label>
-                                    <input type="password" name="new_password" required minlength="6" class="w-full input-glass rounded-xl px-4 py-3">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold tracking-wider text-gray-400 uppercase mb-2">Verify Key</label>
-                                    <input type="password" name="confirm_password" required minlength="6" class="w-full input-glass rounded-xl px-4 py-3">
-                                </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-full bg-rose-500/10 border border-rose-500/50 text-rose-400 font-bold hover:bg-rose-500 hover:text-white transition-all shadow-[0_0_15px_rgba(244,63,94,0.1)] flex items-center justify-center gap-2">
+                                    Update Authorization <i class="fas fa-lock text-sm"></i>
+                                </button>
                             </div>
-                            
-                            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold hover:scale-105 hover:shadow-[0_0_20px_rgba(244,63,94,0.4)] transition-all">
-                                Update Authorization <i class="fas fa-lock ml-2"></i>
-                            </button>
                         </form>
                     </div>
                 </div>
