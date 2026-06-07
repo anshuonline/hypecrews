@@ -31,7 +31,7 @@ if ($action === 'list_threads') {
             FROM support_sessions s
             JOIN users u ON s.user_id = u.id
             $whereClause
-            ORDER BY s.status ASC, COALESCE(s.updated_at, s.created_at) DESC
+            ORDER BY s.status ASC, s.id DESC
         ");
         $stmt->execute();
         $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
