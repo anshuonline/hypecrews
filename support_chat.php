@@ -313,6 +313,7 @@ try {
             const removeAttachment = document.getElementById('removeAttachment');
             const exportPdfBtn = document.getElementById('exportPdfBtn');
             
+            let currentMessages = [];
             let isScrolledToBottom = true;
 
             if(messagesDiv) {
@@ -345,6 +346,7 @@ try {
             }
 
             function renderMessages(messages) {
+                currentMessages = messages;
                 if(!messagesDiv) return;
                 if (messages.length === 0) {
                     messagesDiv.innerHTML = '<div class="text-center text-gray-500 font-medium text-sm mt-10"><i class="fas fa-hand-sparkles text-3xl mb-3 opacity-50"></i><br>No messages yet. Send a message to start chatting!</div>';
@@ -480,13 +482,63 @@ try {
                     exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating PDF...';
                     exportPdfBtn.disabled = true;
                     
-                    // Clone the messages div to format it for PDF
-                    const clone = messagesDiv.cloneNode(true);
-                    clone.style.height = 'auto';
-                    clone.style.maxHeight = 'none';
-                    clone.style.overflow = 'visible';
-                    clone.style.backgroundColor = '#1e293b'; // slate-800
-                    clone.style.padding = '20px';
+                    // Create print container
+                    const printContainer = document.createElement('div');
+                    printContainer.style.backgroundColor = '#ffffff';
+                    printContainer.style.color = '#000000';
+                    printContainer.style.fontFamily = 'Arial, sans-serif';
+                    printContainer.style.padding = '40px';
+                    printContainer.style.width = '100%';
+                    printContainer.style.maxWidth = '800px';
+                    printContainer.style.margin = '0 auto';
+                    
+                    let html = `
+                        <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="background-color: #000; border-radius: 50%; padding: 10px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <img src="/graphics/logos/hypecrews%20logo%20white.png" style="max-width: 100%; height: auto;">
+                                </div>
+                                <div>
+                                    <h2 style="margin: 0; font-size: 24px; color: #000;">Hypecrews Support</h2>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #555;">support@hypecrews.com | hypecrews.com</p>
+                                </div>
+                            </div>
+                            <div style="text-align: right; font-size: 14px; color: #555;">
+                                <p style="margin: 0;"><strong>Session ID:</strong> #${sessionId}</p>
+                                <p style="margin: 5px 0 0 0;"><strong>Exported:</strong> ${new Date().toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                    `;
+                    
+                    currentMessages.forEach(msg => {
+                        const isUser = msg.is_mine;
+                        const senderName = isUser ? 'You' : msg.sender_name + ' (Admin)';
+                        const bgColor = isUser ? '#f0f0f0' : '#e0e7ff';
+                        const align = isUser ? 'flex-end' : 'flex-start';
+                        const textAlign = isUser ? 'right' : 'left';
+                        
+                        let attachmentHtml = '';
+                        if (msg.attachment) {
+                            attachmentHtml = `<div style="margin-top: 10px;"><img src="${msg.attachment}" style="max-width: 300px; max-height: 300px; border: 1px solid #ccc; border-radius: 4px;"></div>`;
+                        }
+                        
+                        // We use a simple replacement for formatMessage that avoids adding tailwind classes to links
+                        let cleanMsg = escapeHtml(msg.message).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #0000EE; text-decoration: underline; word-break: break-all;">$1</a>');
+                        
+                        html += `
+                            <div style="display: flex; flex-direction: column; align-items: ${align}; width: 100%;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px; text-align: ${textAlign}; width: 100%;">${escapeHtml(senderName)} • ${msg.time}</div>
+                                <div style="background-color: ${bgColor}; padding: 15px; border-radius: 8px; max-width: 80%; border: 1px solid #ddd; color: #000; font-size: 14px; line-height: 1.5;">
+                                    ${cleanMsg}
+                                    ${attachmentHtml}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                    printContainer.innerHTML = html;
                     
                     const opt = {
                       margin:       10,
@@ -496,7 +548,7 @@ try {
                       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                     };
                     
-                    html2pdf().set(opt).from(clone).save().then(() => {
+                    html2pdf().set(opt).from(printContainer).save().then(() => {
                         exportPdfBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Downloaded';
                         
                         // Tell server it was exported

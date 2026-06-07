@@ -5,6 +5,14 @@ $current_page = 'support_chats';
 
 $admin_id = $_SESSION['admin_id'];
 
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+$whereClause = "";
+if ($filter === 'open') {
+    $whereClause = "WHERE s.status = 'open'";
+} else if ($filter === 'resolved') {
+    $whereClause = "WHERE s.status = 'resolved'";
+}
+
 // Fetch threads (support sessions)
 try {
     $stmt = $pdo->prepare("
@@ -14,6 +22,7 @@ try {
         (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
         FROM support_sessions s
         JOIN users u ON s.user_id = u.id
+        $whereClause
         ORDER BY s.status ASC, COALESCE(s.updated_at, s.created_at) DESC
     ");
     $stmt->execute();
@@ -83,6 +92,11 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
                         <input type="text" placeholder="Search users..." class="w-full bg-white/50 border border-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all">
                     </div>
+                    <div class="flex gap-2 mt-3">
+                        <a href="?filter=all" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'all') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">All</a>
+                        <a href="?filter=open" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'open') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Open</a>
+                        <a href="?filter=resolved" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'resolved') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Resolved</a>
+                    </div>
                 </div>
                 
                 <div class="flex-1 overflow-y-auto chat-scroll px-3 py-2 space-y-1">
@@ -90,7 +104,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <div class="text-center p-6 text-apple_muted">No support chats yet.</div>
                     <?php else: ?>
                         <?php foreach($threads as $t): ?>
-                            <a href="?session=<?php echo $t['session_id']; ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo $t['status'] === 'resolved' ? 'opacity-60' : ''; ?>">
+                            <a href="?session=<?php echo $t['session_id']; ?>&filter=<?php echo htmlspecialchars($filter); ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo $t['status'] === 'resolved' ? 'opacity-60' : ''; ?>">
                                 <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
                                     <?php echo substr(htmlspecialchars($t['first_name']), 0, 1); ?>
                                     
@@ -248,6 +262,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         const removeAttachment = document.getElementById('removeAttachment');
         const exportPdfBtn = document.getElementById('exportPdfBtn');
         
+        let currentMessages = [];
         let isScrolledToBottom = true;
         if(messagesDiv) {
             messagesDiv.addEventListener('scroll', () => {
@@ -282,6 +297,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         }
 
         function renderMessages(messages) {
+            currentMessages = messages;
             if(!messagesDiv) return;
             if (messages.length === 0) {
                 messagesDiv.innerHTML = '<div class="text-center text-apple_muted mt-10">No messages yet.</div>';
@@ -433,13 +449,62 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating PDF...';
                     exportPdfBtn.disabled = true;
                     
-                    // Clone the messages div to format it for PDF
-                    const clone = messagesDiv.cloneNode(true);
-                    clone.style.height = 'auto';
-                    clone.style.maxHeight = 'none';
-                    clone.style.overflow = 'visible';
-                    clone.style.backgroundColor = '#ffffff';
-                    clone.style.padding = '20px';
+                    // Create print container
+                    const printContainer = document.createElement('div');
+                    printContainer.style.backgroundColor = '#ffffff';
+                    printContainer.style.color = '#000000';
+                    printContainer.style.fontFamily = 'Arial, sans-serif';
+                    printContainer.style.padding = '40px';
+                    printContainer.style.width = '100%';
+                    printContainer.style.maxWidth = '800px';
+                    printContainer.style.margin = '0 auto';
+                    
+                    let html = `
+                        <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="background-color: #000; border-radius: 50%; padding: 10px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <img src="/graphics/logos/hypecrews%20logo%20white.png" style="max-width: 100%; height: auto;">
+                                </div>
+                                <div>
+                                    <h2 style="margin: 0; font-size: 24px; color: #000;">Hypecrews Support</h2>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #555;">support@hypecrews.com | hypecrews.com</p>
+                                </div>
+                            </div>
+                            <div style="text-align: right; font-size: 14px; color: #555;">
+                                <p style="margin: 0;"><strong>Session ID:</strong> #${sessionId}</p>
+                                <p style="margin: 5px 0 0 0;"><strong>Exported:</strong> ${new Date().toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                    `;
+                    
+                    currentMessages.forEach(msg => {
+                        const isAdmin = msg.is_mine;
+                        const senderName = isAdmin ? 'You (Admin)' : msg.sender_name;
+                        const bgColor = isAdmin ? '#e0e7ff' : '#f0f0f0';
+                        const align = isAdmin ? 'flex-end' : 'flex-start';
+                        const textAlign = isAdmin ? 'right' : 'left';
+                        
+                        let attachmentHtml = '';
+                        if (msg.attachment) {
+                            attachmentHtml = `<div style="margin-top: 10px;"><img src="../${msg.attachment}" style="max-width: 300px; max-height: 300px; border: 1px solid #ccc; border-radius: 4px;"></div>`;
+                        }
+                        
+                        let cleanMsg = escapeHtml(msg.message).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #0000EE; text-decoration: underline; word-break: break-all;">$1</a>');
+                        
+                        html += `
+                            <div style="display: flex; flex-direction: column; align-items: ${align}; width: 100%;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px; text-align: ${textAlign}; width: 100%;">${escapeHtml(senderName)} • ${msg.time}</div>
+                                <div style="background-color: ${bgColor}; padding: 15px; border-radius: 8px; max-width: 80%; border: 1px solid #ddd; color: #000; font-size: 14px; line-height: 1.5;">
+                                    ${cleanMsg}
+                                    ${attachmentHtml}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                    printContainer.innerHTML = html;
                     
                     const opt = {
                       margin:       10,
@@ -449,7 +514,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                     };
                     
-                    html2pdf().set(opt).from(clone).save().then(() => {
+                    html2pdf().set(opt).from(printContainer).save().then(() => {
                         exportPdfBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Downloaded';
                         
                         // Tell server it was exported
