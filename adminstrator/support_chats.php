@@ -953,6 +953,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-history text-primary"></i> Past Tickets</h4>
                                 ${chatsHtml}
                             </div>
+                            ` : ''}
                             
                             <!-- Admin Notes -->
                             <div class="border-t border-gray-200 pt-5">
