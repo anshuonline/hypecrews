@@ -222,9 +222,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                     }
                                 }, 1000);
                             </script>
-                            <button id="exportPdfBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-sm transition-all">
-                                <i class="fas fa-file-pdf mr-2"></i> Export Again
-                            </button>
                         <?php else: ?>
                             <p class="text-gray-500 text-sm mb-4">Export the chat history as a PDF. After exporting, a 1-hour deletion countdown will start for both you and the user.</p>
                             <button id="exportPdfBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-sm transition-transform hover:scale-105">
