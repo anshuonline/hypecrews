@@ -52,7 +52,7 @@ if ($action === 'get_messages') {
                 ELSE (SELECT username FROM administrators WHERE id = c.sender_id)
             END as sender_name,
             CASE 
-                WHEN c.sender_type = 'user' THEN (SELECT profile_image FROM users WHERE id = c.sender_id)
+                WHEN c.sender_type = 'user' THEN NULL
                 ELSE (SELECT profile_image FROM administrators WHERE id = c.sender_id)
             END as sender_avatar
             FROM support_chats c 
