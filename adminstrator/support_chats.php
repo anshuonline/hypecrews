@@ -792,7 +792,9 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                     ${activeDot}
                                 </div>
                                 <h3 class="font-bold text-xl text-gray-800">${escapeHtml(u.name)}</h3>
-                                <p class="text-sm text-gray-500">${escapeHtml(u.email)}</p>
+                                <p class="text-sm text-gray-500 mb-2">${escapeHtml(u.email)}</p>
+                                ${u.phone !== 'N/A' ? `<p class="text-xs text-gray-600"><i class="fas fa-phone-alt mr-1 text-gray-400"></i> ${escapeHtml(u.phone)}</p>` : ''}
+                                ${u.company !== 'N/A' ? `<p class="text-xs text-gray-600 mt-1"><i class="fas fa-building mr-1 text-gray-400"></i> ${escapeHtml(u.company)}</p>` : ''}
                                 <div class="mt-1">${activeText}</div>
                             </div>
                             

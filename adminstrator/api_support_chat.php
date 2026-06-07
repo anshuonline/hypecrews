@@ -221,10 +221,10 @@ if ($action === 'get_user_profile') {
     $user_id = $_GET['user_id'] ?? 0;
     
     try {
-        // Fetch User Info
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt->execute([$user_id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Get User Basic Info
+        $u_stmt = $pdo->prepare("SELECT id, username, first_name, last_name, email, ip_address, last_active_at, mobile_number, company_name, country FROM users WHERE id = ?");
+        $u_stmt->execute([$user_id]);
+        $user = $u_stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$user) {
             echo json_encode(['status' => 'error', 'message' => 'User not found']);
@@ -290,7 +290,8 @@ if ($action === 'get_user_profile') {
                     'id' => $user['id'],
                     'name' => $user['first_name'] . ' ' . $user['last_name'],
                     'email' => $user['email'],
-                    'phone' => $user['mobile_number'],
+                    'phone' => $user['mobile_number'] ?? 'N/A',
+                    'company' => $user['company_name'] ?? 'N/A',
                     'country' => $user['country'],
                     'ip_address' => $user['ip_address'] ?? 'N/A',
                     'location' => $location,
