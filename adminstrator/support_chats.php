@@ -146,6 +146,9 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                         <p class="text-[11px] font-medium <?php echo $t['urgency'] === 'urgent' ? 'text-red-500' : ($t['urgency'] === 'normal' ? 'text-emerald-500' : 'text-blue-500'); ?>"><?php echo htmlspecialchars($t['topic']); ?></p>
                                         <?php if($t['status'] === 'resolved'): ?><span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span><?php endif; ?>
                                     </div>
+                                    <?php if($t['assigned_admin_name']): ?>
+                                        <p class="text-[10px] text-purple-600 font-bold mb-0.5"><i class="fas fa-user-check"></i> <?php echo htmlspecialchars($t['assigned_admin_name']); ?></p>
+                                    <?php endif; ?>
                                     <p class="text-[12px] text-apple_muted truncate <?php echo $t['unread_count'] > 0 ? 'font-bold text-apple_text' : ''; ?>"><?php echo htmlspecialchars($t['last_message']); ?></p>
                                 </div>
                             </a>
@@ -405,6 +408,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                             <p class="text-[11px] font-medium ${urgencyColor}">${escapeHtml(t.topic)}</p>
                                             ${resolvedBadge}
                                         </div>
+                                        ${t.assigned_admin_name ? `<p class="text-[10px] text-purple-600 font-bold mb-0.5"><i class="fas fa-user-check"></i> ${escapeHtml(t.assigned_admin_name)}</p>` : ''}
                                         <p class="text-[12px] text-apple_muted truncate ${lastMsgBold}">${escapeHtml(t.last_message || '')}</p>
                                     </div>
                                 </a>`;
