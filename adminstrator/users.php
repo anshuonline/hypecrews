@@ -197,36 +197,41 @@ try {
                             </thead>
                             <tbody class="divide-y divide-black/5">
                                 <?php foreach ($users as $user): ?>
-                                <tr class="hover:bg-white/30 transition-colors group">
+                                <tr onclick="window.location='viewuserdata.php?id=<?php echo $user['id']; ?>'" class="hover:bg-white/30 transition-colors group cursor-pointer relative">
                                     <td class="py-5 px-4 rounded-l-2xl">
                                         <div class="flex items-center">
                                             <div class="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-primary mr-3 shadow-inner">
                                                 <span class="font-bold text-sm"><?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?></span>
                                             </div>
                                             <div>
-                                                <p class="font-bold text-apple_text"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></p>
+                                                <p class="font-bold text-apple_text group-hover:text-primary transition-colors"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></p>
                                                 <p class="text-xs text-primary/70 font-medium mt-0.5">@<?php echo htmlspecialchars($user['username']); ?></p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="py-5 px-4">
-                                        <p class="font-medium text-apple_text"><a href="mailto:<?php echo htmlspecialchars($user['email']); ?>" class="hover:underline text-primary/80"><?php echo htmlspecialchars($user['email']); ?></a></p>
+                                        <p class="font-medium text-apple_text"><a href="mailto:<?php echo htmlspecialchars($user['email']); ?>" onclick="event.stopPropagation();" class="hover:underline text-primary/80"><?php echo htmlspecialchars($user['email']); ?></a></p>
                                         <p class="text-xs text-apple_muted font-medium mt-0.5"><?php echo htmlspecialchars($user['mobile_number']); ?></p>
                                     </td>
                                     <td class="py-5 px-4">
                                         <?php if ($user['company_name']): ?>
                                         <p class="font-semibold text-apple_text"><?php echo htmlspecialchars($user['company_name']); ?></p>
                                         <?php if ($user['company_website']): ?>
-                                        <p class="text-xs mt-0.5"><a href="<?php echo htmlspecialchars($user['company_website']); ?>" target="_blank" class="text-primary hover:underline font-medium"><i class="fas fa-external-link-alt text-[10px] mr-1"></i>Website</a></p>
+                                        <p class="text-xs mt-0.5"><a href="<?php echo htmlspecialchars($user['company_website']); ?>" target="_blank" onclick="event.stopPropagation();" class="text-primary hover:underline font-medium"><i class="fas fa-external-link-alt text-[10px] mr-1"></i>Website</a></p>
                                         <?php endif; ?>
                                         <?php else: ?>
                                         <span class="text-xs text-apple_muted italic font-medium bg-white/50 px-2 py-1 rounded-md border border-black/5">No company info</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="py-5 px-4 text-right rounded-r-2xl">
-                                        <span class="text-xs text-apple_muted font-medium bg-black/5 px-3 py-1.5 rounded-lg whitespace-nowrap">
-                                            <?php echo date('M j, Y', strtotime($user['created_at'])); ?>
-                                        </span>
+                                        <div class="flex items-center justify-end space-x-3">
+                                            <span class="text-xs text-apple_muted font-medium bg-black/5 px-3 py-1.5 rounded-lg whitespace-nowrap">
+                                                <?php echo date('M j, Y', strtotime($user['created_at'])); ?>
+                                            </span>
+                                            <div class="w-8 h-8 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all transform group-hover:scale-110">
+                                                <i class="fas fa-chevron-right text-xs"></i>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
