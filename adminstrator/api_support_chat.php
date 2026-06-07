@@ -38,7 +38,8 @@ if ($action === 'list_threads') {
             $params[] = $searchId;
         } else {
             // Search by name
-            $whereClause .= " AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.username LIKE ?)";
+            $whereClause .= " AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.username LIKE ? OR s.guest_name LIKE ?)";
+            $params[] = "%$search%";
             $params[] = "%$search%";
             $params[] = "%$search%";
             $params[] = "%$search%";
@@ -49,12 +50,13 @@ if ($action === 'list_threads') {
     try {
         $stmt = $pdo->prepare("
             SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity, s.assigned_admin_id,
+            s.guest_name, s.guest_email, s.guest_phone,
             u.id as user_id, u.username, u.first_name, u.last_name, u.email,
             a.username as assigned_admin_name,
             (SELECT message FROM support_chats WHERE session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
             FROM support_sessions s
-            JOIN users u ON s.user_id = u.id
+            LEFT JOIN users u ON s.user_id = u.id
             LEFT JOIN administrators a ON s.assigned_admin_id = a.id
             $whereClause
             ORDER BY CASE WHEN s.status = 'open' THEN 1 ELSE 2 END ASC, unread_count DESC, s.updated_at DESC, s.id DESC

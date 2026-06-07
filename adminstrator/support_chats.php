@@ -404,7 +404,8 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 const bgClass = isActive ? 'bg-primary/10 border-primary/20 shadow-sm' : 'hover:bg-white/50 border-transparent';
                                 const opacityClass = (t.status === 'resolved' || t.status === 'archived') ? 'opacity-60' : '';
                                 
-                                const initial = t.first_name ? t.first_name.charAt(0) : '?';
+                                const displayName = t.user_id ? escapeHtml(t.first_name + ' ' + t.last_name) : escapeHtml((t.guest_name || 'Guest') + ' (Guest)');
+                                const initial = displayName.charAt(0).toUpperCase();
                                 const unreadBadge = t.unread_count > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">${t.unread_count}</span>` : '';
                                 
                                 const urgencyColor = t.urgency === 'urgent' ? 'text-red-500' : (t.urgency === 'normal' ? 'text-emerald-500' : 'text-blue-500');
@@ -422,7 +423,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex justify-between items-baseline mb-0.5">
-                                            <p class="font-bold text-[15px] truncate text-apple_text">#${t.session_id} - ${escapeHtml(t.first_name + ' ' + t.last_name)}</p>
+                                            <p class="font-bold text-[15px] truncate text-apple_text">#${t.session_id} - ${displayName}</p>
                                             <span class="text-[10px] font-medium text-apple_muted shrink-0">${formattedDate}</span>
                                         </div>
                                         <div class="flex items-center justify-between">
