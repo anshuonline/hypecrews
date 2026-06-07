@@ -13,16 +13,16 @@ $admin_id = $_SESSION['admin_id'];
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
 if ($action === 'list_threads') {
-    // Get list of users who have chat messages
+    // Get list of support sessions
     try {
         $stmt = $pdo->prepare("
-            SELECT u.id, u.username, u.first_name, u.last_name, u.profile_image, 
-            (SELECT message FROM support_chats WHERE user_id = u.id ORDER BY created_at DESC LIMIT 1) as last_message,
-            (SELECT created_at FROM support_chats WHERE user_id = u.id ORDER BY created_at DESC LIMIT 1) as last_activity,
-            (SELECT COUNT(*) FROM support_chats WHERE user_id = u.id AND sender_type = 'user' AND is_read = 0) as unread_count
-            FROM users u
-            WHERE EXISTS (SELECT 1 FROM support_chats WHERE user_id = u.id)
-            ORDER BY last_activity DESC
+            SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity,
+            u.id as user_id, u.username, u.first_name, u.last_name, 
+            (SELECT message FROM support_chats WHERE session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+            (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
+            FROM support_sessions s
+            JOIN users u ON s.user_id = u.id
+            ORDER BY s.status ASC, s.updated_at DESC
         ");
         $stmt->execute();
         $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,12 +39,12 @@ if ($action === 'list_threads') {
 }
 
 if ($action === 'get_messages') {
-    $user_id = $_GET['user_id'] ?? 0;
+    $session_id = $_GET['session_id'] ?? 0;
     
     try {
         // Mark as read
-        $pdo->prepare("UPDATE support_chats SET is_read = 1 WHERE user_id = ? AND sender_type = 'user' AND is_read = 0")
-            ->execute([$user_id]);
+        $pdo->prepare("UPDATE support_chats SET is_read = 1 WHERE session_id = ? AND sender_type = 'user' AND is_read = 0")
+            ->execute([$session_id]);
             
         $stmt = $pdo->prepare("SELECT c.*, 
             CASE 
@@ -56,9 +56,9 @@ if ($action === 'get_messages') {
                 ELSE (SELECT profile_image FROM administrators WHERE id = c.sender_id)
             END as sender_avatar
             FROM support_chats c 
-            WHERE c.user_id = ? 
+            WHERE c.session_id = ? 
             ORDER BY c.created_at ASC");
-        $stmt->execute([$user_id]);
+        $stmt->execute([$session_id]);
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         foreach ($messages as &$msg) {
@@ -66,7 +66,12 @@ if ($action === 'get_messages') {
             $msg['is_mine'] = ($msg['sender_type'] === 'admin');
         }
         
-        echo json_encode(['status' => 'success', 'data' => $messages]);
+        // Also fetch session details
+        $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session_id]);
+        $session = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['status' => 'success', 'data' => $messages, 'session' => $session]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }
@@ -74,17 +79,47 @@ if ($action === 'get_messages') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send_message') {
-    $user_id = $_POST['user_id'] ?? 0;
+    $session_id = $_POST['session_id'] ?? 0;
     $message = trim($_POST['message'] ?? '');
     
-    if (empty($message) || empty($user_id)) {
+    if (empty($message) || empty($session_id)) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit();
     }
     
     try {
-        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message) VALUES (?, 'admin', ?, ?)");
-        $stmt->execute([$user_id, $admin_id, $message]);
+        // Get user_id for this session
+        $stmt = $pdo->prepare("SELECT user_id, status FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session_id]);
+        $session = $stmt->fetch();
+        
+        if (!$session || $session['status'] === 'resolved') {
+            echo json_encode(['status' => 'error', 'message' => 'Session is closed or invalid']);
+            exit();
+        }
+        
+        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message, session_id) VALUES (?, 'admin', ?, ?, ?)");
+        $stmt->execute([$session['user_id'], $admin_id, $message, $session_id]);
+        
+        // Update session timestamp
+        $pdo->prepare("UPDATE support_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session_id]);
+        
+        echo json_encode(['status' => 'success']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'resolve_session') {
+    $session_id = $_POST['session_id'] ?? 0;
+    if (empty($session_id)) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
+        exit();
+    }
+    
+    try {
+        $pdo->prepare("UPDATE support_sessions SET status = 'resolved', updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session_id]);
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);

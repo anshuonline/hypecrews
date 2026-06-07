@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Send a message
     $message = trim($_POST['message'] ?? '');
     
     if (empty($message)) {
@@ -21,8 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     try {
-        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message) VALUES (?, 'user', ?, ?)");
-        $stmt->execute([$user_id, $user_id, $message]);
+        // Find active session
+        $stmt = $pdo->prepare("SELECT id FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
+        $stmt->execute([$user_id]);
+        $session = $stmt->fetch();
+        
+        if (!$session) {
+            echo json_encode(['status' => 'error', 'message' => 'No active session']);
+            exit();
+        }
+        
+        $stmt = $pdo->prepare("INSERT INTO support_chats (user_id, sender_type, sender_id, message, session_id) VALUES (?, 'user', ?, ?, ?)");
+        $stmt->execute([$user_id, $user_id, $message, $session['id']]);
+        
+        // Update session timestamp
+        $pdo->prepare("UPDATE support_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session['id']]);
+        
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -31,11 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Fetch messages
     try {
+        // Find active session
+        $stmt = $pdo->prepare("SELECT id FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
+        $stmt->execute([$user_id]);
+        $session = $stmt->fetch();
+        
+        if (!$session) {
+            echo json_encode(['status' => 'success', 'data' => []]);
+            exit();
+        }
+        
         // Mark admin messages as read by the user
-        $pdo->prepare("UPDATE support_chats SET is_read = 1 WHERE user_id = ? AND sender_type = 'admin' AND is_read = 0")
-            ->execute([$user_id]);
+        $pdo->prepare("UPDATE support_chats SET is_read = 1 WHERE session_id = ? AND sender_type = 'admin' AND is_read = 0")
+            ->execute([$session['id']]);
             
         $stmt = $pdo->prepare("SELECT c.*, 
             CASE 
@@ -47,9 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 ELSE (SELECT profile_image FROM administrators WHERE id = c.sender_id)
             END as sender_avatar
             FROM support_chats c 
-            WHERE c.user_id = ? 
+            WHERE c.session_id = ? 
             ORDER BY c.created_at ASC");
-        $stmt->execute([$user_id]);
+        $stmt->execute([$session['id']]);
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         // Format time

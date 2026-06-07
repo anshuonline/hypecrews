@@ -5,16 +5,16 @@ $current_page = 'support_chats';
 
 $admin_id = $_SESSION['admin_id'];
 
-// Fetch threads (users who have sent/received messages)
+// Fetch threads (support sessions)
 try {
     $stmt = $pdo->prepare("
-        SELECT u.id, u.username, u.first_name, u.last_name, 
-        (SELECT message FROM support_chats WHERE user_id = u.id ORDER BY created_at DESC LIMIT 1) as last_message,
-        (SELECT created_at FROM support_chats WHERE user_id = u.id ORDER BY created_at DESC LIMIT 1) as last_activity,
-        (SELECT COUNT(*) FROM support_chats WHERE user_id = u.id AND sender_type = 'user' AND is_read = 0) as unread_count
-        FROM users u
-        WHERE EXISTS (SELECT 1 FROM support_chats WHERE user_id = u.id)
-        ORDER BY last_activity DESC
+        SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity,
+        u.id as user_id, u.username, u.first_name, u.last_name, 
+        (SELECT message FROM support_chats WHERE session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
+        (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
+        FROM support_sessions s
+        JOIN users u ON s.user_id = u.id
+        ORDER BY s.status ASC, s.updated_at DESC
     ");
     $stmt->execute();
     $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -22,7 +22,8 @@ try {
     $error = "Database error: " . $e->getMessage();
 }
 
-$chat_with = isset($_GET['user']) ? $_GET['user'] : null;
+$chat_with = isset($_GET['session']) ? $_GET['session'] : null;
+
 ?>
 
 <!DOCTYPE html>
@@ -89,7 +90,7 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
                         <div class="text-center p-6 text-apple_muted">No support chats yet.</div>
                     <?php else: ?>
                         <?php foreach($threads as $t): ?>
-                            <a href="?user=<?php echo $t['id']; ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?>">
+                            <a href="?session=<?php echo $t['session_id']; ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo $t['status'] === 'resolved' ? 'opacity-60' : ''; ?>">
                                 <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
                                     <?php echo substr(htmlspecialchars($t['first_name']), 0, 1); ?>
                                     
@@ -101,6 +102,10 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
                                     <div class="flex justify-between items-baseline mb-0.5">
                                         <p class="font-bold text-[15px] truncate text-apple_text"><?php echo htmlspecialchars($t['first_name'] . ' ' . $t['last_name']); ?></p>
                                         <span class="text-[10px] font-medium text-apple_muted shrink-0"><?php echo date('M d', strtotime($t['last_activity'])); ?></span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-[11px] font-medium <?php echo $t['urgency'] === 'urgent' ? 'text-red-500' : ($t['urgency'] === 'normal' ? 'text-emerald-500' : 'text-blue-500'); ?>"><?php echo htmlspecialchars($t['topic']); ?></p>
+                                        <?php if($t['status'] === 'resolved'): ?><span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span><?php endif; ?>
                                     </div>
                                     <p class="text-[12px] text-apple_muted truncate <?php echo $t['unread_count'] > 0 ? 'font-bold text-apple_text' : ''; ?>"><?php echo htmlspecialchars($t['last_message']); ?></p>
                                 </div>
@@ -115,29 +120,45 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
                 <?php if (!$chat_with): ?>
                     <div class="flex-1 flex flex-col items-center justify-center text-apple_muted">
                         <i class="fas fa-comments text-6xl mb-4 opacity-20"></i>
-                        <p class="text-lg font-medium">Select a user to view support chat.</p>
+                        <p class="text-lg font-medium">Select a session to view support chat.</p>
                     </div>
                 <?php else: ?>
                     <?php
-                        // Get current user info
-                        $u_stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-                        $u_stmt->execute([$chat_with]);
-                        $chat_user = $u_stmt->fetch();
+                        // Get current session info
+                        $s_stmt = $pdo->prepare("SELECT s.*, u.username, u.first_name, u.last_name, u.email FROM support_sessions s JOIN users u ON s.user_id = u.id WHERE s.id = ?");
+                        $s_stmt->execute([$chat_with]);
+                        $session_data = $s_stmt->fetch();
                     ?>
                     <!-- Chat Header -->
-                    <div class="px-6 py-4 glass-panel border-b border-black/5 flex items-center shadow-sm shrink-0 z-10 rounded-none">
-                        <a href="support_chats.php" class="md:hidden mr-4 w-10 h-10 rounded-full bg-black/5 flex items-center justify-center text-apple_text">
-                            <i class="fas fa-arrow-left"></i>
-                        </a>
+                    <div class="px-6 py-4 glass-panel border-b border-black/5 flex items-center justify-between shadow-sm shrink-0 z-10 rounded-none">
                         <div class="flex items-center">
+                            <a href="support_chats.php" class="md:hidden mr-4 w-10 h-10 rounded-full bg-black/5 flex items-center justify-center text-apple_text">
+                                <i class="fas fa-arrow-left"></i>
+                            </a>
                             <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold mr-3 shrink-0">
-                                <?php echo substr(htmlspecialchars($chat_user['first_name']), 0, 1); ?>
+                                <?php echo substr(htmlspecialchars($session_data['first_name']), 0, 1); ?>
                             </div>
                             <div>
-                                <h2 class="text-lg font-bold leading-tight"><?php echo htmlspecialchars($chat_user['first_name'] . ' ' . $chat_user['last_name']); ?></h2>
-                                <p class="text-[11px] font-semibold text-apple_muted">@<?php echo htmlspecialchars($chat_user['username']); ?> • <?php echo htmlspecialchars($chat_user['email']); ?></p>
+                                <h2 class="text-lg font-bold leading-tight flex items-center gap-2">
+                                    <?php echo htmlspecialchars($session_data['first_name'] . ' ' . $session_data['last_name']); ?>
+                                    <span class="text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded font-medium">#<?php echo $session_data['id']; ?></span>
+                                </h2>
+                                <p class="text-[11px] font-semibold text-apple_muted">
+                                    <?php echo htmlspecialchars($session_data['topic']); ?> • 
+                                    <span class="<?php echo $session_data['urgency'] === 'urgent' ? 'text-red-500' : ($session_data['urgency'] === 'normal' ? 'text-emerald-500' : 'text-blue-500'); ?>"><?php echo ucfirst($session_data['urgency']); ?></span>
+                                </p>
                             </div>
                         </div>
+                        
+                        <?php if($session_data['status'] === 'open'): ?>
+                        <button onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                            <i class="fas fa-check-circle"></i> Resolve
+                        </button>
+                        <?php else: ?>
+                        <span class="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-lg text-sm font-bold border border-gray-200 flex items-center gap-2">
+                            <i class="fas fa-lock text-xs"></i> Resolved
+                        </span>
+                        <?php endif; ?>
                     </div>
                     
                     <!-- Messages Area -->
@@ -146,15 +167,22 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
                     </div>
                     
                     <!-- Chat Input -->
+                    <?php if($session_data['status'] === 'open'): ?>
                     <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6">
                         <form id="chatForm" class="flex gap-3">
-                            <input type="hidden" id="chatWith" value="<?php echo htmlspecialchars($chat_with); ?>">
+                            <input type="hidden" id="chatSession" value="<?php echo htmlspecialchars($chat_with); ?>">
                             <input type="text" id="messageInput" autocomplete="off" placeholder="Type reply as Admin..." class="flex-1 bg-white border border-black/10 rounded-full px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all font-medium">
                             <button type="submit" class="bg-primary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md transition-transform hover:scale-105 shrink-0">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </form>
                     </div>
+                    <?php else: ?>
+                    <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6 text-center text-apple_muted bg-gray-50/50">
+                        <i class="fas fa-info-circle mb-2 block"></i>
+                        This session has been marked as resolved and is now closed to new messages.
+                    </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -162,18 +190,21 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
     
     <?php if ($chat_with): ?>
     <script>
-        const chatWith = document.getElementById('chatWith').value;
+        const chatSession = document.getElementById('chatSession') ? document.getElementById('chatSession').value : null;
         const messagesDiv = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         const messageInput = document.getElementById('messageInput');
         
         let isScrolledToBottom = true;
-        messagesDiv.addEventListener('scroll', () => {
-            isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
-        });
+        if(messagesDiv) {
+            messagesDiv.addEventListener('scroll', () => {
+                isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
+            });
+        }
 
         function fetchMessages() {
-            fetch('api_support_chat.php?action=get_messages&user_id=' + chatWith)
+            if(!chatSession) return;
+            fetch('api_support_chat.php?action=get_messages&session_id=' + chatSession)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -184,6 +215,7 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
         }
 
         function renderMessages(messages) {
+            if(!messagesDiv) return;
             if (messages.length === 0) {
                 messagesDiv.innerHTML = '<div class="text-center text-apple_muted mt-10">No messages yet.</div>';
                 return;
@@ -230,43 +262,62 @@ $chat_with = isset($_GET['user']) ? $_GET['user'] : null;
             }
         }
 
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const msg = messageInput.value.trim();
-            if (!msg) return;
-            
-            // Optimistic update
-            const tempHtml = `
-            <div class="flex justify-end mb-4 group opacity-50">
-                <div class="max-w-[75%]">
-                    <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
-                    <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
-                        ${escapeHtml(msg)}
+        if(chatForm) {
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const msg = messageInput.value.trim();
+                if (!msg) return;
+                
+                // Optimistic update
+                const tempHtml = `
+                <div class="flex justify-end mb-4 group opacity-50">
+                    <div class="max-w-[75%]">
+                        <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
+                        <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
+                            ${escapeHtml(msg)}
+                        </div>
                     </div>
-                </div>
-            </div>`;
-            messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            
-            const formData = new FormData();
-            formData.append('action', 'send_message');
-            formData.append('user_id', chatWith);
-            formData.append('message', msg);
-            
-            messageInput.value = '';
-            
-            fetch('api_support_chat.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    isScrolledToBottom = true;
-                    fetchMessages();
-                }
+                </div>`;
+                messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                
+                const formData = new FormData();
+                formData.append('action', 'send_message');
+                formData.append('session_id', chatSession);
+                formData.append('message', msg);
+                
+                messageInput.value = '';
+                
+                fetch('api_support_chat.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        isScrolledToBottom = true;
+                        fetchMessages();
+                    }
+                });
             });
-        });
+        }
+        
+        function resolveSession(sessionId) {
+            if(confirm('Are you sure you want to resolve this session? The user will have to start a new chat.')) {
+                const formData = new FormData();
+                formData.append('action', 'resolve_session');
+                formData.append('session_id', sessionId);
+                
+                fetch('api_support_chat.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(res => res.json()).then(data => {
+                    if(data.status === 'success') {
+                        window.location.reload();
+                    }
+                });
+            }
+        }
 
         function escapeHtml(unsafe) {
             return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");

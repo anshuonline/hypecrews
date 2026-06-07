@@ -21,6 +21,24 @@ try {
         header("Location: login.php");
         exit();
     }
+
+    // Handle new session creation
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_session'])) {
+        $topic = trim($_POST['topic']);
+        $urgency = trim($_POST['urgency']);
+        if (!empty($topic) && in_array($urgency, ['low', 'normal', 'urgent'])) {
+            $stmt = $pdo->prepare("INSERT INTO support_sessions (user_id, topic, urgency) VALUES (?, ?, ?)");
+            $stmt->execute([$user_id, $topic, $urgency]);
+            header("Location: support_chat.php");
+            exit();
+        }
+    }
+
+    // Check for active session
+    $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
+    $stmt->execute([$user_id]);
+    $active_session = $stmt->fetch();
+
 } catch (PDOException $e) {
     die("Database error");
 }
@@ -112,40 +130,99 @@ try {
                     ?>
                 </div>
                 
-                <!-- Chat Interface -->
+                <!-- Chat Interface / New Session Form -->
                 <div class="w-full lg:w-3/4 xl:w-4/5 flex-1 flex flex-col glass-card rounded-3xl overflow-hidden relative">
                     <div class="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[60px] pointer-events-none"></div>
                     
-                    <!-- Chat Header -->
-                    <div class="p-5 border-b border-white/5 flex items-center justify-between bg-black/20 shrink-0 z-10">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary shadow-[0_0_15px_rgba(139,92,246,0.2)]">
-                                <i class="fas fa-headset text-xl"></i>
+                    <?php if (!$active_session): ?>
+                        <!-- New Session Form -->
+                        <div class="flex-1 flex flex-col items-center justify-center p-8 z-10 text-center">
+                            <div class="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mb-6 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+                                <i class="fas fa-ticket-alt text-3xl"></i>
                             </div>
-                            <div>
-                                <h3 class="font-bold text-white text-lg">Admin Support</h3>
-                                <p class="text-xs text-green-400 font-medium flex items-center gap-1.5"><i class="fas fa-circle text-[8px]"></i> We usually reply within minutes</p>
+                            <h2 class="text-2xl font-bold text-white mb-2 font-heading">Start a New Conversation</h2>
+                            <p class="text-gray-400 mb-8 max-w-md">Please provide some details about your inquiry so we can route you to the right expert.</p>
+                            
+                            <form method="POST" class="w-full max-w-md bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm text-left">
+                                <input type="hidden" name="create_session" value="1">
+                                
+                                <div class="mb-5">
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2">What is this regarding?</label>
+                                    <select name="topic" required class="w-full chat-input rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-secondary/50 appearance-none bg-[#151b2b]">
+                                        <option value="" disabled selected>Select a topic...</option>
+                                        <option value="Copyright Protection">Copyright Protection</option>
+                                        <option value="Social Media">Social Media</option>
+                                        <option value="Digital Marketing">Digital Marketing</option>
+                                        <option value="Web & Development">Web & Development</option>
+                                        <option value="Recovery & Support">Recovery & Support</option>
+                                        <option value="General Inquiry">General Inquiry</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Urgency Level</label>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <label class="cursor-pointer relative">
+                                            <input type="radio" name="urgency" value="low" class="peer sr-only">
+                                            <div class="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/5 text-gray-400 text-xs font-bold transition-all peer-checked:bg-blue-500/20 peer-checked:text-blue-400 peer-checked:border-blue-500/50 hover:bg-white/10">Low</div>
+                                        </label>
+                                        <label class="cursor-pointer relative">
+                                            <input type="radio" name="urgency" value="normal" checked class="peer sr-only">
+                                            <div class="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/5 text-gray-400 text-xs font-bold transition-all peer-checked:bg-emerald-500/20 peer-checked:text-emerald-400 peer-checked:border-emerald-500/50 hover:bg-white/10">Normal</div>
+                                        </label>
+                                        <label class="cursor-pointer relative">
+                                            <input type="radio" name="urgency" value="urgent" class="peer sr-only">
+                                            <div class="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/5 text-gray-400 text-xs font-bold transition-all peer-checked:bg-red-500/20 peer-checked:text-red-400 peer-checked:border-red-500/50 hover:bg-white/10">Urgent</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:scale-[1.02] transition-all">
+                                    Initiate Chat <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                                </button>
+                            </form>
+                        </div>
+                        
+                    <?php else: ?>
+                        <!-- Chat Header -->
+                        <div class="p-5 border-b border-white/5 flex items-center justify-between bg-black/20 shrink-0 z-10">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+                                    <i class="fas fa-headset text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">Admin Support <span class="text-xs ml-2 bg-white/10 px-2 py-0.5 rounded text-gray-300">#<?php echo $active_session['id']; ?></span></h3>
+                                    <p class="text-xs text-green-400 font-medium flex items-center gap-1.5">
+                                        <i class="fas fa-circle text-[8px]"></i> 
+                                        <?php echo htmlspecialchars($active_session['topic']); ?> • 
+                                        <span class="<?php echo $active_session['urgency'] === 'urgent' ? 'text-red-400' : ($active_session['urgency'] === 'normal' ? 'text-emerald-400' : 'text-blue-400'); uppercase; ?>">
+                                            <?php echo ucfirst($active_session['urgency']); ?>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Chat Messages Area -->
-                    <div id="chatMessages" class="flex-1 overflow-y-auto chat-scroll p-6 space-y-6 z-10">
-                        <div class="text-center text-gray-500 font-medium text-sm mt-10">
-                            <i class="fas fa-circle-notch fa-spin text-secondary text-2xl mb-3"></i><br>
-                            Loading messages...
+                        
+                        <!-- Chat Messages Area -->
+                        <div id="chatMessages" class="flex-1 overflow-y-auto chat-scroll p-6 space-y-6 z-10" data-session-id="<?php echo $active_session['id']; ?>">
+                            <div class="text-center text-gray-500 font-medium text-sm mt-10">
+                                <i class="fas fa-circle-notch fa-spin text-secondary text-2xl mb-3"></i><br>
+                                Loading messages...
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Chat Input -->
-                    <div class="p-5 border-t border-white/5 bg-black/20 shrink-0 z-10">
-                        <form id="chatForm" class="flex gap-3">
-                            <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message here..." class="flex-1 chat-input rounded-full px-6 py-3.5 text-sm font-medium">
-                            <button type="submit" class="bg-secondary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-transform hover:scale-105 shrink-0">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                    </div>
+                        
+                        <!-- Chat Input -->
+                        <div class="p-5 border-t border-white/5 bg-black/20 shrink-0 z-10">
+                            <form id="chatForm" class="flex gap-3">
+                                <input type="hidden" id="sessionId" value="<?php echo $active_session['id']; ?>">
+                                <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message here..." class="flex-1 chat-input rounded-full px-6 py-3.5 text-sm font-medium">
+                                <button type="submit" class="bg-secondary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-transform hover:scale-105 shrink-0">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
             
