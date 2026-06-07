@@ -32,7 +32,7 @@ try {
     
     // Fetch threads (support sessions)
     $stmt = $pdo->prepare("
-        SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity,
+        SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity, s.assigned_admin_id,
         u.id as user_id, u.username, u.first_name, u.last_name, 
         (SELECT message FROM support_chats WHERE session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
         (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
@@ -109,9 +109,10 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <input type="text" id="searchInput" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search ticket # or name..." class="w-full bg-white/50 border border-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all">
                     </div>
                     <div class="flex gap-2 mt-3">
-                        <a href="?filter=all" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'all') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">All</a>
-                        <a href="?filter=open" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'open') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Open</a>
-                        <a href="?filter=resolved" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'resolved') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Resolved</a>
+                        <a href="?filter=all" class="flex-1 text-center py-1.5 rounded-lg text-[10px] font-bold <?php echo ($filter === 'all') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">All</a>
+                        <a href="?filter=mine" class="flex-1 text-center py-1.5 rounded-lg text-[10px] font-bold <?php echo ($filter === 'mine') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Mine</a>
+                        <a href="?filter=open" class="flex-1 text-center py-1.5 rounded-lg text-[10px] font-bold <?php echo ($filter === 'open') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Open</a>
+                        <a href="?filter=resolved" class="flex-1 text-center py-1.5 rounded-lg text-[10px] font-bold <?php echo ($filter === 'resolved') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">Resolved</a>
                     </div>
                 </div>
                 
@@ -157,7 +158,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 <?php else: ?>
                     <?php
                         // Get current session info
-                        $s_stmt = $pdo->prepare("SELECT s.*, u.username, u.first_name, u.last_name, u.email FROM support_sessions s JOIN users u ON s.user_id = u.id WHERE s.id = ?");
+                        $s_stmt = $pdo->prepare("SELECT s.*, u.username, u.first_name, u.last_name, u.email, a.username as assigned_admin_name FROM support_sessions s JOIN users u ON s.user_id = u.id LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.id = ?");
                         $s_stmt->execute([$chat_with]);
                         $session_data = $s_stmt->fetch();
                     ?>
@@ -182,15 +183,27 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             </div>
                         </div>
                         
-                        <?php if($session_data['status'] === 'open'): ?>
-                        <button onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
-                            <i class="fas fa-check-circle"></i> Resolve
-                        </button>
-                        <?php else: ?>
-                        <span class="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-lg text-sm font-bold border border-gray-200 flex items-center gap-2">
-                            <i class="fas fa-lock text-xs"></i> Resolved
-                        </span>
-                        <?php endif; ?>
+                        <div class="flex items-center gap-2">
+                            <?php if ($session_data['assigned_admin_id']): ?>
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-200 flex items-center gap-1.5">
+                                    <i class="fas fa-user-check"></i> <?php echo htmlspecialchars($session_data['assigned_admin_name']); ?>
+                                </span>
+                            <?php else: ?>
+                                <button onclick="assignChat(<?php echo $session_data['id']; ?>)" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-500 hover:text-white border border-indigo-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
+                                    <i class="fas fa-hand-paper"></i> Assign to Me
+                                </button>
+                            <?php endif; ?>
+                            
+                            <?php if($session_data['status'] === 'open'): ?>
+                            <button onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                                <i class="fas fa-check-circle"></i> Resolve
+                            </button>
+                            <?php else: ?>
+                            <button onclick="reopenChat(<?php echo $session_data['id']; ?>)" class="bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white border border-amber-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                                <i class="fas fa-undo-alt"></i> Reopen
+                            </button>
+                            <?php endif; ?>
+                        </div>
                     </div>
                     
                     <!-- Top Admin Notes Banner -->
@@ -526,6 +539,42 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 }).then(res => res.json()).then(data => {
                     if(data.status === 'success') {
                         window.location.reload();
+                    }
+                });
+            }
+        }
+        
+        function assignChat(sessionId) {
+            const formData = new FormData();
+            formData.append('action', 'assign_session');
+            formData.append('session_id', sessionId);
+            
+            fetch('api_support_chat.php', {
+                method: 'POST',
+                body: formData
+            }).then(res => res.json()).then(data => {
+                if(data.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Error assigning chat');
+                }
+            });
+        }
+        
+        function reopenChat(sessionId) {
+            if(confirm('Are you sure you want to reopen this session?')) {
+                const formData = new FormData();
+                formData.append('action', 'reopen_session');
+                formData.append('session_id', sessionId);
+                
+                fetch('api_support_chat.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(res => res.json()).then(data => {
+                    if(data.status === 'success') {
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Error reopening chat');
                     }
                 });
             }

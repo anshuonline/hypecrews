@@ -21,9 +21,14 @@ if ($action === 'list_threads') {
         $whereClause .= " AND s.status = 'open'";
     } else if ($filter === 'resolved') {
         $whereClause .= " AND s.status = 'resolved'";
+    } else if ($filter === 'mine') {
+        $whereClause .= " AND s.assigned_admin_id = ?";
     }
     
     $params = [];
+    if ($filter === 'mine') {
+        $params[] = $admin_id;
+    }
     if (!empty($search)) {
         if (strpos($search, '#') === 0 || is_numeric($search)) {
             // Search by ticket ID
@@ -42,12 +47,14 @@ if ($action === 'list_threads') {
     // Get list of support sessions
     try {
         $stmt = $pdo->prepare("
-            SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity,
-            u.id as user_id, u.username, u.first_name, u.last_name, 
+            SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity, s.assigned_admin_id,
+            u.id as user_id, u.username, u.first_name, u.last_name, u.email,
+            a.username as assigned_admin_name,
             (SELECT message FROM support_chats WHERE session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
             FROM support_sessions s
             JOIN users u ON s.user_id = u.id
+            LEFT JOIN administrators a ON s.assigned_admin_id = a.id
             $whereClause
             ORDER BY CASE WHEN s.status = 'open' THEN 1 ELSE 2 END ASC, unread_count DESC, s.updated_at DESC, s.id DESC
         ");
@@ -170,14 +177,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send_message') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'resolve_session') {
     $session_id = $_POST['session_id'] ?? 0;
-    if (empty($session_id)) {
-        echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
-        exit();
-    }
-    
     try {
-        $pdo->prepare("UPDATE support_sessions SET status = 'resolved', updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session_id]);
-        echo json_encode(['status' => 'success']);
+        $pdo->prepare("UPDATE support_sessions SET status = 'resolved' WHERE id = ?")->execute([$session_id]);
+        echo json_encode(['status' => 'success', 'message' => 'Session resolved']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'assign_session') {
+    $session_id = $_POST['session_id'] ?? 0;
+    try {
+        $pdo->prepare("UPDATE support_sessions SET assigned_admin_id = ? WHERE id = ?")->execute([$admin_id, $session_id]);
+        echo json_encode(['status' => 'success', 'message' => 'Session assigned successfully']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'reopen_session') {
+    $session_id = $_POST['session_id'] ?? 0;
+    try {
+        // Check if user exported it already
+        $stmt = $pdo->prepare("SELECT user_exported FROM support_sessions WHERE id = ?");
+        $stmt->execute([$session_id]);
+        $session = $stmt->fetch();
+        
+        if ($session && $session['user_exported']) {
+            echo json_encode(['status' => 'error', 'message' => 'Cannot reopen: User has already exported and closed this chat.']);
+        } else {
+            $pdo->prepare("UPDATE support_sessions SET status = 'open' WHERE id = ?")->execute([$session_id]);
+            echo json_encode(['status' => 'success', 'message' => 'Session reopened successfully']);
+        }
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }
