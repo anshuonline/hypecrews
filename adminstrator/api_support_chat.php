@@ -14,11 +14,29 @@ $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
 if ($action === 'list_threads') {
     $filter = $_GET['filter'] ?? 'all';
-    $whereClause = "";
+    $search = $_GET['search'] ?? '';
+    
+    $whereClause = "WHERE 1=1";
     if ($filter === 'open') {
-        $whereClause = "WHERE s.status = 'open'";
+        $whereClause .= " AND s.status = 'open'";
     } else if ($filter === 'resolved') {
-        $whereClause = "WHERE s.status = 'resolved'";
+        $whereClause .= " AND s.status = 'resolved'";
+    }
+    
+    $params = [];
+    if (!empty($search)) {
+        if (strpos($search, '#') === 0 || is_numeric($search)) {
+            // Search by ticket ID
+            $searchId = ltrim($search, '#');
+            $whereClause .= " AND s.id = ?";
+            $params[] = $searchId;
+        } else {
+            // Search by name
+            $whereClause .= " AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.username LIKE ?)";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
+        }
     }
     
     // Get list of support sessions
@@ -33,7 +51,7 @@ if ($action === 'list_threads') {
             $whereClause
             ORDER BY CASE WHEN s.status = 'open' THEN 1 ELSE 2 END ASC, unread_count DESC, s.updated_at DESC, s.id DESC
         ");
-        $stmt->execute();
+        $stmt->execute($params);
         $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         foreach ($threads as &$t) {
@@ -160,6 +178,117 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'resolve_session') {
     try {
         $pdo->prepare("UPDATE support_sessions SET status = 'resolved', updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session_id]);
         echo json_encode(['status' => 'success']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($action === 'get_user_profile') {
+    $user_id = $_GET['user_id'] ?? 0;
+    
+    try {
+        // Fetch User Info
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
+            echo json_encode(['status' => 'error', 'message' => 'User not found']);
+            exit();
+        }
+        
+        // Determine Active Status
+        $is_active = false;
+        if ($user['last_active_at']) {
+            $last_active = strtotime($user['last_active_at']);
+            if (time() - $last_active < 300) { // 5 minutes
+                $is_active = true;
+            }
+        }
+        
+        // Fetch Location from IP
+        $location = 'Unknown';
+        if (!empty($user['ip_address']) && filter_var($user['ip_address'], FILTER_VALIDATE_IP)) {
+            // Check if it's a local IP
+            if ($user['ip_address'] === '::1' || $user['ip_address'] === '127.0.0.1') {
+                $location = 'Localhost';
+            } else {
+                $ch = curl_init("http://ip-api.com/json/" . $user['ip_address']);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                
+                if ($response) {
+                    $geo = json_decode($response, true);
+                    if ($geo && $geo['status'] === 'success') {
+                        $location = $geo['city'] . ', ' . $geo['country'];
+                    }
+                }
+            }
+        }
+        
+        // Fetch Order History
+        $stmt = $pdo->prepare("SELECT id, order_title, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+        $stmt->execute([$user_id]);
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Fetch Past Chats
+        $stmt = $pdo->prepare("SELECT id, topic, status, created_at FROM support_sessions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+        $stmt->execute([$user_id]);
+        $past_chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Fetch Admin Notes
+        $stmt = $pdo->prepare("
+            SELECT n.id, n.note, n.created_at, a.username as admin_name 
+            FROM user_notes n 
+            JOIN administrators a ON n.admin_id = a.id 
+            WHERE n.user_id = ? 
+            ORDER BY n.created_at DESC
+        ");
+        $stmt->execute([$user_id]);
+        $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode([
+            'status' => 'success',
+            'data' => [
+                'user' => [
+                    'id' => $user['id'],
+                    'name' => $user['first_name'] . ' ' . $user['last_name'],
+                    'email' => $user['email'],
+                    'phone' => $user['mobile_number'],
+                    'country' => $user['country'],
+                    'ip_address' => $user['ip_address'] ?? 'N/A',
+                    'location' => $location,
+                    'is_active' => $is_active,
+                    'last_active' => $user['last_active_at'] ? date('M d, Y h:i A', strtotime($user['last_active_at'])) : 'Never'
+                ],
+                'orders' => $orders,
+                'past_chats' => $past_chats,
+                'notes' => $notes
+            ]
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'add_user_note') {
+    $user_id = $_POST['user_id'] ?? 0;
+    $note = trim($_POST['note'] ?? '');
+    
+    if (empty($note)) {
+        echo json_encode(['status' => 'error', 'message' => 'Note cannot be empty']);
+        exit();
+    }
+    
+    try {
+        $stmt = $pdo->prepare("INSERT INTO user_notes (user_id, admin_id, note) VALUES (?, ?, ?)");
+        $stmt->execute([$user_id, $admin_id, $note]);
+        
+        echo json_encode(['status' => 'success', 'message' => 'Note added successfully']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }

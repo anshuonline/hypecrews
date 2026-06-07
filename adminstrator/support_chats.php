@@ -5,16 +5,32 @@ $current_page = 'support_chats';
 
 $admin_id = $_SESSION['admin_id'];
 
-$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
-$whereClause = "";
-if ($filter === 'open') {
-    $whereClause = "WHERE s.status = 'open'";
-} else if ($filter === 'resolved') {
-    $whereClause = "WHERE s.status = 'resolved'";
-}
+$filter = $_GET['filter'] ?? 'all';
+$search = $_GET['search'] ?? '';
 
-// Fetch threads (support sessions)
 try {
+    $whereClause = "WHERE 1=1";
+    if ($filter === 'open') {
+        $whereClause .= " AND s.status = 'open'";
+    } else if ($filter === 'resolved') {
+        $whereClause .= " AND s.status = 'resolved'";
+    }
+    
+    $params = [];
+    if (!empty($search)) {
+        if (strpos($search, '#') === 0 || is_numeric($search)) {
+            $searchId = ltrim($search, '#');
+            $whereClause .= " AND s.id = ?";
+            $params[] = $searchId;
+        } else {
+            $whereClause .= " AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.username LIKE ?)";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
+        }
+    }
+    
+    // Fetch threads (support sessions)
     $stmt = $pdo->prepare("
         SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity,
         u.id as user_id, u.username, u.first_name, u.last_name, 
@@ -25,7 +41,7 @@ try {
         $whereClause
         ORDER BY CASE WHEN s.status = 'open' THEN 1 ELSE 2 END ASC, unread_count DESC, s.updated_at DESC, s.id DESC
     ");
-    $stmt->execute();
+    $stmt->execute($params);
     $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
@@ -90,7 +106,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     <h2 class="text-2xl font-bold tracking-tight mb-4 text-purple-600"><i class="fas fa-headset mr-2"></i> User Support</h2>
                     <div class="relative">
                         <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
-                        <input type="text" placeholder="Search users..." class="w-full bg-white/50 border border-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all">
+                        <input type="text" id="searchInput" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search ticket # or name..." class="w-full bg-white/50 border border-white rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all">
                     </div>
                     <div class="flex gap-2 mt-3">
                         <a href="?filter=all" class="flex-1 text-center py-1.5 rounded-lg text-xs font-bold <?php echo ($filter === 'all') ? 'bg-primary text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'; ?>">All</a>
@@ -104,7 +120,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <div class="text-center p-6 text-apple_muted">No support chats yet.</div>
                     <?php else: ?>
                         <?php foreach($threads as $t): ?>
-                            <a href="?session=<?php echo $t['session_id']; ?>&filter=<?php echo htmlspecialchars($filter); ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo $t['status'] === 'resolved' ? 'opacity-60' : ''; ?>">
+                            <a href="?session=<?php echo $t['session_id']; ?>&filter=<?php echo htmlspecialchars($filter); ?>&search=<?php echo htmlspecialchars($search); ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo $t['status'] === 'resolved' ? 'opacity-60' : ''; ?>">
                                 <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
                                     <?php echo substr(htmlspecialchars($t['first_name']), 0, 1); ?>
                                     
@@ -114,7 +130,9 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex justify-between items-baseline mb-0.5">
-                                        <p class="font-bold text-[15px] truncate text-apple_text"><?php echo htmlspecialchars($t['first_name'] . ' ' . $t['last_name']); ?></p>
+                                        <p class="font-bold text-[15px] truncate text-apple_text flex items-center gap-1">
+                                            #<?php echo $t['session_id']; ?> - <?php echo htmlspecialchars($t['first_name'] . ' ' . $t['last_name']); ?>
+                                        </p>
                                         <span class="text-[10px] font-medium text-apple_muted shrink-0"><?php echo date('M d', strtotime($t['last_activity'])); ?></span>
                                     </div>
                                     <div class="flex items-center justify-between">
@@ -248,14 +266,31 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     <?php endif; ?>
                 <?php endif; ?>
             </div>
+            
+            <!-- User Profile Sidebar (Right) -->
+            <?php if ($chat_with): ?>
+            <div class="w-full md:w-80 glass-panel border-l border-black/5 flex flex-col h-full shrink-0 z-20 shadow-xl overflow-y-auto hidden xl:flex bg-white/70">
+                <div class="p-5 border-b border-black/5 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur z-10">
+                    <h2 class="text-lg font-bold text-gray-800"><i class="fas fa-user-circle mr-2 text-purple-600"></i> User Profile</h2>
+                </div>
+                
+                <div id="userProfileContent" class="p-5 space-y-6">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin text-primary text-2xl"></i>
+                        <p class="text-sm text-gray-500 mt-2">Loading profile...</p>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         const chatSession = "<?php echo $chat_with ? htmlspecialchars($chat_with) : ''; ?>";
-        const currentFilter = "<?php echo htmlspecialchars($filter); ?>";
+        const chatUserId = "<?php echo $chat_with ? htmlspecialchars($session_data['user_id']) : ''; ?>";
+        let currentFilter = "<?php echo htmlspecialchars($filter); ?>";
+        let searchQuery = "<?php echo htmlspecialchars($search); ?>";
         const messagesDiv = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         const messageInput = document.getElementById('messageInput');
@@ -276,7 +311,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         }
         
         function fetchThreads() {
-            fetch('api_support_chat.php?action=list_threads&filter=' + currentFilter)
+            fetch('api_support_chat.php?action=list_threads&filter=' + encodeURIComponent(currentFilter) + '&search=' + encodeURIComponent(searchQuery))
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -285,7 +320,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         
                         let html = '';
                         if (data.data.length === 0) {
-                            html = '<div class="text-center p-6 text-apple_muted">No support chats yet.</div>';
+                            html = '<div class="text-center p-6 text-apple_muted">No support chats found.</div>';
                         } else {
                             data.data.forEach(t => {
                                 const isActive = (t.session_id == chatSession);
@@ -299,19 +334,18 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 const resolvedBadge = t.status === 'resolved' ? '<span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span>' : '';
                                 const lastMsgBold = t.unread_count > 0 ? 'font-bold text-apple_text' : '';
                                 
-                                // Clean output using JS date formatting
                                 const dateObj = new Date(t.last_activity);
                                 const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                                 
                                 html += `
-                                <a href="?session=${t.session_id}&filter=${currentFilter}" class="flex items-center p-3 rounded-2xl transition-all duration-300 border ${bgClass} ${opacityClass}">
+                                <a href="?session=${t.session_id}&filter=${encodeURIComponent(currentFilter)}&search=${encodeURIComponent(searchQuery)}" class="flex items-center p-3 rounded-2xl transition-all duration-300 border ${bgClass} ${opacityClass}">
                                     <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
                                         ${initial}
                                         ${unreadBadge}
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex justify-between items-baseline mb-0.5">
-                                            <p class="font-bold text-[15px] truncate text-apple_text">${escapeHtml(t.first_name + ' ' + t.last_name)}</p>
+                                            <p class="font-bold text-[15px] truncate text-apple_text">#${t.session_id} - ${escapeHtml(t.first_name + ' ' + t.last_name)}</p>
                                             <span class="text-[10px] font-medium text-apple_muted shrink-0">${formattedDate}</span>
                                         </div>
                                         <div class="flex items-center justify-between">
@@ -323,11 +357,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 </a>`;
                             });
                         }
-                        
-                        // only update if changed
-                        if (sidebar.innerHTML !== html) {
-                            sidebar.innerHTML = html;
-                        }
+                        if (sidebar.innerHTML !== html) sidebar.innerHTML = html;
                     }
                 });
         }
@@ -343,21 +373,14 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             return;
                         }
                         renderMessages(data.data);
-                    } else {
-                        messagesDiv.innerHTML = '<div class="text-center text-red-500 mt-10">Error: ' + escapeHtml(data.message) + '</div>';
                     }
                 })
-                .catch(err => {
-                    messagesDiv.innerHTML = '<div class="text-center text-red-500 mt-10">Fetch Error: ' + err.message + '</div>';
-                    console.error("Error fetching messages:", err);
-                });
+                .catch(err => console.error(err));
         }
 
         function formatMessage(text) {
             if(!text) return '';
-            // Escape HTML first
             let html = escapeHtml(text);
-            // Make links clickable
             html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-500 hover:text-blue-600 hover:underline break-all">$1</a>');
             return html;
         }
@@ -376,13 +399,9 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 let html = '';
                 
                 messages.forEach(msg => {
-                    let attachmentHtml = '';
-                    if (msg.attachment) {
-                        attachmentHtml = `<div class="mt-2 rounded-lg overflow-hidden border border-black/10"><img src="../${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>`;
-                    }
+                    let attachmentHtml = msg.attachment ? `<div class="mt-2 rounded-lg overflow-hidden border border-black/10"><img src="../${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain"></div>` : '';
                     
                     if (msg.is_mine) {
-                        // Admin sent it
                         html += `
                         <div class="flex justify-end mb-4 group">
                             <div class="max-w-[75%]">
@@ -394,7 +413,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             </div>
                         </div>`;
                     } else {
-                        // User sent it
                         html += `
                         <div class="flex justify-start mb-4 group">
                             <div class="w-8 h-8 rounded-full bg-black/5 border border-black/10 flex items-center justify-center shrink-0 mr-3 mt-auto mb-1 overflow-hidden">
@@ -412,20 +430,13 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 });
                 
                 messagesDiv.innerHTML = html;
-                if (isScrolledToBottom) {
-                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                }
+                if (isScrolledToBottom) messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }
         }
 
         if (attachmentInput) {
             attachmentInput.addEventListener('change', function() {
                 if (this.files && this.files[0]) {
-                    if(this.files[0].size > 2 * 1024 * 1024) {
-                        alert('Image size must be less than 2MB');
-                        this.value = '';
-                        return;
-                    }
                     attachmentName.textContent = this.files[0].name;
                     attachmentPreview.classList.remove('hidden');
                     attachmentPreview.classList.add('flex');
@@ -437,7 +448,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             removeAttachment.addEventListener('click', function() {
                 attachmentInput.value = '';
                 attachmentPreview.classList.add('hidden');
-                attachmentPreview.classList.remove('flex');
             });
         }
 
@@ -468,17 +478,12 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 formData.append('action', 'send_message');
                 formData.append('session_id', chatSession);
                 formData.append('message', msg);
-                if (hasAttachment) {
-                    formData.append('attachment', attachmentInput.files[0]);
-                }
+                if (hasAttachment) formData.append('attachment', attachmentInput.files[0]);
                 
                 messageInput.value = '';
                 if (removeAttachment) removeAttachment.click();
                 
-                fetch('api_support_chat.php', {
-                    method: 'POST',
-                    body: formData
-                })
+                fetch('api_support_chat.php', { method: 'POST', body: formData })
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -492,7 +497,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         }
         
         function resolveSession(sessionId) {
-            if(confirm('Are you sure you want to resolve this session? The user will have to start a new chat.')) {
+            if(confirm('Are you sure you want to resolve this session?')) {
                 const formData = new FormData();
                 formData.append('action', 'resolve_session');
                 formData.append('session_id', sessionId);
@@ -603,12 +608,193 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchQuery = this.value;
+                searchTimeout = setTimeout(() => {
+                    fetchThreads();
+                    // Update URL silently
+                    const url = new URL(window.location);
+                    if (searchQuery) url.searchParams.set('search', searchQuery);
+                    else url.searchParams.delete('search');
+                    window.history.replaceState({}, '', url);
+                }, 500);
+            });
+        }
+
         fetchThreads();
         setInterval(fetchThreads, 5000);
         
         if (chatSession) {
             fetchMessages();
             setInterval(fetchMessages, 3000);
+            
+            if (chatUserId) {
+                fetchUserProfile();
+                // Refresh profile every 60 seconds to check online status
+                setInterval(fetchUserProfile, 60000);
+            }
+        }
+        
+        function fetchUserProfile() {
+            fetch('api_support_chat.php?action=get_user_profile&user_id=' + chatUserId)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const profileDiv = document.getElementById('userProfileContent');
+                        const u = data.data.user;
+                        
+                        let activeDot = u.is_active ? '<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>' : '<span class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>';
+                        let activeText = u.is_active ? '<span class="text-green-600 font-bold text-xs">Online Now</span>' : `<span class="text-gray-500 text-xs">Last seen: ${u.last_active}</span>`;
+                        
+                        let ordersHtml = '<p class="text-sm text-gray-500">No orders found.</p>';
+                        if (data.data.orders.length > 0) {
+                            ordersHtml = '<div class="space-y-2">';
+                            data.data.orders.forEach(o => {
+                                let statusColor = o.status === 'completed' ? 'text-green-600 bg-green-100' : (o.status === 'pending' ? 'text-yellow-600 bg-yellow-100' : 'text-blue-600 bg-blue-100');
+                                ordersHtml += `
+                                    <div class="border border-black/5 rounded-lg p-2 text-sm flex justify-between items-center">
+                                        <div class="truncate mr-2 font-medium">#${o.id} - ${escapeHtml(o.order_title)}</div>
+                                        <span class="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${statusColor} shrink-0">${o.status}</span>
+                                    </div>
+                                `;
+                            });
+                            ordersHtml += '</div>';
+                        }
+                        
+                        let chatsHtml = '<p class="text-sm text-gray-500">No past chats.</p>';
+                        if (data.data.past_chats.length > 0) {
+                            chatsHtml = '<div class="space-y-2">';
+                            data.data.past_chats.forEach(c => {
+                                let statusIcon = c.status === 'open' ? '<i class="fas fa-door-open text-emerald-500"></i>' : '<i class="fas fa-lock text-gray-400"></i>';
+                                chatsHtml += `
+                                    <a href="?session=${c.id}" class="block border border-black/5 rounded-lg p-2 text-sm hover:bg-gray-50 transition-colors">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-bold text-primary">#${c.id}</span>
+                                            <span class="text-[10px] text-gray-500">${new Date(c.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-gray-700 truncate">
+                                            ${statusIcon} ${escapeHtml(c.topic)}
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                            chatsHtml += '</div>';
+                        }
+                        
+                        let notesHtml = '';
+                        if (data.data.notes.length > 0) {
+                            data.data.notes.forEach(n => {
+                                notesHtml += `
+                                    <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm mb-2">
+                                        <p class="text-gray-800 whitespace-pre-wrap">${escapeHtml(n.note)}</p>
+                                        <div class="text-[10px] text-gray-500 mt-2 flex justify-between">
+                                            <span>By ${escapeHtml(n.admin_name)}</span>
+                                            <span>${new Date(n.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            notesHtml = '<p class="text-sm text-gray-500 italic">No notes yet.</p>';
+                        }
+                        
+                        profileDiv.innerHTML = `
+                            <!-- User Header -->
+                            <div class="text-center mb-6">
+                                <div class="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-3 relative">
+                                    ${u.name.charAt(0)}
+                                    ${activeDot}
+                                </div>
+                                <h3 class="font-bold text-xl text-gray-800">${escapeHtml(u.name)}</h3>
+                                <p class="text-sm text-gray-500">${escapeHtml(u.email)}</p>
+                                <div class="mt-1">${activeText}</div>
+                            </div>
+                            
+                            <!-- Location Details -->
+                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-6 text-sm">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="truncate">
+                                        <p class="text-xs text-gray-500">Location</p>
+                                        <p class="font-bold text-gray-700 truncate">${escapeHtml(u.location)}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded bg-gray-200 text-gray-600 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-network-wired"></i>
+                                    </div>
+                                    <div class="truncate">
+                                        <p class="text-xs text-gray-500">IP Address</p>
+                                        <p class="font-mono font-bold text-gray-700 text-xs">${escapeHtml(u.ip_address)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order History -->
+                            <div class="mb-6">
+                                <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-shopping-bag text-primary"></i> Recent Orders</h4>
+                                ${ordersHtml}
+                            </div>
+                            
+                            <!-- Past Chats -->
+                            <div class="mb-6">
+                                <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-history text-primary"></i> Past Tickets</h4>
+                                ${chatsHtml}
+                            </div>
+                            
+                            <!-- Admin Notes -->
+                            <div class="border-t border-gray-200 pt-5">
+                                <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-sticky-note text-yellow-500"></i> Admin Notes</h4>
+                                <div class="mb-4">
+                                    <textarea id="newAdminNote" rows="2" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-yellow-50/30" placeholder="Add a private note about this user..."></textarea>
+                                    <button onclick="addAdminNote()" class="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1.5 rounded-lg text-sm transition-colors shadow-sm">Save Note</button>
+                                </div>
+                                <div id="notesContainer" class="max-h-60 overflow-y-auto pr-1">
+                                    ${notesHtml}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+        }
+        
+        function addAdminNote() {
+            const noteInput = document.getElementById('newAdminNote');
+            const note = noteInput.value.trim();
+            if (!note) return;
+            
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('action', 'add_user_note');
+            formData.append('user_id', chatUserId);
+            formData.append('note', note);
+            
+            fetch('api_support_chat.php', { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        fetchUserProfile();
+                    } else {
+                        alert(data.message || 'Error saving note');
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                })
+                .catch(() => {
+                    alert('Network error while saving note.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
         }
     </script>
 </body>
