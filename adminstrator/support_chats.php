@@ -669,7 +669,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         }
 
         // Search and Filter functionality
-        const exportPdfBtn = document.getElementById('exportPdfBtn');
         if (exportPdfBtn) {
                 exportPdfBtn.addEventListener('click', () => {
                     const sessionId = chatSession;
