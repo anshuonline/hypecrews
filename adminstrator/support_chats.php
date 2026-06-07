@@ -209,15 +209,12 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             <?php endif; ?>
                             
                             <?php if($session_data['assigned_admin_id'] == $admin_id): ?>
-                                <?php if($session_data['status'] === 'open'): ?>
-                                <button onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                                <button id="resolveBtn" onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2 <?php echo $session_data['status'] === 'open' ? 'block' : 'hidden'; ?>">
                                     <i class="fas fa-check-circle"></i> Resolve
                                 </button>
-                                <?php else: ?>
-                                <button onclick="reopenChat(<?php echo $session_data['id']; ?>)" class="bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white border border-amber-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                                <button id="reopenBtn" onclick="reopenChat(<?php echo $session_data['id']; ?>)" class="bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white border border-amber-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2 <?php echo $session_data['status'] !== 'open' ? 'block' : 'hidden'; ?>">
                                     <i class="fas fa-undo-alt"></i> Reopen
                                 </button>
-                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -240,8 +237,8 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <div class="text-center mt-10"><i class="fas fa-spinner fa-spin text-primary text-2xl"></i></div>
                     </div>
                     
-                    <!-- Chat Input -->
-                    <?php if($session_data['status'] === 'open'): ?>
+                    <!-- Chat Input Container (Dynamic) -->
+                    <div id="activeChatInputContainer" class="<?php echo $session_data['status'] === 'open' ? 'block' : 'hidden'; ?>">
                         <?php if($session_data['assigned_admin_id'] == $admin_id): ?>
                         <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6">
                             <form id="chatForm" class="flex gap-3">
@@ -273,7 +270,10 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             </button>
                         </div>
                         <?php endif; ?>
-                    <?php else: ?>
+                    </div>
+                    
+                    <!-- Resolved Chat Container (Dynamic) -->
+                    <div id="resolvedChatContainer" class="<?php echo $session_data['status'] !== 'open' ? 'block' : 'hidden'; ?>">
                     <?php 
                         $time_remaining = -1;
                         if ($session_data['exported_at']) {
@@ -322,7 +322,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             </script>
                         <?php endif; ?>
                     </div>
-                    <?php endif; ?>
+                    </div>
                 <?php endif; ?>
             </div>
             
@@ -445,8 +445,29 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 .then(data => {
                     if (data.status === 'success') {
                         if (data.session && data.session.status && data.session.status !== currentSessionStatus && currentSessionStatus !== '') {
-                            window.location.reload();
-                            return;
+                            // Status changed dynamically!
+                            currentSessionStatus = data.session.status;
+                            const activeContainer = document.getElementById('activeChatInputContainer');
+                            const resolvedContainer = document.getElementById('resolvedChatContainer');
+                            const resolveBtn = document.getElementById('resolveBtn');
+                            const reopenBtn = document.getElementById('reopenBtn');
+                            
+                            if (currentSessionStatus === 'open') {
+                                if(activeContainer) { activeContainer.classList.remove('hidden'); activeContainer.classList.add('block'); }
+                                if(resolvedContainer) { resolvedContainer.classList.remove('block'); resolvedContainer.classList.add('hidden'); }
+                                if(resolveBtn) { resolveBtn.classList.remove('hidden'); resolveBtn.classList.add('flex'); }
+                                if(reopenBtn) { reopenBtn.classList.remove('flex'); reopenBtn.classList.add('hidden'); }
+                            } else {
+                                if(activeContainer) { activeContainer.classList.remove('block'); activeContainer.classList.add('hidden'); }
+                                if(resolvedContainer) { resolvedContainer.classList.remove('hidden'); resolvedContainer.classList.add('block'); }
+                                if(resolveBtn) { resolveBtn.classList.remove('flex'); resolveBtn.classList.add('hidden'); }
+                                if(reopenBtn) { reopenBtn.classList.remove('hidden'); reopenBtn.classList.add('flex'); }
+                            }
+                            
+                            // Also reload just to refresh buttons if needed, OR we can just update them via JS.
+                            // But wait, if they reopen it, the buttons at the top need changing too.
+                            // To be perfectly smooth, we can just let it be, or we can reload the page if it's resolved? 
+                            // The user requested NO reload. So we just toggle the bottom containers.
                         }
                         renderMessages(data.data);
                     }
