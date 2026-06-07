@@ -226,16 +226,29 @@ try {
             }
 
             chatForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const msg = messageInput.value.trim();
-                if (!msg) return;
-                
-                const formData = new FormData();
-                formData.append('message', msg);
-                
-                messageInput.value = '';
-                
-                fetch('api_support_chat.php', {
+            e.preventDefault();
+            const msg = messageInput.value.trim();
+            if (!msg) return;
+            
+            // Optimistic update
+            const tempHtml = `
+            <div class="flex justify-end mb-4 group opacity-50">
+                <div class="max-w-[85%]">
+                    <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
+                    <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
+                        ${escapeHtml(msg)}
+                    </div>
+                </div>
+            </div>`;
+            messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            const formData = new FormData();
+            formData.append('message', msg);
+            
+            messageInput.value = '';
+            
+            fetch('api_support_chat.php', {
                     method: 'POST',
                     body: formData
                 })
