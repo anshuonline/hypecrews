@@ -1,19 +1,27 @@
 <!-- Live Chat Widget Component -->
 <div id="hc-live-chat" class="fixed bottom-6 right-6 z-[9999] font-sans">
     
+    <!-- Apple Style Floating Bubble -->
+    <div id="hc-floating-bubble" class="absolute right-[calc(100%+16px)] bottom-2 whitespace-nowrap bg-white/95 backdrop-blur-xl text-gray-800 text-[13px] font-medium tracking-tight py-3 px-5 rounded-[20px] rounded-br-[4px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 origin-bottom-right transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] scale-0 opacity-0 flex flex-col gap-1 items-start cursor-pointer hover:bg-gray-50/50 group/bubble" onclick="toggleHcChat()">
+        <!-- Close button -->
+        <button onclick="event.stopPropagation(); closeHcBubble()" class="absolute -top-2 -right-2 w-5 h-5 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 shadow-sm z-10 transition-colors opacity-0 group-hover/bubble:opacity-100">
+            <i class="fas fa-times text-[9px]"></i>
+        </button>
+        <div class="flex items-center gap-2 mb-0.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-[#34c759] animate-pulse shrink-0"></div>
+            <span class="font-bold text-[#007aff] text-[11px] uppercase tracking-wider">Support</span>
+        </div>
+        <span id="hc-bubble-text" class="transition-opacity duration-300">Hey, need help for your business? 👋</span>
+    </div>
+
     <!-- Chat Button -->
-    <button id="hc-chat-btn" onclick="toggleHcChat()" class="w-14 h-14 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-2xl shadow-purple-600/30 flex items-center justify-center transition-transform hover:scale-110 relative group">
+    <button id="hc-chat-btn" onclick="toggleHcChat()" class="w-14 h-14 bg-[#007aff] hover:bg-[#005bb5] text-white rounded-full shadow-2xl shadow-[#007aff]/30 flex items-center justify-center transition-transform hover:scale-110 relative group">
         <i id="hc-chat-icon" class="fas fa-comment-dots text-2xl transition-transform duration-300"></i>
         <i id="hc-close-icon" class="fas fa-times text-2xl absolute opacity-0 scale-50 transition-all duration-300"></i>
         <span class="absolute -top-1 -right-1 flex h-4 w-4 hidden" id="hc-chat-badge">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
         </span>
-        <!-- Apple Style Floating Bubble -->
-        <div id="hc-floating-bubble" class="absolute right-full mr-5 whitespace-nowrap bg-white/95 backdrop-blur-xl text-gray-800 text-[13px] font-medium tracking-tight py-3 px-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 pointer-events-none origin-right transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] translate-x-4 opacity-0 flex items-center gap-2.5">
-            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0"></div>
-            <span id="hc-bubble-text" class="transition-opacity duration-300">Hey, need help for your business? 👋</span>
-        </div>
     </button>
 
     <!-- Chat Window -->
@@ -77,7 +85,7 @@
             <!-- Chat Input Area -->
             <div id="hc-chat-input-area" class="p-3 bg-white/90 backdrop-blur-xl border-t border-gray-100 shrink-0">
                 <form id="hc-message-form" onsubmit="sendHcMessage(event)" class="relative flex items-center">
-                    <input type="text" id="hc-message-input" placeholder="iMessage" autocomplete="off" class="w-full bg-[#f2f2f7] border border-transparent text-gray-900 focus:bg-white rounded-full pl-4 pr-10 py-2.5 text-[14px] focus:outline-none focus:border-gray-300 transition-colors placeholder-[#8e8e93]">
+                    <input type="text" id="hc-message-input" placeholder="Type a message..." autocomplete="off" class="w-full bg-[#f2f2f7] border border-transparent text-gray-900 focus:bg-white rounded-full pl-4 pr-10 py-2.5 text-[14px] focus:outline-none focus:border-gray-300 transition-colors placeholder-[#8e8e93]">
                     <button type="submit" class="absolute right-1.5 w-7 h-7 bg-[#007aff] hover:bg-[#005bb5] text-white rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
                         <i class="fas fa-arrow-up text-[12px]"></i>
                     </button>
@@ -100,6 +108,8 @@
     let hcChatPolling = null;
     let hcChatOpen = false;
 
+    let bubbleClosed = false;
+
     // Initialize UI on load
     document.addEventListener('DOMContentLoaded', () => {
         if (hcSessionToken) {
@@ -112,33 +122,38 @@
             document.getElementById('hc-chat-form-container').classList.remove('hidden');
             document.getElementById('hc-chat-messages-container').classList.add('hidden');
             document.getElementById('hc-chat-messages-container').classList.remove('flex');
-            
-            // Apple UI Bubble Animation
-            setTimeout(() => {
-                const bubble = document.getElementById('hc-floating-bubble');
-                const bubbleText = document.getElementById('hc-bubble-text');
-                if(bubble && !hcChatOpen && !hcSessionToken) {
-                    bubble.classList.remove('opacity-0', 'translate-x-4');
-                    bubble.classList.add('opacity-100', 'translate-x-0');
-                    
-                    setTimeout(() => {
+        }
+
+        // Tawk.to Style Bubble Animation (For everyone)
+        setTimeout(() => {
+            const bubble = document.getElementById('hc-floating-bubble');
+            const bubbleText = document.getElementById('hc-bubble-text');
+            if(bubble && !hcChatOpen && !bubbleClosed) {
+                bubble.classList.remove('scale-0', 'opacity-0');
+                bubble.classList.add('scale-100', 'opacity-100');
+                
+                // Animate text once after it appears
+                setTimeout(() => {
+                    if(!hcChatOpen && !bubbleClosed) {
                         bubbleText.style.opacity = '0';
                         setTimeout(() => {
                             bubbleText.innerHTML = 'Reach us now! 🚀';
                             bubbleText.style.opacity = '1';
                         }, 300);
-                    }, 4000);
-                    
-                    setTimeout(() => {
-                        if(!hcChatOpen) {
-                            bubble.classList.remove('opacity-100', 'translate-x-0');
-                            bubble.classList.add('opacity-0', 'translate-x-4');
-                        }
-                    }, 8000);
-                }
-            }, 1000);
-        }
+                    }
+                }, 4000);
+            }
+        }, 1500);
     });
+
+    function closeHcBubble() {
+        bubbleClosed = true;
+        const bubble = document.getElementById('hc-floating-bubble');
+        if (bubble) {
+            bubble.classList.remove('scale-100', 'opacity-100');
+            bubble.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+        }
+    }
 
     function toggleHcChat() {
         const windowEl = document.getElementById('hc-chat-window');
