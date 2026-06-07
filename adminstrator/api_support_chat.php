@@ -393,6 +393,7 @@ if ($action === 'get_session_profile') {
                     'notes' => $notes
                 ]
             ]);
+        } else {
             // Guest Session
             $notes = [];
             if (!empty($session['admin_note'])) {
