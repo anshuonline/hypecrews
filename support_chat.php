@@ -38,12 +38,12 @@ try {
     $pdo->exec("DELETE FROM support_sessions WHERE exported_at IS NOT NULL AND exported_at < NOW() - INTERVAL 1 HOUR");
 
     // Check for active session
-    $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'open' ORDER BY s.created_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $active_session = $stmt->fetch();
 
     // Check for resolved session to show export/timer
-    $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'resolved' ORDER BY created_at DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'resolved' ORDER BY s.created_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $resolved_session = $stmt->fetch();
     
@@ -211,8 +211,13 @@ try {
                                     <i class="fas fa-headset text-xl"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-white text-lg">Admin Support <span class="text-xs ml-2 bg-white/10 px-2 py-0.5 rounded text-gray-300">#<?php echo $active_session['id']; ?></span></h3>
-                                    <p class="text-xs text-green-400 font-medium flex items-center gap-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-white text-lg">Admin Support <span class="text-xs bg-white/10 px-2 py-0.5 rounded text-gray-300">#<?php echo $active_session['id']; ?></span></h3>
+                                        <?php if ($active_session['assigned_admin_name']): ?>
+                                            <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1"><i class="fas fa-user-shield"></i> <?php echo htmlspecialchars($active_session['assigned_admin_name']); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p class="text-xs text-green-400 font-medium flex items-center gap-1.5 mt-0.5">
                                         <i class="fas fa-circle text-[8px]"></i> 
                                         <?php echo htmlspecialchars($active_session['topic']); ?> • 
                                         <span class="uppercase <?php echo $active_session['urgency'] === 'urgent' ? 'text-red-400' : ($active_session['urgency'] === 'normal' ? 'text-emerald-400' : 'text-blue-400'); ?>">
