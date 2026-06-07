@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
+require_once 'components/logger.php';
 
 header('Content-Type: application/json');
 
@@ -170,6 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send_message') {
         // Update session timestamp
         $pdo->prepare("UPDATE support_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$session_id]);
         
+        logAdminActivity($pdo, 'Support Chat', "Replied to support session #$session_id");
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -181,6 +183,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'resolve_session') {
     $session_id = $_POST['session_id'] ?? 0;
     try {
         $pdo->prepare("UPDATE support_sessions SET status = 'resolved' WHERE id = ?")->execute([$session_id]);
+        
+        // Insert system message
+        $pdo->prepare("INSERT INTO support_chats (session_id, sender_id, sender_type, message) VALUES (?, 0, 'system', 'Admin has marked this session as resolved.')")->execute([$session_id]);
+        
+        logAdminActivity($pdo, 'Support Chat', "Resolved support session #$session_id");
         echo json_encode(['status' => 'success', 'message' => 'Session resolved']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -208,6 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'assign_session') {
                 ->execute([$session_id, $sess['user_id'], $msg]);
         }
         
+        logAdminActivity($pdo, 'Support Chat', "Assigned support session #$session_id to self");
         echo json_encode(['status' => 'success', 'message' => 'Session assigned successfully']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -227,6 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'reopen_session') {
             echo json_encode(['status' => 'error', 'message' => 'Cannot reopen: User has already exported and closed this chat.']);
         } else {
             $pdo->prepare("UPDATE support_sessions SET status = 'open' WHERE id = ?")->execute([$session_id]);
+            logAdminActivity($pdo, 'Support Chat', "Reopened support session #$session_id");
             echo json_encode(['status' => 'success', 'message' => 'Session reopened successfully']);
         }
     } catch (PDOException $e) {
@@ -251,6 +260,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'save_note') {
         
         $note_val = $note === '' ? null : $note;
         $pdo->prepare("UPDATE support_sessions SET admin_note = ? WHERE id = ?")->execute([$note_val, $session_id]);
+        
+        if ($note_val === null) {
+            logAdminActivity($pdo, 'Support Chat', "Removed note from support session #$session_id");
+        } else {
+            logAdminActivity($pdo, 'Support Chat', "Added/Updated note on support session #$session_id");
+        }
+        
         echo json_encode(['status' => 'success', 'message' => 'Note saved successfully']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -263,6 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete_user_note') {
     
     try {
         $pdo->prepare("DELETE FROM user_notes WHERE id = ?")->execute([$note_id]);
+        logAdminActivity($pdo, 'User Management', "Deleted user profile note (ID: $note_id)");
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -381,6 +398,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'add_user_note') {
         $stmt = $pdo->prepare("INSERT INTO user_notes (user_id, admin_id, note) VALUES (?, ?, ?)");
         $stmt->execute([$user_id, $admin_id, $note]);
         
+        logAdminActivity($pdo, 'User Management', "Added a note to user profile (User ID: $user_id)");
         echo json_encode(['status' => 'success', 'message' => 'Note added successfully']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
@@ -392,6 +410,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'export_session') {
     $session_id = $_POST['session_id'] ?? 0;
     try {
         $pdo->prepare("UPDATE support_sessions SET admin_exported = 1, exported_at = COALESCE(exported_at, CURRENT_TIMESTAMP) WHERE id = ?")->execute([$session_id]);
+        logAdminActivity($pdo, 'Support Chat', "Exported support session #$session_id to PDF");
         echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
