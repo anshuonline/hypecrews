@@ -3,55 +3,50 @@
 $current_user_page = isset($current_user_page) ? $current_user_page : 'profile';
 ?>
 
-<div class="glass-card rounded-3xl p-6 relative overflow-hidden group h-full flex flex-col">
-    <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-all"></div>
-    
+<div class="bg-white/5 border border-white/10 rounded-3xl p-5 relative overflow-hidden flex flex-col h-full shadow-2xl backdrop-blur-md">
     <!-- User Avatar & Info -->
-    <div class="relative z-10 text-center mb-6 border-b border-white/5 pb-6">
-        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 p-1 mx-auto mb-4 relative shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-            <div class="w-full h-full rounded-full bg-[#0B0F19] flex items-center justify-center border border-white/5">
-                <i class="fas fa-user-astronaut text-3xl text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 to-purple-400"></i>
+    <div class="relative z-10 flex items-center mb-8 pb-6 border-b border-white/10">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 p-[2px] mr-4 shrink-0 shadow-lg">
+            <div class="w-full h-full rounded-full bg-[#0f172a] flex items-center justify-center overflow-hidden">
+                <span class="text-xl font-bold text-white"><?php echo substr(htmlspecialchars($user['first_name']), 0, 1); ?></span>
             </div>
-            <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-[#0B0F19] rounded-full"></div>
         </div>
-        <h2 class="font-heading text-xl font-bold text-white"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-        <p class="text-primary font-medium tracking-wide text-xs mt-1">@<?php echo htmlspecialchars($user['username']); ?></p>
+        <div class="overflow-hidden">
+            <h2 class="font-heading text-lg font-bold text-white truncate"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+            <p class="text-gray-400 font-medium text-xs truncate">@<?php echo htmlspecialchars($user['username']); ?></p>
+        </div>
     </div>
     
     <!-- Navigation Menu -->
-    <div class="relative z-10 flex-1 space-y-2 mb-6">
-        <div class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 px-2">Menu</div>
+    <div class="relative z-10 flex-1 space-y-1.5 mb-6">
+        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 px-3">Main Menu</div>
         
-        <a href="profile.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 <?php echo $current_user_page === 'profile' ? 'bg-primary/20 text-white border border-primary/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'; ?>">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center <?php echo $current_user_page === 'profile' ? 'bg-primary text-white shadow-sm' : 'bg-black/20 text-gray-400 group-hover:bg-black/30'; ?>">
-                <i class="fas fa-id-card"></i>
-            </div>
-            <span class="font-semibold text-sm">Profile Overview</span>
+        <a href="profile.php" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 <?php echo $current_user_page === 'profile' ? 'bg-white/10 text-white font-semibold' : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium'; ?>">
+            <i class="fas fa-user-circle w-5 text-center <?php echo $current_user_page === 'profile' ? 'text-indigo-400' : ''; ?>"></i>
+            <span class="text-sm">Profile Settings</span>
         </a>
         
-        <a href="support_chat.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 <?php echo $current_user_page === 'support_chat' ? 'bg-secondary/20 text-white border border-secondary/30 shadow-[0_0_15px_rgba(139,92,246,0.15)]' : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'; ?>">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center <?php echo $current_user_page === 'support_chat' ? 'bg-secondary text-white shadow-sm' : 'bg-black/20 text-gray-400 group-hover:bg-black/30'; ?>">
-                <i class="fas fa-comments"></i>
-            </div>
-            <span class="font-semibold text-sm">Support Chat</span>
+        <a href="track_orders.php" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 <?php echo $current_user_page === 'orders' ? 'bg-white/10 text-white font-semibold' : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium'; ?>">
+            <i class="fas fa-box w-5 text-center <?php echo $current_user_page === 'orders' ? 'text-blue-400' : ''; ?>"></i>
+            <span class="text-sm">My Orders</span>
         </a>
 
-        <!-- Placeholder for future options -->
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-400 hover:bg-white/5 hover:text-white border border-transparent opacity-50 cursor-not-allowed" title="Coming Soon">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-black/20">
-                <i class="fas fa-box"></i>
-            </div>
-            <span class="font-semibold text-sm">My Orders <span class="text-[9px] bg-white/10 px-1.5 py-0.5 rounded text-white ml-1">SOON</span></span>
+        <a href="change_password.php" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 <?php echo $current_user_page === 'change_password' ? 'bg-white/10 text-white font-semibold' : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium'; ?>">
+            <i class="fas fa-lock w-5 text-center <?php echo $current_user_page === 'change_password' ? 'text-rose-400' : ''; ?>"></i>
+            <span class="text-sm">Security & Password</span>
+        </a>
+        
+        <a href="support_chat.php" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 <?php echo $current_user_page === 'support_chat' ? 'bg-white/10 text-white font-semibold' : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium'; ?>">
+            <i class="fas fa-comments w-5 text-center <?php echo $current_user_page === 'support_chat' ? 'text-purple-400' : ''; ?>"></i>
+            <span class="text-sm">Support Chat</span>
         </a>
     </div>
 
     <!-- Action Menu -->
-    <div class="relative z-10 mt-auto pt-6 border-t border-white/5">
-        <a href="?logout=1" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-red-400 hover:bg-red-500/10 hover:text-red-300 border border-transparent hover:border-red-500/20 group">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-400 group-hover:bg-red-500/20 group-hover:text-red-300 transition-colors">
-                <i class="fas fa-sign-out-alt"></i>
-            </div>
-            <span class="font-semibold text-sm">Logout</span>
+    <div class="relative z-10 mt-auto pt-4 border-t border-white/10">
+        <a href="?logout=1" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium">
+            <i class="fas fa-sign-out-alt w-5 text-center"></i>
+            <span class="text-sm">Logout</span>
         </a>
     </div>
 </div>

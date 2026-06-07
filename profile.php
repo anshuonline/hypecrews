@@ -73,40 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
-// Handle password change
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-    
-    if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
-        $error = "Please fill in all password fields.";
-    } elseif ($new_password !== $confirm_password) {
-        $error = "New passwords do not match.";
-    } elseif (strlen($new_password) < 6) {
-        $error = "New password must be at least 6 characters long.";
-    } else {
-        try {
-            // Verify current password
-            $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
-            $stmt->execute([$user_id]);
-            $user_data = $stmt->fetch();
-            
-            if ($user_data && password_verify($current_password, $user_data['password'])) {
-                // Update password
-                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-                $stmt->execute([$hashed_password, $user_id]);
-                
-                $success = "Password changed successfully!";
-            } else {
-                $error = "Current password is incorrect.";
-            }
-        } catch (PDOException $e) {
-            $error = "Error changing password.";
-        }
-    }
-}
+
 
 // Handle logout
 if (isset($_GET['logout'])) {
@@ -281,38 +248,7 @@ if (isset($_GET['logout'])) {
                         </form>
                     </div>
                     
-                    <!-- Security -->
-                    <div class="glass-card rounded-3xl p-8 reveal-right delay-300 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-64 h-64 bg-rose-500/5 rounded-full blur-[60px] pointer-events-none"></div>
-                        <h3 class="font-heading text-2xl font-bold mb-6 flex items-center gap-3">
-                            <i class="fas fa-shield-alt text-rose-400"></i> Security Credentials
-                        </h3>
-                        
-                        <form method="POST">
-                            <input type="hidden" name="change_password" value="1">
-                            
-                            <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden mb-6 backdrop-blur-sm shadow-lg">
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-rose-400 transition-colors mb-2 sm:mb-0">Current Key</label>
-                                    <input type="password" name="current_password" required placeholder="••••••••" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-rose-400 transition-colors mb-2 sm:mb-0">New Key</label>
-                                    <input type="password" name="new_password" required minlength="6" placeholder="••••••••" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-rose-400 transition-colors mb-2 sm:mb-0">Verify Key</label>
-                                    <input type="password" name="confirm_password" required minlength="6" placeholder="••••••••" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-end">
-                                <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-full bg-rose-500/10 border border-rose-500/50 text-rose-400 font-bold hover:bg-rose-500 hover:text-white transition-all shadow-[0_0_15px_rgba(244,63,94,0.1)] flex items-center justify-center gap-2">
-                                    Update Authorization <i class="fas fa-lock text-sm"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+
                 </div>
             </div>
         </div>

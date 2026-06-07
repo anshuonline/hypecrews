@@ -176,44 +176,12 @@ $firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
 
             
             <?php if ($isLoggedIn): ?>
-                <div class="relative group">
-                    <button class="px-4 py-2 rounded-xl font-bold text-white hover:bg-white/10 transition-all duration-300 flex items-center border border-transparent hover:border-white/10 backdrop-blur-sm shadow-[0_0_15px_rgba(255,255,255,0.05)]">
-                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mr-2 shadow-inner">
-                            <span class="text-xs font-black"><?php echo substr(htmlspecialchars($firstName), 0, 1); ?></span>
-                        </div>
-                        <?php echo htmlspecialchars($firstName); ?> 
-                        <i class="fas fa-chevron-down ml-2 text-xs transition-transform duration-300 group-hover:rotate-180 text-primary"></i>
-                    </button>
-                    <div class="absolute right-0 mt-4 w-64 bg-[#0f172a]/95 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-400 transform group-hover:translate-y-0 translate-y-4 border border-white/10 dropdown-menu z-50">
-                        <div class="px-3 py-2 mb-2 border-b border-white/10">
-                            <p class="text-xs text-gray-400 font-semibold tracking-wider uppercase">Signed in as</p>
-                            <p class="font-bold text-white truncate">@<?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : htmlspecialchars($firstName); ?></p>
-                        </div>
-                        
-                        <a href="track_orders.php" class="flex items-center p-3 rounded-xl hover:bg-white/5 transition-all duration-300 group/item">
-                            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center mr-3 group-hover/item:bg-indigo-500/20 group-hover/item:scale-110 transition-all duration-300 shrink-0">
-                                <i class="fas fa-satellite-dish text-indigo-400"></i>
-                            </div>
-                            <span class="font-semibold text-gray-200 group-hover/item:text-indigo-400 transition-colors">Telemetry</span>
-                        </a>
-                        
-                        <a href="profile.php" class="flex items-center p-3 rounded-xl hover:bg-white/5 transition-all duration-300 group/item">
-                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center mr-3 group-hover/item:bg-purple-500/20 group-hover/item:scale-110 transition-all duration-300 shrink-0">
-                                <i class="fas fa-id-card text-purple-400"></i>
-                            </div>
-                            <span class="font-semibold text-gray-200 group-hover/item:text-purple-400 transition-colors">Command Center</span>
-                        </a>
-                        
-                        <div class="h-px bg-white/10 my-2"></div>
-                        
-                        <a href="logout.php" class="flex items-center p-3 rounded-xl hover:bg-red-500/10 transition-all duration-300 group/item">
-                            <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center mr-3 group-hover/item:bg-red-500/20 group-hover/item:scale-110 transition-all duration-300 shrink-0">
-                                <i class="fas fa-power-off text-red-400"></i>
-                            </div>
-                            <span class="font-semibold text-red-400 group-hover/item:text-red-300 transition-colors">Terminate Session</span>
-                        </a>
+                <a href="profile.php" class="px-4 py-2 rounded-xl font-bold text-white hover:bg-white/10 transition-all duration-300 flex items-center border border-transparent hover:border-white/10 backdrop-blur-sm shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                    <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mr-2 shadow-inner">
+                        <span class="text-xs font-black"><?php echo substr(htmlspecialchars($firstName), 0, 1); ?></span>
                     </div>
-                </div>
+                    <?php echo htmlspecialchars($firstName); ?> 
+                </a>
             <?php else: ?>
                 <a href="login.php" class="ml-2 bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-lg font-medium hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg">Login</a>
             <?php endif; ?>
