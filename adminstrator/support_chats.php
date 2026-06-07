@@ -14,9 +14,15 @@ try {
         $whereClause .= " AND s.status = 'open'";
     } else if ($filter === 'resolved') {
         $whereClause .= " AND s.status = 'resolved'";
+    } else if ($filter === 'mine') {
+        $whereClause .= " AND s.assigned_admin_id = ?";
     }
     
     $params = [];
+    if ($filter === 'mine') {
+        $params[] = $admin_id;
+    }
+    
     if (!empty($search)) {
         if (strpos($search, '#') === 0 || is_numeric($search)) {
             $searchId = ltrim($search, '#');
@@ -188,20 +194,24 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 <span class="bg-purple-100 text-purple-700 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-200 flex items-center gap-1.5">
                                     <i class="fas fa-user-check"></i> <?php echo htmlspecialchars($session_data['assigned_admin_name']); ?>
                                 </span>
-                            <?php else: ?>
+                            <?php endif; ?>
+                            
+                            <?php if ($session_data['assigned_admin_id'] != $admin_id): ?>
                                 <button onclick="assignChat(<?php echo $session_data['id']; ?>)" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-500 hover:text-white border border-indigo-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
                                     <i class="fas fa-hand-paper"></i> Assign to Me
                                 </button>
                             <?php endif; ?>
                             
-                            <?php if($session_data['status'] === 'open'): ?>
-                            <button onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
-                                <i class="fas fa-check-circle"></i> Resolve
-                            </button>
-                            <?php else: ?>
-                            <button onclick="reopenChat(<?php echo $session_data['id']; ?>)" class="bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white border border-amber-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
-                                <i class="fas fa-undo-alt"></i> Reopen
-                            </button>
+                            <?php if($session_data['assigned_admin_id'] == $admin_id): ?>
+                                <?php if($session_data['status'] === 'open'): ?>
+                                <button onclick="resolveSession(<?php echo $session_data['id']; ?>)" class="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                                    <i class="fas fa-check-circle"></i> Resolve
+                                </button>
+                                <?php else: ?>
+                                <button onclick="reopenChat(<?php echo $session_data['id']; ?>)" class="bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white border border-amber-500/20 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                                    <i class="fas fa-undo-alt"></i> Reopen
+                                </button>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -223,25 +233,37 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     
                     <!-- Chat Input -->
                     <?php if($session_data['status'] === 'open'): ?>
-                    <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6">
-                        <form id="chatForm" class="flex gap-3">
-                            <input type="hidden" id="chatSession" value="<?php echo htmlspecialchars($chat_with); ?>">
-                            <div class="relative flex-1">
-                                <input type="text" id="messageInput" autocomplete="off" placeholder="Type reply as Admin..." class="w-full bg-white border border-black/10 rounded-full pl-5 pr-10 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all font-medium">
-                                <label class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-primary transition-colors p-2">
-                                    <i class="fas fa-paperclip"></i>
-                                    <input type="file" id="attachmentInput" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
-                                </label>
+                        <?php if($session_data['assigned_admin_id'] == $admin_id): ?>
+                        <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6">
+                            <form id="chatForm" class="flex gap-3">
+                                <input type="hidden" id="chatSession" value="<?php echo htmlspecialchars($chat_with); ?>">
+                                <div class="relative flex-1">
+                                    <input type="text" id="messageInput" autocomplete="off" placeholder="Type reply as Admin..." class="w-full bg-white border border-black/10 rounded-full pl-5 pr-10 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-sm transition-all font-medium">
+                                    <label class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-primary transition-colors p-2">
+                                        <i class="fas fa-paperclip"></i>
+                                        <input type="file" id="attachmentInput" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
+                                    </label>
+                                </div>
+                                <button type="submit" class="bg-primary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md transition-transform hover:scale-105 shrink-0">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            <div id="attachmentPreview" class="hidden mt-3 text-sm text-primary font-medium items-center gap-2">
+                                <i class="fas fa-image"></i> <span id="attachmentName"></span>
+                                <button type="button" id="removeAttachment" class="text-red-500 hover:text-red-600 ml-2"><i class="fas fa-times"></i></button>
                             </div>
-                            <button type="submit" class="bg-primary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md transition-transform hover:scale-105 shrink-0">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                        <div id="attachmentPreview" class="hidden mt-3 text-sm text-primary font-medium items-center gap-2">
-                            <i class="fas fa-image"></i> <span id="attachmentName"></span>
-                            <button type="button" id="removeAttachment" class="text-red-500 hover:text-red-600 ml-2"><i class="fas fa-times"></i></button>
                         </div>
-                    </div>
+                        <?php else: ?>
+                        <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6 text-center">
+                            <p class="text-gray-500 text-sm mb-3">
+                                <?php echo $session_data['assigned_admin_id'] ? 'This chat is assigned to another admin.' : 'This chat is not assigned to anyone.'; ?> 
+                                You must assign it to yourself to reply.
+                            </p>
+                            <button onclick="assignChat(<?php echo $session_data['id']; ?>)" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                                <i class="fas fa-hand-paper mr-2"></i> Assign to Me
+                            </button>
+                        </div>
+                        <?php endif; ?>
                     <?php else: ?>
                     <?php 
                         $time_remaining = -1;

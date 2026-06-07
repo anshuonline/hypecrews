@@ -153,12 +153,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send_message') {
     
     try {
         // Get user_id for this session
-        $stmt = $pdo->prepare("SELECT user_id, status FROM support_sessions WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT user_id, status, assigned_admin_id FROM support_sessions WHERE id = ?");
         $stmt->execute([$session_id]);
         $session = $stmt->fetch();
         
         if (!$session || $session['status'] === 'resolved') {
             echo json_encode(['status' => 'error', 'message' => 'Session is closed or invalid']);
+            exit();
+        }
+        
+        if ($session['assigned_admin_id'] && $session['assigned_admin_id'] != $admin_id) {
+            echo json_encode(['status' => 'error', 'message' => 'This session is assigned to another admin.']);
             exit();
         }
         
@@ -228,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'reopen_session') {
             echo json_encode(['status' => 'success', 'message' => 'Session reopened successfully']);
         }
     } catch (PDOException $e) {
-        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
     }
     exit();
 }
