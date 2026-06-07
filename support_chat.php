@@ -38,12 +38,12 @@ try {
     $pdo->exec("DELETE FROM support_sessions WHERE exported_at IS NOT NULL AND exported_at < NOW() - INTERVAL 1 HOUR");
 
     // Check for active session
-    $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'open' ORDER BY s.created_at DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'open' ORDER BY s.updated_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $active_session = $stmt->fetch();
 
     // Check for resolved session to show export/timer
-    $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'resolved' ORDER BY s.created_at DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'resolved' ORDER BY s.updated_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $resolved_session = $stmt->fetch();
     
