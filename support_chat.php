@@ -40,7 +40,7 @@ try {
     $active_session = $stmt->fetch();
 
 } catch (PDOException $e) {
-    die("Database error");
+    die("Database error: " . $e->getMessage());
 }
 ?>
 
@@ -196,8 +196,8 @@ try {
                                     <p class="text-xs text-green-400 font-medium flex items-center gap-1.5">
                                         <i class="fas fa-circle text-[8px]"></i> 
                                         <?php echo htmlspecialchars($active_session['topic']); ?> • 
-                                        <span class="<?php echo $active_session['urgency'] === 'urgent' ? 'text-red-400' : ($active_session['urgency'] === 'normal' ? 'text-emerald-400' : 'text-blue-400'); uppercase; ?>">
-                                            <?php echo ucfirst($active_session['urgency']); ?>
+                                        <span class="uppercase <?php echo $active_session['urgency'] === 'urgent' ? 'text-red-400' : ($active_session['urgency'] === 'normal' ? 'text-emerald-400' : 'text-blue-400'); ?>">
+                                            <?php echo htmlspecialchars(ucfirst($active_session['urgency'])); ?>
                                         </span>
                                     </p>
                                 </div>
