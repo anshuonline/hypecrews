@@ -246,6 +246,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         const attachmentPreview = document.getElementById('attachmentPreview');
         const attachmentName = document.getElementById('attachmentName');
         const removeAttachment = document.getElementById('removeAttachment');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
         
         let isScrolledToBottom = true;
         if(messagesDiv) {
@@ -261,9 +262,14 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 .then(data => {
                     if (data.status === 'success') {
                         renderMessages(data.data);
+                    } else {
+                        messagesDiv.innerHTML = '<div class="text-center text-red-500 mt-10">Error: ' + escapeHtml(data.message) + '</div>';
                     }
                 })
-                .catch(err => console.error("Error fetching messages:", err));
+                .catch(err => {
+                    messagesDiv.innerHTML = '<div class="text-center text-red-500 mt-10">Fetch Error: ' + err.message + '</div>';
+                    console.error("Error fetching messages:", err);
+                });
         }
 
         function formatMessage(text) {
