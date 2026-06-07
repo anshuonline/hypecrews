@@ -172,9 +172,12 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 <?php else: ?>
                     <?php
                         // Get current session info
-                        $s_stmt = $pdo->prepare("SELECT s.*, u.username, u.first_name, u.last_name, u.email, a.username as assigned_admin_name FROM support_sessions s JOIN users u ON s.user_id = u.id LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.id = ?");
+                        $s_stmt = $pdo->prepare("SELECT s.*, u.username, u.first_name, u.last_name, u.email, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN users u ON s.user_id = u.id LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.id = ?");
                         $s_stmt->execute([$chat_with]);
                         $session_data = $s_stmt->fetch();
+                        
+                        $displayName = $session_data['user_id'] ? ($session_data['first_name'] . ' ' . $session_data['last_name']) : ($session_data['guest_name'] ? $session_data['guest_name'] . ' (Guest)' : 'Guest');
+                        $displayInitial = substr($displayName, 0, 1);
                     ?>
                     <!-- Chat Header -->
                     <div class="px-6 py-4 glass-panel border-b border-black/5 flex items-center justify-between shadow-sm shrink-0 z-10 rounded-none">
@@ -183,11 +186,11 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                 <i class="fas fa-arrow-left"></i>
                             </a>
                             <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold mr-3 shrink-0">
-                                <?php echo substr(htmlspecialchars($session_data['first_name']), 0, 1); ?>
+                                <?php echo htmlspecialchars($displayInitial); ?>
                             </div>
                             <div class="cursor-pointer hover:bg-black/5 p-2 rounded-lg transition-colors -ml-2" onclick="toggleUserProfile()">
                                 <h2 class="text-lg font-bold leading-tight flex items-center gap-2">
-                                    <?php echo htmlspecialchars($session_data['first_name'] . ' ' . $session_data['last_name']); ?>
+                                    <?php echo htmlspecialchars($displayName); ?>
                                     <span class="text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded font-medium">#<?php echo $session_data['id']; ?></span>
                                 </h2>
                                 <p class="text-[11px] font-semibold text-apple_muted">
