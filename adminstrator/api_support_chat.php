@@ -307,9 +307,12 @@ if ($action === 'get_user_profile') {
         }
         
         // Fetch Order History
-        $stmt = $pdo->prepare("SELECT id, order_title, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
-        $stmt->execute([$user_id]);
-        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $orders = [];
+        try {
+            $stmt = $pdo->prepare("SELECT id, order_title, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+            $stmt->execute([$user_id]);
+            $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {}
         
         // Fetch Past Chats
         $stmt = $pdo->prepare("SELECT id, topic, status, created_at FROM support_sessions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
@@ -317,15 +320,18 @@ if ($action === 'get_user_profile') {
         $past_chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         // Fetch Admin Notes
-        $stmt = $pdo->prepare("
-            SELECT n.id, n.note, n.created_at, a.username as admin_name 
-            FROM user_notes n 
-            JOIN administrators a ON n.admin_id = a.id 
-            WHERE n.user_id = ? 
-            ORDER BY n.created_at DESC
-        ");
-        $stmt->execute([$user_id]);
-        $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $notes = [];
+        try {
+            $stmt = $pdo->prepare("
+                SELECT n.id, n.note, n.created_at, a.username as admin_name 
+                FROM user_notes n 
+                JOIN administrators a ON n.admin_id = a.id 
+                WHERE n.user_id = ? 
+                ORDER BY n.created_at DESC
+            ");
+            $stmt->execute([$user_id]);
+            $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {}
         
         echo json_encode([
             'status' => 'success',
