@@ -194,9 +194,7 @@ if (isset($_GET['logout'])) {
                     <h1 class="font-heading text-4xl md:text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Command Center</h1>
                     <p class="text-gray-400 font-light">Manage your digital identity and security settings.</p>
                 </div>
-                <a href="?logout=1" class="px-5 py-2.5 rounded-full border border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500 transition-all flex items-center gap-2 group">
-                    <i class="fas fa-sign-out-alt group-hover:-translate-x-1 transition-transform"></i> <span class="hidden sm:inline">Logout</span>
-                </a>
+
             </div>
             
             <?php if ($error): ?>

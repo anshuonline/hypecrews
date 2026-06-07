@@ -45,17 +45,13 @@ $current_user_page = isset($current_user_page) ? $current_user_page : 'profile';
         </a>
     </div>
 
-    <!-- Contact Info Summary -->
-    <div class="relative z-10 bg-white/5 rounded-xl p-4 border border-white/5 mt-auto">
-        <div class="space-y-3">
-            <div class="flex items-center justify-between">
-                <span class="text-gray-400 text-xs flex items-center gap-2"><i class="fas fa-envelope w-3 text-purple-400"></i> Email</span>
-                <span class="text-xs font-medium text-white truncate max-w-[120px]" title="<?php echo htmlspecialchars($user['email']); ?>"><?php echo htmlspecialchars($user['email']); ?></span>
+    <!-- Action Menu -->
+    <div class="relative z-10 mt-auto pt-6 border-t border-white/5">
+        <a href="?logout=1" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-red-400 hover:bg-red-500/10 hover:text-red-300 border border-transparent hover:border-red-500/20 group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-400 group-hover:bg-red-500/20 group-hover:text-red-300 transition-colors">
+                <i class="fas fa-sign-out-alt"></i>
             </div>
-            <div class="flex items-center justify-between">
-                <span class="text-gray-400 text-xs flex items-center gap-2"><i class="fas fa-phone w-3 text-cyan-400"></i> Mobile</span>
-                <span class="text-xs font-medium text-white"><?php echo htmlspecialchars($user['mobile_number']); ?></span>
-            </div>
-        </div>
+            <span class="font-semibold text-sm">Logout</span>
+        </a>
     </div>
 </div>
