@@ -87,10 +87,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        // Find active session
-        $stmt = $pdo->prepare("SELECT id FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
-        $stmt->execute([$user_id]);
-        $session = $stmt->fetch();
+        $session_id = $_GET['session_id'] ?? null;
+        
+        if ($session_id) {
+            $stmt = $pdo->prepare("SELECT id FROM support_sessions WHERE id = ? AND user_id = ?");
+            $stmt->execute([$session_id, $user_id]);
+            $session = $stmt->fetch();
+        } else {
+            // Find active session
+            $stmt = $pdo->prepare("SELECT id FROM support_sessions WHERE user_id = ? AND status = 'open' ORDER BY created_at DESC LIMIT 1");
+            $stmt->execute([$user_id]);
+            $session = $stmt->fetch();
+        }
         
         if (!$session) {
             echo json_encode(['status' => 'success', 'data' => []]);

@@ -317,7 +317,10 @@ try {
             }
 
             function fetchMessages() {
-                fetch('api_support_chat.php')
+                const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
+                const url = sessionId ? `api_support_chat.php?session_id=${sessionId}` : 'api_support_chat.php';
+                
+                fetch(url)
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success') {
