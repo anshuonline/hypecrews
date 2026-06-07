@@ -85,7 +85,7 @@ if ($action === 'get_messages') {
             
         $stmt = $pdo->prepare("SELECT c.*, 
             CASE 
-                WHEN c.sender_type = 'user' THEN (SELECT username FROM users WHERE id = c.sender_id)
+                WHEN c.sender_type = 'user' THEN COALESCE((SELECT username FROM users WHERE id = c.sender_id), (SELECT guest_name FROM support_sessions WHERE id = c.session_id))
                 ELSE (SELECT username FROM administrators WHERE id = c.sender_id)
             END as sender_name,
             NULL as sender_avatar

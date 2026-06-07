@@ -5,8 +5,7 @@ require_once 'config/db.php';
 header('Content-Type: application/json');
 
 // Check token from headers or POST body
-$headers = getallheaders();
-$session_token = $headers['X-Session-Token'] ?? $_POST['session_token'] ?? $_GET['session_token'] ?? null;
+$session_token = $_SERVER['HTTP_X_SESSION_TOKEN'] ?? $_POST['session_token'] ?? $_GET['session_token'] ?? null;
 
 $action = $_POST['action'] ?? $_GET['action'] ?? 'get_messages';
 
