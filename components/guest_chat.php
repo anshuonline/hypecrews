@@ -9,11 +9,11 @@
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
         </span>
-        <!-- Tooltip -->
-        <span class="absolute right-full mr-4 whitespace-nowrap bg-gray-900 text-white text-xs font-bold py-1 px-3 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            Live Chat Support
-            <div class="absolute left-full top-1/2 -mt-1 w-0 h-0 border-4 border-transparent border-l-gray-900"></div>
-        </span>
+        <!-- Apple Style Floating Bubble -->
+        <div id="hc-floating-bubble" class="absolute right-full mr-5 whitespace-nowrap bg-white/95 backdrop-blur-xl text-gray-800 text-[13px] font-medium tracking-tight py-3 px-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 pointer-events-none origin-right transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] translate-x-4 opacity-0 flex items-center gap-2.5">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0"></div>
+            <span id="hc-bubble-text" class="transition-opacity duration-300">Hey, need help for your business? 👋</span>
+        </div>
     </button>
 
     <!-- Chat Window -->
@@ -77,7 +77,7 @@
             <!-- Chat Input Area -->
             <div id="hc-chat-input-area" class="p-3 bg-white border-t border-gray-100 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
                 <form id="hc-message-form" onsubmit="sendHcMessage(event)" class="relative flex items-center">
-                    <input type="text" id="hc-message-input" placeholder="Type your message..." autocomplete="off" class="w-full bg-gray-100 border-transparent focus:bg-white rounded-full pl-5 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all">
+                    <input type="text" id="hc-message-input" placeholder="Type your message..." autocomplete="off" class="w-full bg-gray-100 border-transparent text-gray-900 focus:bg-white rounded-full pl-5 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all">
                     <button type="submit" class="absolute right-2 w-8 h-8 bg-purple-600 hover:bg-purple-700 text-white rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
                         <i class="fas fa-paper-plane text-[10px]"></i>
                     </button>
@@ -112,6 +112,31 @@
             document.getElementById('hc-chat-form-container').classList.remove('hidden');
             document.getElementById('hc-chat-messages-container').classList.add('hidden');
             document.getElementById('hc-chat-messages-container').classList.remove('flex');
+            
+            // Apple UI Bubble Animation
+            setTimeout(() => {
+                const bubble = document.getElementById('hc-floating-bubble');
+                const bubbleText = document.getElementById('hc-bubble-text');
+                if(bubble && !hcChatOpen && !hcSessionToken) {
+                    bubble.classList.remove('opacity-0', 'translate-x-4');
+                    bubble.classList.add('opacity-100', 'translate-x-0');
+                    
+                    setTimeout(() => {
+                        bubbleText.style.opacity = '0';
+                        setTimeout(() => {
+                            bubbleText.innerHTML = 'Reach us now! 🚀';
+                            bubbleText.style.opacity = '1';
+                        }, 300);
+                    }, 4000);
+                    
+                    setTimeout(() => {
+                        if(!hcChatOpen) {
+                            bubble.classList.remove('opacity-100', 'translate-x-0');
+                            bubble.classList.add('opacity-0', 'translate-x-4');
+                        }
+                    }, 8000);
+                }
+            }, 1000);
         }
     });
 
@@ -120,6 +145,7 @@
         const iconBtn = document.getElementById('hc-chat-icon');
         const closeIcon = document.getElementById('hc-close-icon');
         const badge = document.getElementById('hc-chat-badge');
+        const bubble = document.getElementById('hc-floating-bubble');
         
         hcChatOpen = !hcChatOpen;
         
@@ -130,6 +156,7 @@
             closeIcon.classList.remove('scale-50', 'opacity-0');
             closeIcon.classList.add('scale-100', 'opacity-100');
             badge.classList.add('hidden');
+            if (bubble) bubble.classList.add('opacity-0', 'pointer-events-none');
             if (hcSessionToken) scrollToBottomHc();
         } else {
             windowEl.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
@@ -266,7 +293,7 @@
                             html += `
                                 <div class="flex justify-start mb-2 items-end gap-2">
                                     <div class="w-6 h-6 rounded-full bg-gray-200 border border-gray-300 shrink-0 overflow-hidden flex items-center justify-center text-[10px] font-bold text-gray-500">
-                                        ${m.sender_avatar ? `<img src="uploads/admins/${m.sender_avatar}" class="w-full h-full object-cover">` : '<i class="fas fa-headset"></i>'}
+                                        ${m.sender_avatar ? `<img src="${m.sender_avatar}" class="w-full h-full object-cover">` : '<i class="fas fa-headset"></i>'}
                                     </div>
                                     <div class="max-w-[75%] bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 py-2.5 text-[13px] shadow-sm leading-relaxed">
                                         ${escapeHtmlHc(m.message)}
