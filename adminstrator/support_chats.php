@@ -846,8 +846,11 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         if (data.data.notes.length > 0) {
                             data.data.notes.forEach(n => {
                                 notesHtml += `
-                                    <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm mb-2">
-                                        <p class="text-gray-800 whitespace-pre-wrap">${escapeHtml(n.note)}</p>
+                                    <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm mb-2 relative group">
+                                        <button onclick="deleteUserNote(${n.id})" class="absolute top-2 right-2 text-yellow-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <p class="text-gray-800 whitespace-pre-wrap pr-4">${escapeHtml(n.note)}</p>
                                         <div class="text-[10px] text-gray-500 mt-2 flex justify-between">
                                             <span>By ${escapeHtml(n.admin_name)}</span>
                                             <span>${new Date(n.created_at).toLocaleDateString()}</span>
@@ -968,6 +971,24 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 });
+        }
+        
+        function deleteUserNote(noteId) {
+            if(confirm('Are you sure you want to delete this note?')) {
+                const formData = new FormData();
+                formData.append('action', 'delete_user_note');
+                formData.append('note_id', noteId);
+                
+                fetch('api_support_chat.php', { method: 'POST', body: formData })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            fetchUserProfile();
+                        } else {
+                            alert(data.message || 'Error deleting note');
+                        }
+                    });
+            }
         }
         
         function toggleUserProfile() {

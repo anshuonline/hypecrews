@@ -249,9 +249,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'save_note') {
             exit();
         }
         
-        // Only assigned admin can add notes? Let's allow any admin to add notes since notes are for internal communication
-        $pdo->prepare("UPDATE support_sessions SET admin_note = ? WHERE id = ?")->execute([$note, $session_id]);
+        $note_val = $note === '' ? null : $note;
+        $pdo->prepare("UPDATE support_sessions SET admin_note = ? WHERE id = ?")->execute([$note_val, $session_id]);
         echo json_encode(['status' => 'success', 'message' => 'Note saved successfully']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete_user_note') {
+    $note_id = $_POST['note_id'] ?? 0;
+    
+    try {
+        $pdo->prepare("DELETE FROM user_notes WHERE id = ?")->execute([$note_id]);
+        echo json_encode(['status' => 'success']);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }
