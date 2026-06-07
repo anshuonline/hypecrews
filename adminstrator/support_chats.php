@@ -32,7 +32,9 @@ try {
             $whereClause .= " AND s.id = ?";
             $params[] = $searchId;
         } else {
-            $whereClause .= " AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.username LIKE ?)";
+            $whereClause .= " AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.username LIKE ? OR s.guest_name LIKE ? OR s.guest_email LIKE ?)";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
             $params[] = "%$search%";
             $params[] = "%$search%";
             $params[] = "%$search%";
@@ -41,12 +43,12 @@ try {
     
     // Fetch threads (support sessions)
     $stmt = $pdo->prepare("
-        SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity, s.assigned_admin_id,
-        u.id as user_id, u.username, u.first_name, u.last_name, 
+        SELECT s.id as session_id, s.topic, s.urgency, s.status, s.updated_at as last_activity, s.assigned_admin_id, s.guest_name,
+        u.id as user_id, IFNULL(u.username, s.guest_name) as username, IFNULL(u.first_name, s.guest_name) as first_name, IFNULL(u.last_name, '') as last_name, 
         (SELECT message FROM support_chats WHERE session_id = s.id ORDER BY created_at DESC LIMIT 1) as last_message,
         (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
         FROM support_sessions s
-        JOIN users u ON s.user_id = u.id
+        LEFT JOIN users u ON s.user_id = u.id
         $whereClause
         ORDER BY CASE WHEN s.status = 'open' THEN 1 ELSE 2 END ASC, unread_count DESC, s.updated_at DESC, s.id DESC
     ");
@@ -813,23 +815,21 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             fetchMessages();
             setInterval(fetchMessages, 3000);
             
-            if (chatUserId) {
-                fetchUserProfile();
-                // Refresh profile every 60 seconds to check online status
-                setInterval(fetchUserProfile, 60000);
-            }
+            fetchUserProfile();
+            // Refresh profile every 60 seconds
+            setInterval(fetchUserProfile, 60000);
         }
         
         function fetchUserProfile() {
-            fetch('api_support_chat.php?action=get_user_profile&user_id=' + chatUserId)
+            fetch('api_support_chat.php?action=get_session_profile&session_id=' + chatSession)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
                         const profileDiv = document.getElementById('userProfileContent');
                         const u = data.data.user;
                         
-                        let activeDot = u.is_active ? '<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>' : '<span class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>';
-                        let activeText = u.is_active ? '<span class="text-green-600 font-bold text-xs">Online Now</span>' : `<span class="text-gray-500 text-xs">Last seen: ${u.last_active}</span>`;
+                        let activeDot = u.is_active ? '<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>' : (u.is_guest ? '' : '<span class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>');
+                        let activeText = u.is_active ? '<span class="text-green-600 font-bold text-xs">Online Now</span>' : (u.is_guest ? '<span class="text-gray-500 text-xs">Guest User</span>' : `<span class="text-gray-500 text-xs">Last seen: ${u.last_active}</span>`);
                         
                         let ordersHtml = '<p class="text-sm text-gray-500">No orders found.</p>';
                         if (data.data.orders.length > 0) {
@@ -938,6 +938,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             </div>
                             
                             <!-- Order History -->
+                            ${!u.is_guest ? `
                             <div class="mb-6">
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-shopping-bag text-primary"></i> Recent Orders</h4>
                                 ${ordersHtml}
@@ -960,6 +961,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                     ${notesHtml}
                                 </div>
                             </div>
+                            ` : ''}
                         `;
                     }
                 });

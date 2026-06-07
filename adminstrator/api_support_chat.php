@@ -287,98 +287,134 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete_user_note') {
     exit();
 }
 
-if ($action === 'get_user_profile') {
-    $user_id = $_GET['user_id'] ?? 0;
+if ($action === 'get_session_profile') {
+    $session_id = $_GET['session_id'] ?? 0;
     
     try {
-        // Get User Basic Info
-        $u_stmt = $pdo->prepare("SELECT id, username, first_name, last_name, email, ip_address, last_active_at, mobile_number, company_name, country FROM users WHERE id = ?");
-        $u_stmt->execute([$user_id]);
-        $user = $u_stmt->fetch(PDO::FETCH_ASSOC);
+        $s_stmt = $pdo->prepare("SELECT user_id, guest_name, guest_email, guest_phone, created_at FROM support_sessions WHERE id = ?");
+        $s_stmt->execute([$session_id]);
+        $session = $s_stmt->fetch(PDO::FETCH_ASSOC);
         
-        if (!$user) {
-            echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        if (!$session) {
+            echo json_encode(['status' => 'error', 'message' => 'Session not found']);
             exit();
         }
         
-        // Determine Active Status
-        $is_active = false;
-        if ($user['last_active_at']) {
-            $last_active = strtotime($user['last_active_at']);
-            if (time() - $last_active < 300) { // 5 minutes
-                $is_active = true;
+        if ($session['user_id']) {
+            // Get User Basic Info
+            $user_id = $session['user_id'];
+            $u_stmt = $pdo->prepare("SELECT id, username, first_name, last_name, email, ip_address, last_active_at, mobile_number, company_name, country FROM users WHERE id = ?");
+            $u_stmt->execute([$user_id]);
+            $user = $u_stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$user) {
+                echo json_encode(['status' => 'error', 'message' => 'User not found']);
+                exit();
             }
-        }
-        
-        // Fetch Location from IP
-        $location = 'Unknown';
-        if (!empty($user['ip_address']) && filter_var($user['ip_address'], FILTER_VALIDATE_IP)) {
-            // Check if it's a local IP
-            if ($user['ip_address'] === '::1' || $user['ip_address'] === '127.0.0.1') {
-                $location = 'Localhost';
-            } else {
-                $ch = curl_init("http://ip-api.com/json/" . $user['ip_address']);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-                $response = curl_exec($ch);
-                curl_close($ch);
-                
-                if ($response) {
-                    $geo = json_decode($response, true);
-                    if ($geo && $geo['status'] === 'success') {
-                        $location = $geo['city'] . ', ' . $geo['country'];
+            
+            // Determine Active Status
+            $is_active = false;
+            if ($user['last_active_at']) {
+                $last_active = strtotime($user['last_active_at']);
+                if (time() - $last_active < 300) { // 5 minutes
+                    $is_active = true;
+                }
+            }
+            
+            // Fetch Location from IP
+            $location = 'Unknown';
+            if (!empty($user['ip_address']) && filter_var($user['ip_address'], FILTER_VALIDATE_IP)) {
+                // Check if it's a local IP
+                if ($user['ip_address'] === '::1' || $user['ip_address'] === '127.0.0.1') {
+                    $location = 'Localhost';
+                } else {
+                    $ch = curl_init("http://ip-api.com/json/" . $user['ip_address']);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+                    $response = curl_exec($ch);
+                    curl_close($ch);
+                    
+                    if ($response) {
+                        $geo = json_decode($response, true);
+                        if ($geo && $geo['status'] === 'success') {
+                            $location = $geo['city'] . ', ' . $geo['country'];
+                        }
                     }
                 }
             }
+            
+            // Fetch Order History
+            $orders = [];
+            try {
+                $stmt = $pdo->prepare("SELECT id, order_title, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+                $stmt->execute([$user_id]);
+                $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch(PDOException $e) {}
+            
+            // Fetch Past Chats
+            $stmt = $pdo->prepare("SELECT id, topic, status, created_at FROM support_sessions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+            $stmt->execute([$user_id]);
+            $past_chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Fetch Admin Notes
+            $notes = [];
+            try {
+                $stmt = $pdo->prepare("
+                    SELECT n.id, n.note, n.created_at, a.username as admin_name 
+                    FROM user_notes n 
+                    JOIN administrators a ON n.admin_id = a.id 
+                    WHERE n.user_id = ? 
+                    ORDER BY n.created_at DESC
+                ");
+                $stmt->execute([$user_id]);
+                $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch(PDOException $e) {}
+            
+            echo json_encode([
+                'status' => 'success',
+                'data' => [
+                    'user' => [
+                        'id' => $user['id'],
+                        'name' => $user['first_name'] . ' ' . $user['last_name'],
+                        'email' => $user['email'],
+                        'phone' => $user['mobile_number'] ?? 'N/A',
+                        'company' => $user['company_name'] ?? 'N/A',
+                        'country' => $user['country'],
+                        'ip_address' => $user['ip_address'] ?? 'N/A',
+                        'location' => $location,
+                        'is_active' => $is_active,
+                        'is_guest' => false,
+                        'last_active' => $user['last_active_at'] ? date('M d, Y h:i A', strtotime($user['last_active_at'])) : 'Never'
+                    ],
+                    'orders' => $orders,
+                    'past_chats' => $past_chats,
+                    'notes' => $notes
+                ]
+            ]);
+        } else {
+            // Guest Session
+            echo json_encode([
+                'status' => 'success',
+                'data' => [
+                    'user' => [
+                        'id' => 'GUEST',
+                        'name' => $session['guest_name'],
+                        'email' => $session['guest_email'],
+                        'phone' => $session['guest_phone'] ?? 'N/A',
+                        'company' => 'N/A',
+                        'country' => 'Unknown',
+                        'ip_address' => 'N/A',
+                        'location' => 'Unknown',
+                        'is_active' => true,
+                        'is_guest' => true,
+                        'last_active' => 'Now'
+                    ],
+                    'orders' => [],
+                    'past_chats' => [],
+                    'notes' => []
+                ]
+            ]);
         }
-        
-        // Fetch Order History
-        $orders = [];
-        try {
-            $stmt = $pdo->prepare("SELECT id, order_title, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
-            $stmt->execute([$user_id]);
-            $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $e) {}
-        
-        // Fetch Past Chats
-        $stmt = $pdo->prepare("SELECT id, topic, status, created_at FROM support_sessions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
-        $stmt->execute([$user_id]);
-        $past_chats = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Fetch Admin Notes
-        $notes = [];
-        try {
-            $stmt = $pdo->prepare("
-                SELECT n.id, n.note, n.created_at, a.username as admin_name 
-                FROM user_notes n 
-                JOIN administrators a ON n.admin_id = a.id 
-                WHERE n.user_id = ? 
-                ORDER BY n.created_at DESC
-            ");
-            $stmt->execute([$user_id]);
-            $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $e) {}
-        
-        echo json_encode([
-            'status' => 'success',
-            'data' => [
-                'user' => [
-                    'id' => $user['id'],
-                    'name' => $user['first_name'] . ' ' . $user['last_name'],
-                    'email' => $user['email'],
-                    'phone' => $user['mobile_number'] ?? 'N/A',
-                    'company' => $user['company_name'] ?? 'N/A',
-                    'country' => $user['country'],
-                    'ip_address' => $user['ip_address'] ?? 'N/A',
-                    'location' => $location,
-                    'is_active' => $is_active,
-                    'last_active' => $user['last_active_at'] ? date('M d, Y h:i A', strtotime($user['last_active_at'])) : 'Never'
-                ],
-                'orders' => $orders,
-                'past_chats' => $past_chats,
-                'notes' => $notes
-            ]
-        ]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }

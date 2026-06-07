@@ -573,5 +573,6 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
             revealElements.forEach(el => observer.observe(el));
         });
     </script>
+    <?php include 'components/guest_chat.php'; ?>
 </body>
 </html>
