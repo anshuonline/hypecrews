@@ -287,14 +287,16 @@ try {
                                         }
                                     }, 1000);
                                 </script>
-                                    <button onclick="startNewChat()" class="bg-white/10 hover:bg-white/20 text-white font-bold py-3 px-6 rounded-xl transition-colors">
-                                        Skip & Start New Chat
-                                    </button>
-                                    <button id="exportPdfBtn" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-transform hover:scale-[1.02]">
-                                        <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
-                                    </button>
-                                </div>
                             <?php endif; ?>
+                            
+                            <div class="flex items-center justify-center gap-4 mt-2">
+                                <button onclick="reopenSession()" class="bg-indigo-500/20 hover:bg-indigo-500 text-indigo-400 hover:text-white font-bold py-3 px-6 rounded-xl transition-all border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                                    <i class="fas fa-undo-alt mr-2"></i> Reopen Chat
+                                </button>
+                                <button onclick="startNewChat()" class="bg-primary hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-transform hover:scale-105">
+                                    <i class="fas fa-plus-circle mr-2"></i> Start New Chat
+                                </button>
+                            </div>
                         </div>
                         <?php endif; ?>
                     <?php endif; ?>
