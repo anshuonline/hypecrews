@@ -17,19 +17,19 @@
     </button>
 
     <!-- Chat Window -->
-    <div id="hc-chat-window" class="absolute bottom-20 right-0 w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl shadow-purple-900/20 border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0 pointer-events-none">
+    <div id="hc-chat-window" class="absolute bottom-20 right-0 w-[360px] h-[550px] bg-white rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-gray-100 flex flex-col overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] origin-bottom-right scale-0 opacity-0 pointer-events-none">
         
         <!-- Header -->
-        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 text-white shrink-0 shadow-md relative z-10">
+        <div class="bg-white/90 backdrop-blur-xl border-b border-gray-100 p-4 shrink-0 relative z-10">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur text-xl font-bold border border-white/30 shadow-inner">
+                    <div class="w-10 h-10 rounded-full bg-[#f0f4ff] flex items-center justify-center text-[#007aff] text-xl font-bold border border-[#007aff]/10">
                         HC
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg leading-tight">Hypecrews Support</h3>
-                        <p class="text-xs text-purple-100 flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse border border-green-200"></span> We typically reply instantly
+                        <h3 class="font-semibold text-[15px] text-gray-900 leading-tight tracking-tight">Hypecrews Support</h3>
+                        <p class="text-[11px] text-gray-500 flex items-center gap-1.5 font-medium mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#34c759]"></span> Typically replies instantly
                         </p>
                     </div>
                 </div>
@@ -37,24 +37,24 @@
         </div>
 
         <!-- Initial Form State (Hidden if session exists) -->
-        <div id="hc-chat-form-container" class="flex-1 p-6 overflow-y-auto bg-gray-50/50 hidden">
-            <p class="text-sm text-gray-600 mb-5 leading-relaxed">Please fill out the form below to start chatting with our support team.</p>
+        <div id="hc-chat-form-container" class="flex-1 p-6 overflow-y-auto bg-[#fafafa] hidden min-h-0">
+            <p class="text-[13px] text-gray-500 mb-6 text-center">Please fill out the form below to connect with us.</p>
             <form id="hc-init-form" onsubmit="startHcChat(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="hc-input-name" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-shadow shadow-sm">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Full Name <span class="text-[#ff3b30]">*</span></label>
+                    <input type="text" id="hc-input-name" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
-                    <input type="email" id="hc-input-email" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-shadow shadow-sm">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Email Address <span class="text-[#ff3b30]">*</span></label>
+                    <input type="email" id="hc-input-email" required class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
-                    <input type="tel" id="hc-input-phone" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-shadow shadow-sm">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Phone Number</label>
+                    <input type="tel" id="hc-input-phone" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">How can we help?</label>
-                    <select id="hc-input-topic" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-shadow shadow-sm appearance-none">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">How can we help?</label>
+                    <select id="hc-input-topic" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm appearance-none">
                         <option value="General Inquiry">General Inquiry</option>
                         <option value="Sales & Pricing">Sales & Pricing</option>
                         <option value="Technical Support">Technical Support</option>
@@ -62,33 +62,33 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <button type="submit" id="hc-start-btn" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg hover:shadow-xl mt-2 flex items-center justify-center gap-2">
-                    <span>Start Chat</span> <i class="fas fa-paper-plane text-xs"></i>
+                <button type="submit" id="hc-start-btn" class="w-full bg-[#007aff] hover:bg-[#005bb5] text-white font-semibold py-3.5 rounded-xl text-[15px] transition-colors shadow-sm mt-4">
+                    Start Chat
                 </button>
             </form>
         </div>
 
         <!-- Active Chat State -->
-        <div id="hc-chat-messages-container" class="flex-1 flex flex-col hidden bg-gray-50/30">
-            <div id="hc-messages-area" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div id="hc-chat-messages-container" class="flex-1 flex flex-col hidden bg-[#fafafa] min-h-0">
+            <div id="hc-messages-area" class="flex-1 overflow-y-auto p-4 space-y-3">
                 <!-- Messages will be appended here via JS -->
             </div>
             
             <!-- Chat Input Area -->
-            <div id="hc-chat-input-area" class="p-3 bg-white border-t border-gray-100 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
+            <div id="hc-chat-input-area" class="p-3 bg-white/90 backdrop-blur-xl border-t border-gray-100 shrink-0">
                 <form id="hc-message-form" onsubmit="sendHcMessage(event)" class="relative flex items-center">
-                    <input type="text" id="hc-message-input" placeholder="Type your message..." autocomplete="off" class="w-full bg-gray-100 border-transparent text-gray-900 focus:bg-white rounded-full pl-5 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all">
-                    <button type="submit" class="absolute right-2 w-8 h-8 bg-purple-600 hover:bg-purple-700 text-white rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
-                        <i class="fas fa-paper-plane text-[10px]"></i>
+                    <input type="text" id="hc-message-input" placeholder="iMessage" autocomplete="off" class="w-full bg-[#f2f2f7] border border-transparent text-gray-900 focus:bg-white rounded-full pl-4 pr-10 py-2.5 text-[14px] focus:outline-none focus:border-gray-300 transition-colors placeholder-[#8e8e93]">
+                    <button type="submit" class="absolute right-1.5 w-7 h-7 bg-[#007aff] hover:bg-[#005bb5] text-white rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                        <i class="fas fa-arrow-up text-[12px]"></i>
                     </button>
                 </form>
             </div>
             
             <!-- Resolved State Area -->
-            <div id="hc-chat-resolved-area" class="p-4 bg-gray-50 border-t border-gray-200 hidden text-center">
-                <p class="text-sm font-bold text-gray-700 mb-1">Chat Resolved</p>
-                <p class="text-xs text-gray-500 mb-3">This conversation has been closed.</p>
-                <button onclick="startNewChat()" class="text-xs font-bold text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100 py-1.5 px-4 rounded-full transition-colors border border-purple-200">Start New Chat</button>
+            <div id="hc-chat-resolved-area" class="p-4 bg-[#f2f2f7] border-t border-gray-200 hidden text-center shrink-0">
+                <p class="text-[14px] font-semibold text-gray-900 mb-0.5">Chat Resolved</p>
+                <p class="text-[12px] text-gray-500 mb-3">This conversation has been closed.</p>
+                <button onclick="startNewChat()" class="text-[13px] font-semibold text-[#007aff] hover:text-[#005bb5] transition-colors">Start New Chat</button>
             </div>
         </div>
         
@@ -217,8 +217,8 @@
         
         // Optimistic UI Append
         const msgHtml = `
-            <div class="flex justify-end animate-fade-in-up">
-                <div class="max-w-[85%] bg-purple-600 text-white rounded-2xl rounded-tr-sm px-4 py-2 text-sm shadow-md">
+            <div class="flex justify-end mb-1 animate-fade-in-up">
+                <div class="max-w-[75%] bg-[#007aff] text-white rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
                     ${escapeHtmlHc(message)}
                 </div>
             </div>
@@ -276,26 +276,26 @@
                         if (m.sender_type === 'system') {
                             html += `
                                 <div class="flex justify-center my-4 animate-fade-in">
-                                    <div class="bg-gray-100 text-gray-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider text-center max-w-[80%]">
+                                    <div class="text-[#8e8e93] text-[11px] font-medium px-3 py-1 text-center max-w-[80%]">
                                         ${escapeHtmlHc(m.message)}
                                     </div>
                                 </div>
                             `;
                         } else if (m.is_mine) {
                             html += `
-                                <div class="flex justify-end mb-2">
-                                    <div class="max-w-[85%] bg-purple-600 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 text-[13px] shadow-md shadow-purple-900/10 leading-relaxed">
+                                <div class="flex justify-end mb-1">
+                                    <div class="max-w-[75%] bg-[#007aff] text-white rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
                                         ${escapeHtmlHc(m.message)}
                                     </div>
                                 </div>
                             `;
                         } else {
                             html += `
-                                <div class="flex justify-start mb-2 items-end gap-2">
-                                    <div class="w-6 h-6 rounded-full bg-gray-200 border border-gray-300 shrink-0 overflow-hidden flex items-center justify-center text-[10px] font-bold text-gray-500">
+                                <div class="flex justify-start mb-1 items-end gap-2">
+                                    <div class="w-7 h-7 rounded-full bg-gray-200 border border-gray-300 shrink-0 overflow-hidden flex items-center justify-center text-[10px] font-bold text-gray-500 mb-1">
                                         ${m.sender_avatar ? `<img src="${m.sender_avatar}" class="w-full h-full object-cover">` : '<i class="fas fa-headset"></i>'}
                                     </div>
-                                    <div class="max-w-[75%] bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 py-2.5 text-[13px] shadow-sm leading-relaxed">
+                                    <div class="max-w-[75%] bg-[#e9e9eb] text-black rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
                                         ${escapeHtmlHc(m.message)}
                                     </div>
                                 </div>
