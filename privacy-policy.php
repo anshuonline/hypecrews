@@ -91,7 +91,7 @@ $pageTitle = "Privacy Policy";
                         <li>Register for an account on our website</li>
                         <li>Place an order or purchase our services</li>
                         <li>Subscribe to our newsletter</li>
-                        <li>Contact us via email or our contact forms</li>
+                        <li>Contact us via email, contact forms, or our Guest Live Chat support system</li>
                         <li>Participate in surveys, promotions, or contests</li>
                     </ul>
                     
@@ -103,6 +103,7 @@ $pageTitle = "Privacy Policy";
                         <li>Pages visited and time spent on our website</li>
                         <li>Referring website and exit pages</li>
                         <li>Click patterns and site interaction data</li>
+                        <li>Live chat sessions, transcripts, and associated session metadata</li>
                     </ul>
                     
                     <h3 class="text-xl font-bold mb-4 mt-8 text-white">2. How We Use Your Information</h3>
