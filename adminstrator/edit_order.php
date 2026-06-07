@@ -95,19 +95,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Edit Order - Hypecrews Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="components/sidebar.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0f172a',
-                        light: '#1e293b'
+                        primary: '#0066cc', // Apple Blue
+                        apple_text: '#1d1d1f', // Apple Dark text
+                        apple_muted: '#86868b', // Apple Muted text
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif']
                     }
                 }
             }
@@ -115,24 +115,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
         
-        .sidebar {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        .glass-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0;
+            background: #f5f5f9; overflow: hidden; pointer-events: none;
         }
         
-        .nav-link {
-            transition: all 0.3s ease;
+        .glass-bg::before, .glass-bg::after, .glass-blob {
+            content: ''; position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6;
         }
         
-        .nav-link:hover, .nav-link.active {
-            background: rgba(99, 102, 241, 0.1);
-            color: #6366f1;
+        .glass-bg::before { background: #dbeafe; width: 600px; height: 600px; top: -100px; right: -100px; }
+        .glass-bg::after { background: #f3e8ff; width: 500px; height: 500px; bottom: -100px; left: 10%; }
+        .glass-blob { background: #e0f2fe; width: 400px; height: 400px; top: 40%; left: 50%; transform: translate(-50%, -50%); }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
         }
         
         .input-field {
@@ -140,100 +152,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         .input-field:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
-<body class="text-white">
-    <div class="flex h-screen">
+<body class="text-apple_text">
+
+    <div class="glass-bg"><div class="glass-blob"></div></div>
+
+    <div class="flex h-screen overflow-hidden relative z-10">
         <!-- Sidebar -->
-        <div class="sidebar w-64 flex-shrink-0 flex flex-col">
-            <div class="p-6 border-b border-gray-800">
-                <h1 class="text-2xl font-bold">Hypecrews <span class="text-primary">Admin</span></h1>
-            </div>
-            
-            <nav class="flex-1 py-6">
-                <a href="index.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white">
-                    <i class="fas fa-home mr-3"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="orders.php" class="nav-link active flex items-center px-6 py-3 text-white">
-                    <i class="fas fa-box mr-3"></i>
-                    <span>Orders</span>
-                </a>
-                <a href="users.php" class="nav-link flex items-center px-6 py-3 text-gray-400 hover:text-white">
-                    <i class="fas fa-users mr-3"></i>
-                    <span>Users</span>
-                </a>
-            </nav>
-            
-            <div class="p-6 border-t border-gray-800">
-                <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center mr-3">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        <p class="font-medium"><?php echo htmlspecialchars($admin_username); ?></p>
-                        <p class="text-sm text-gray-400">Administrator</p>
-                    </div>
-                </div>
-                <a href="logout.php" class="mt-4 flex items-center text-gray-400 hover:text-white">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
+        <div class="bg-[#0f172a] h-full flex-shrink-0 z-20 shadow-xl text-white">
+            <?php 
+            $current_page = 'orders';
+            include 'components/sidebar.php'; 
+            ?>
         </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="bg-dark border-b border-gray-800 p-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold">Edit Order #<?php echo $order['id']; ?></h2>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="window.location.href='orders.php'" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                            <i class="fas fa-arrow-left mr-2"></i>
-                            Back to Orders
-                        </button>
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <header class="glass-panel border-b border-white/60 px-10 py-6 flex justify-between items-center z-10 sticky top-0">
+                <div class="flex items-center">
+                    <a href="orders.php" class="mr-4 w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-apple_text transition-colors">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h1 class="text-3xl font-bold text-apple_text tracking-tight">Edit Order #<?php echo $order['id']; ?></h1>
                     </div>
                 </div>
             </header>
             
-            <!-- Content -->
-            <div class="flex-1 overflow-y-auto p-6">
+            <div class="flex-1 overflow-y-auto p-10 relative z-0">
                 <?php if ($success): ?>
-                <div class="mb-6 p-4 rounded-lg bg-green-900/50 border border-green-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-green-300"><?php echo htmlspecialchars($success); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-green-50/50 border-green-200 shadow-sm text-green-700 font-medium flex items-center">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($success); ?></p>
                 </div>
                 <?php endif; ?>
                 
                 <?php if ($error): ?>
-                <div class="mb-6 p-4 rounded-lg bg-red-900/50 border border-red-700 backdrop-blur-sm">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="text-red-300"><?php echo htmlspecialchars($error); ?></p>
-                        </div>
-                    </div>
+                <div class="mb-8 p-4 rounded-3xl glass-panel bg-red-50/50 border-red-200 shadow-sm text-red-700 font-medium flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                    <p><?php echo htmlspecialchars($error); ?></p>
                 </div>
                 <?php endif; ?>
                 
-                <div class="bg-light rounded-xl p-6">
-                    <form method="POST" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel rounded-[2rem] p-8 shadow-sm max-w-4xl mx-auto">
+                    <form method="POST" class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
-                                <label for="user_id" class="block text-sm font-medium text-gray-300 mb-2">Assign to User (Optional)</label>
+                                <label for="user_id" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Assign to User (Optional)</label>
                                 <select 
                                     id="user_id" 
                                     name="user_id" 
-                                    class="w-full input-field bg-dark/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    class="w-full input-field bg-white/60 border border-black/10 rounded-xl px-5 py-3 text-apple_text focus:outline-none shadow-sm font-medium">
                                     <option value="">Select a user (optional)</option>
                                     <?php foreach ($users as $user): ?>
                                     <option value="<?php echo $user['id']; ?>" <?php echo ($order['user_id'] == $user['id']) ? 'selected' : ''; ?>>
@@ -244,48 +219,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             
                             <div>
-                                <label for="tracking_id" class="block text-sm font-medium text-gray-300 mb-2">Tracking ID (Cannot be changed)</label>
+                                <label for="tracking_id" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Tracking ID (Cannot be changed)</label>
                                 <input 
                                     type="text" 
                                     id="tracking_id" 
                                     name="tracking_id" 
-                                    class="w-full input-field bg-dark/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    class="w-full input-field bg-black/5 border border-black/5 rounded-xl px-5 py-3 text-apple_muted focus:outline-none font-mono cursor-not-allowed"
                                     placeholder="Auto-generated tracking ID"
                                     value="<?php echo htmlspecialchars($order['tracking_id']); ?>" readonly>
-                                <p class="text-xs text-gray-400 mt-1">This ID was auto-generated and cannot be changed</p>
+                                <p class="text-xs text-apple_muted mt-2"><i class="fas fa-lock mr-1"></i> This ID was auto-generated and cannot be changed</p>
                             </div>
                         </div>
                         
                         <div>
-                            <label for="order_title" class="block text-sm font-medium text-gray-300 mb-2">Order Title *</label>
+                            <label for="order_title" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Order Title *</label>
                             <input 
                                 type="text" 
                                 id="order_title" 
                                 name="order_title" 
                                 required
-                                class="w-full input-field bg-dark/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                class="w-full input-field bg-white/60 border border-black/10 rounded-xl px-5 py-3 text-apple_text focus:outline-none shadow-sm font-medium text-lg"
                                 placeholder="Enter order title"
                                 value="<?php echo htmlspecialchars($order['order_title']); ?>">
                         </div>
                         
                         <div>
-                            <label for="order_description" class="block text-sm font-medium text-gray-300 mb-2">Order Description *</label>
+                            <label for="order_description" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Order Description *</label>
                             <textarea 
                                 id="order_description" 
                                 name="order_description" 
-                                rows="4"
+                                rows="5"
                                 required
-                                class="w-full input-field bg-dark/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                class="w-full input-field bg-white/60 border border-black/10 rounded-xl px-5 py-3 text-apple_text focus:outline-none shadow-sm font-medium leading-relaxed"
                                 placeholder="Enter order description"><?php echo htmlspecialchars($order['order_description']); ?></textarea>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-black/5 pt-8">
                             <div>
-                                <label for="status" class="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                                <label for="status" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Status</label>
                                 <select 
                                     id="status" 
                                     name="status" 
-                                    class="w-full input-field bg-dark/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    class="w-full input-field bg-white/60 border border-black/10 rounded-xl px-5 py-3 text-apple_text focus:outline-none shadow-sm font-bold">
                                     <option value="pending" <?php echo ($order['status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
                                     <option value="in_review" <?php echo ($order['status'] == 'in_review') ? 'selected' : ''; ?>>In Review</option>
                                     <option value="approved" <?php echo ($order['status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
@@ -303,36 +278,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             
                             <div>
-                                <label for="custom_status" class="block text-sm font-medium text-gray-300 mb-2">Custom Status (Optional)</label>
+                                <label for="custom_status" class="block text-sm font-semibold text-apple_muted uppercase tracking-wider mb-2">Custom Status (Optional)</label>
                                 <input 
                                     type="text" 
                                     id="custom_status" 
                                     name="custom_status" 
-                                    class="w-full input-field bg-dark/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                    placeholder="Enter custom status"
+                                    class="w-full input-field bg-white/60 border border-black/10 rounded-xl px-5 py-3 text-apple_text focus:outline-none shadow-sm font-medium"
+                                    placeholder="e.g. Waiting for client response"
                                     value="<?php echo htmlspecialchars($order['custom_status']); ?>">
                             </div>
                         </div>
                         
-                        <div class="flex items-center">
+                        <div class="flex items-center bg-white/40 p-5 rounded-xl border border-black/5 mt-4">
                             <input 
                                 type="checkbox" 
                                 id="request_review" 
                                 name="request_review" 
                                 value="1" 
                                 <?php echo ($order['review_requested']) ? 'checked' : ''; ?>
-                                class="w-4 h-4 text-primary bg-dark border-gray-700 rounded focus:ring-primary">
-                            <label for="request_review" class="ml-2 block text-sm text-gray-300">
-                                Request Review from User
+                                class="w-5 h-5 text-primary bg-white border-gray-300 rounded focus:ring-primary focus:ring-2 cursor-pointer">
+                            <label for="request_review" class="ml-3 block font-semibold text-apple_text cursor-pointer">
+                                Request Review from User <span class="text-xs font-normal text-apple_muted block">Check this box to prompt the user to review the order when completed.</span>
                             </label>
                         </div>
                         
-                        <div class="flex justify-end space-x-4">
-                            <button type="button" onclick="window.location.href='orders.php'" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg">
+                        <div class="flex justify-end space-x-4 pt-8 border-t border-black/5 mt-8">
+                            <button type="button" onclick="window.location.href='view_order.php?id=<?php echo $order['id']; ?>'" class="bg-black/5 hover:bg-black/10 text-apple_text font-bold py-3 px-8 rounded-full transition-colors shadow-sm">
                                 Cancel
                             </button>
-                            <button type="submit" class="bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2 px-6 rounded-lg">
-                                Update Order
+                            <button type="submit" class="bg-primary/90 hover:bg-primary text-white font-bold py-3 px-8 rounded-full transition-colors shadow-md">
+                                Save Changes
                             </button>
                         </div>
                     </form>
