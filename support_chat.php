@@ -42,13 +42,19 @@ try {
     $stmt->execute([$user_id]);
     $active_session = $stmt->fetch();
 
-    // Check for resolved session to show export
-    $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'resolved' AND exported_at IS NULL ORDER BY created_at DESC LIMIT 1");
+    // Check for resolved session to show export/timer
+    $stmt = $pdo->prepare("SELECT * FROM support_sessions WHERE user_id = ? AND status = 'resolved' ORDER BY created_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $resolved_session = $stmt->fetch();
     
     if(!$active_session && $resolved_session) {
-        $active_session = $resolved_session; // Allow viewing it to export
+        $active_session = $resolved_session; // Allow viewing it
+    }
+
+    $time_remaining = -1;
+    if ($active_session && $active_session['exported_at']) {
+        $exported_time = strtotime($active_session['exported_at']);
+        $time_remaining = max(0, 3600 - (time() - $exported_time));
     }
 
 } catch (PDOException $e) {
@@ -250,10 +256,38 @@ try {
                         <!-- Export Area -->
                         <div class="p-8 border-t border-white/5 bg-black/20 shrink-0 z-10 text-center">
                             <h4 class="text-lg font-bold text-white mb-2">This session has been resolved.</h4>
-                            <p class="text-gray-400 text-sm mb-6">You can export the chat history as a PDF. After exporting, the history will be permanently deleted after 1 hour.</p>
-                            <button id="exportPdfBtn" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-transform hover:scale-[1.02]">
-                                <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
-                            </button>
+                            <?php if ($time_remaining >= 0): ?>
+                                <p class="text-red-400 text-sm mb-4 font-bold flex items-center justify-center gap-2">
+                                    <i class="fas fa-exclamation-triangle"></i> Chat history will be permanently deleted in:
+                                </p>
+                                <div class="text-4xl font-black font-heading text-white tracking-widest mb-6" id="countdownTimer">
+                                    --:--
+                                </div>
+                                <script>
+                                    let timeRemaining = <?php echo $time_remaining; ?>;
+                                    const timerEl = document.getElementById('countdownTimer');
+                                    const countdownInterval = setInterval(() => {
+                                        if (timeRemaining <= 0) {
+                                            clearInterval(countdownInterval);
+                                            timerEl.innerText = "00:00";
+                                            window.location.reload();
+                                        } else {
+                                            let m = Math.floor(timeRemaining / 60);
+                                            let s = timeRemaining % 60;
+                                            timerEl.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                                            timeRemaining--;
+                                        }
+                                    }, 1000);
+                                </script>
+                                <button id="exportPdfBtn" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-5 text-sm rounded-xl transition-all">
+                                    <i class="fas fa-file-pdf mr-2"></i> Export Again
+                                </button>
+                            <?php else: ?>
+                                <p class="text-gray-400 text-sm mb-6">You can export the chat history as a PDF. After exporting, the history will be permanently deleted after 1 hour.</p>
+                                <button id="exportPdfBtn" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-transform hover:scale-[1.02]">
+                                    <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
+                                </button>
+                            <?php endif; ?>
                         </div>
                         <?php endif; ?>
                     <?php endif; ?>

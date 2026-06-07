@@ -188,9 +188,49 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         </div>
                     </div>
                     <?php else: ?>
-                    <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6 text-center text-apple_muted bg-gray-50/50">
-                        <i class="fas fa-info-circle mb-2 block"></i>
-                        This session has been marked as resolved and is now closed to new messages.
+                    <?php 
+                        $time_remaining = -1;
+                        if ($session_data['exported_at']) {
+                            $exported_time = strtotime($session_data['exported_at']);
+                            $time_remaining = max(0, 3600 - (time() - $exported_time));
+                        }
+                    ?>
+                    <div class="p-4 md:p-6 glass-panel border-t border-black/5 shrink-0 z-10 rounded-none pb-6 text-center bg-gray-50/50">
+                        <i class="fas fa-lock text-gray-400 text-3xl mb-3"></i>
+                        <h4 class="text-lg font-bold text-gray-700 mb-2">This session is resolved and closed.</h4>
+                        
+                        <?php if ($time_remaining >= 0): ?>
+                            <p class="text-red-500 text-sm mb-3 font-bold">
+                                <i class="fas fa-exclamation-triangle"></i> Chat will be auto-deleted in:
+                            </p>
+                            <div class="text-3xl font-black text-gray-800 tracking-widest mb-4" id="countdownTimer">
+                                --:--
+                            </div>
+                            <script>
+                                let timeRemaining = <?php echo $time_remaining; ?>;
+                                const timerEl = document.getElementById('countdownTimer');
+                                const countdownInterval = setInterval(() => {
+                                    if (timeRemaining <= 0) {
+                                        clearInterval(countdownInterval);
+                                        timerEl.innerText = "00:00";
+                                        window.location.reload();
+                                    } else {
+                                        let m = Math.floor(timeRemaining / 60);
+                                        let s = timeRemaining % 60;
+                                        timerEl.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                                        timeRemaining--;
+                                    }
+                                }, 1000);
+                            </script>
+                            <button id="exportPdfBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-sm transition-all">
+                                <i class="fas fa-file-pdf mr-2"></i> Export Again
+                            </button>
+                        <?php else: ?>
+                            <p class="text-gray-500 text-sm mb-4">Export the chat history as a PDF. After exporting, a 1-hour deletion countdown will start for both you and the user.</p>
+                            <button id="exportPdfBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-sm transition-transform hover:scale-105">
+                                <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
+                            </button>
+                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -198,6 +238,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         </div>
     </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <?php if ($chat_with): ?>
     <script>
         const chatSession = document.getElementById('chatSession') ? document.getElementById('chatSession').value : null;
@@ -381,6 +422,48 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                 });
             }
         }
+
+            if (exportPdfBtn) {
+                exportPdfBtn.addEventListener('click', () => {
+                    const sessionId = chatSession;
+                    
+                    exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating PDF...';
+                    exportPdfBtn.disabled = true;
+                    
+                    // Clone the messages div to format it for PDF
+                    const clone = messagesDiv.cloneNode(true);
+                    clone.style.height = 'auto';
+                    clone.style.maxHeight = 'none';
+                    clone.style.overflow = 'visible';
+                    clone.style.backgroundColor = '#ffffff';
+                    clone.style.padding = '20px';
+                    
+                    const opt = {
+                      margin:       10,
+                      filename:     'Support_Chat_History_' + sessionId + '.pdf',
+                      image:        { type: 'jpeg', quality: 0.98 },
+                      html2canvas:  { scale: 2, useCORS: true, logging: false },
+                      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+                    
+                    html2pdf().set(opt).from(clone).save().then(() => {
+                        exportPdfBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Downloaded';
+                        
+                        // Tell server it was exported
+                        const formData = new FormData();
+                        formData.append('action', 'export_session');
+                        formData.append('session_id', sessionId);
+                        fetch('api_support_chat.php', {
+                            method: 'POST',
+                            body: formData
+                        }).then(() => {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 3000);
+                        });
+                    });
+                });
+            }
 
         function escapeHtml(unsafe) {
             return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
