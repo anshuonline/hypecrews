@@ -984,7 +984,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             const formData = new FormData();
             if (chatUserId === 'GUEST') {
                 formData.append('action', 'add_guest_note');
-                formData.append('session_id', currentChatSessionId);
+                formData.append('session_id', chatSession);
             } else {
                 formData.append('action', 'add_user_note');
                 formData.append('user_id', chatUserId);
