@@ -136,7 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 WHEN c.sender_type = 'user' THEN (SELECT username FROM users WHERE id = c.sender_id)
                 ELSE (SELECT username FROM administrators WHERE id = c.sender_id)
             END as sender_name,
-            NULL as sender_avatar
+            CASE 
+                WHEN c.sender_type = 'admin' THEN (SELECT profile_image FROM administrators WHERE id = c.sender_id)
+                ELSE NULL
+            END as sender_avatar
             FROM support_chats c 
             WHERE c.session_id = ? 
             ORDER BY c.created_at ASC");
