@@ -14,7 +14,7 @@ try {
         (SELECT COUNT(*) FROM support_chats WHERE session_id = s.id AND sender_type = 'user' AND is_read = 0) as unread_count
         FROM support_sessions s
         JOIN users u ON s.user_id = u.id
-        ORDER BY s.status ASC, s.updated_at DESC
+        ORDER BY s.status ASC, COALESCE(s.updated_at, s.created_at) DESC
     ");
     $stmt->execute();
     $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -238,7 +238,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <?php if ($chat_with): ?>
     <script>
-        const chatSession = document.getElementById('chatSession') ? document.getElementById('chatSession').value : null;
+        const chatSession = "<?php echo htmlspecialchars($chat_with); ?>";
         const messagesDiv = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         const messageInput = document.getElementById('messageInput');
