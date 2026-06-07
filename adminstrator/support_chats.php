@@ -871,7 +871,6 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         }
                         
                         let notesHtml = '';
-                        let topNotesHtml = '';
                         if (data.data.notes.length > 0) {
                             data.data.notes.forEach(n => {
                                 const isGuestNote = String(n.id).startsWith('guest_');
@@ -886,23 +885,21 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                         </div>
                                     </div>
                                 `;
-                                topNotesHtml += `
-                                    <div class="bg-white/50 border border-yellow-300 p-2 rounded text-xs mb-2 shadow-sm">
-                                        <p class="text-gray-800 font-medium whitespace-pre-wrap">${escapeHtml(n.note)}</p>
-                                        <div class="text-[9px] text-gray-500 mt-1">By ${escapeHtml(n.admin_name)} • ${new Date(n.created_at).toLocaleString()}</div>
-                                    </div>
-                                `;
                             });
-                            
-                            const topBanner = document.getElementById('topAdminNotes');
-                            if (topBanner) {
-                                topBanner.classList.remove('hidden');
-                                document.getElementById('topAdminNotesContent').innerHTML = `<div class="max-h-28 overflow-y-auto pr-2">${topNotesHtml}</div>`;
-                            }
                         } else {
                             notesHtml = '<p class="text-sm text-gray-500 italic">No notes yet.</p>';
-                            const topBanner = document.getElementById('topAdminNotes');
-                            if (topBanner) topBanner.classList.add('hidden');
+                        }
+                        
+                        const topBanner = document.getElementById('topAdminNotes');
+                        if (topBanner) {
+                            if (data.data.admin_note) {
+                                topBanner.classList.remove('hidden');
+                                topBanner.classList.add('flex'); // Because it uses flex layout
+                                document.getElementById('topAdminNotesContent').innerHTML = escapeHtml(data.data.admin_note).replace(/\n/g, '<br>');
+                            } else {
+                                topBanner.classList.add('hidden');
+                                topBanner.classList.remove('flex');
+                            }
                         }
                         
                         profileDiv.innerHTML = `

@@ -293,7 +293,7 @@ if ($action === 'get_session_profile') {
     $session_id = $_GET['session_id'] ?? 0;
     
     try {
-        $s_stmt = $pdo->prepare("SELECT user_id, guest_name, guest_email, guest_phone, created_at FROM support_sessions WHERE id = ?");
+        $s_stmt = $pdo->prepare("SELECT user_id, guest_name, guest_email, guest_phone, created_at, admin_note FROM support_sessions WHERE id = ?");
         $s_stmt->execute([$session_id]);
         $session = $s_stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -390,7 +390,8 @@ if ($action === 'get_session_profile') {
                     ],
                     'orders' => $orders,
                     'past_chats' => $past_chats,
-                    'notes' => $notes
+                    'notes' => $notes,
+                    'admin_note' => $session['admin_note']
                 ]
             ]);
         } else {
@@ -429,7 +430,8 @@ if ($action === 'get_session_profile') {
                     ],
                     'orders' => [],
                     'past_chats' => [],
-                    'notes' => $notes
+                    'notes' => $notes,
+                    'admin_note' => $session['admin_note']
                 ]
             ]);
         }
