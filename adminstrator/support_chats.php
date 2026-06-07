@@ -193,6 +193,16 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <?php endif; ?>
                     </div>
                     
+                    <!-- Top Admin Notes Banner -->
+                    <div id="topAdminNotes" class="hidden px-6 py-3 bg-yellow-50/80 border-b border-yellow-200 shrink-0 z-10 shadow-sm backdrop-blur-sm">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-sticky-note text-yellow-500 mt-1"></i>
+                            <div class="flex-1" id="topAdminNotesContent">
+                                <!-- Notes will be populated here by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Messages Area -->
                     <div id="chatMessages" class="flex-1 overflow-y-auto chat-scroll p-6 space-y-4 relative z-0">
                         <div class="text-center mt-10"><i class="fas fa-spinner fa-spin text-primary text-2xl"></i></div>
@@ -686,6 +696,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         }
                         
                         let notesHtml = '';
+                        let topNotesHtml = '';
                         if (data.data.notes.length > 0) {
                             data.data.notes.forEach(n => {
                                 notesHtml += `
@@ -697,9 +708,23 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                         </div>
                                     </div>
                                 `;
+                                topNotesHtml += `
+                                    <div class="bg-white/50 border border-yellow-300 p-2 rounded text-xs mb-2 shadow-sm">
+                                        <p class="text-gray-800 font-medium whitespace-pre-wrap">${escapeHtml(n.note)}</p>
+                                        <div class="text-[9px] text-gray-500 mt-1">By ${escapeHtml(n.admin_name)} • ${new Date(n.created_at).toLocaleString()}</div>
+                                    </div>
+                                `;
                             });
+                            
+                            const topBanner = document.getElementById('topAdminNotes');
+                            if (topBanner) {
+                                topBanner.classList.remove('hidden');
+                                document.getElementById('topAdminNotesContent').innerHTML = `<div class="max-h-28 overflow-y-auto pr-2">${topNotesHtml}</div>`;
+                            }
                         } else {
                             notesHtml = '<p class="text-sm text-gray-500 italic">No notes yet.</p>';
+                            const topBanner = document.getElementById('topAdminNotes');
+                            if (topBanner) topBanner.classList.add('hidden');
                         }
                         
                         profileDiv.innerHTML = `
