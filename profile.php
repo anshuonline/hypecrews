@@ -214,52 +214,16 @@ if (isset($_GET['logout'])) {
             <?php endif; ?>
             
             <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Sidebar Profile Card -->
-                <div class="w-full lg:w-1/3 reveal-left delay-100">
-                    <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-all"></div>
-                        
-                        <div class="relative z-10 text-center mb-8">
-                            <div class="w-28 h-28 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 p-1 mx-auto mb-4 relative shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-                                <div class="w-full h-full rounded-full bg-[#0B0F19] flex items-center justify-center border border-white/5">
-                                    <i class="fas fa-user-astronaut text-4xl text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 to-purple-400"></i>
-                                </div>
-                                <div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-[#0B0F19] rounded-full"></div>
-                            </div>
-                            <h2 class="font-heading text-2xl font-bold"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-                            <p class="text-primary font-medium tracking-wide text-sm mt-1">@<?php echo htmlspecialchars($user['username']); ?></p>
-                        </div>
-                        
-                        <div class="space-y-5 relative z-10">
-                            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                                <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-calendar-alt w-4 text-indigo-400"></i> Member</span>
-                                <span class="text-sm font-medium"><?php echo date('M j, Y', strtotime($user['created_at'])); ?></span>
-                            </div>
-                            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                                <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-envelope w-4 text-purple-400"></i> Email</span>
-                                <span class="text-sm font-medium truncate max-w-[150px]" title="<?php echo htmlspecialchars($user['email']); ?>"><?php echo htmlspecialchars($user['email']); ?></span>
-                            </div>
-                            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                                <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-phone w-4 text-cyan-400"></i> Mobile</span>
-                                <span class="text-sm font-medium"><?php echo htmlspecialchars($user['mobile_number']); ?></span>
-                            </div>
-                            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                                <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-globe-americas w-4 text-emerald-400"></i> Location</span>
-                                <span class="text-sm font-medium"><?php echo htmlspecialchars($user['country']); ?></span>
-                            </div>
-                            
-                            <?php if (!empty($user['company_name'])): ?>
-                            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                                <span class="text-gray-400 text-sm flex items-center gap-2"><i class="fas fa-building w-4 text-amber-400"></i> Corp</span>
-                                <span class="text-sm font-medium truncate max-w-[150px]"><?php echo htmlspecialchars($user['company_name']); ?></span>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                <!-- Sidebar Menu -->
+                <div class="w-full lg:w-1/4 xl:w-1/5 reveal-left delay-100 flex flex-col h-full">
+                    <?php 
+                    $current_user_page = 'profile';
+                    include 'components/user_sidebar.php'; 
+                    ?>
                 </div>
                 
                 <!-- Forms -->
-                <div class="w-full lg:w-2/3 space-y-8">
+                <div class="w-full lg:w-3/4 xl:w-4/5 space-y-8">
                     <!-- Profile Update -->
                     <div class="glass-card rounded-3xl p-8 reveal-right delay-200 relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full blur-[60px] pointer-events-none"></div>

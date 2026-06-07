@@ -13,6 +13,7 @@ if (!isset($admin_username)) {
 // Fetch profile image if possible
 $admin_profile_image = null;
 $unread_chat_count = 0;
+$unread_support_count = 0;
 if (isset($pdo) && isset($_SESSION['admin_id'])) {
     try {
         $admin_id = $_SESSION['admin_id'];
@@ -30,6 +31,10 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
         $stmt_unread = $pdo->prepare("SELECT COUNT(*) FROM admin_chats WHERE sender_id != ? AND (created_at > (SELECT last_chat_read FROM administrators WHERE id = ?) OR (SELECT last_chat_read FROM administrators WHERE id = ?) IS NULL)");
         $stmt_unread->execute([$_SESSION['admin_id'], $_SESSION['admin_id'], $_SESSION['admin_id']]);
         $unread_chat_count = $stmt_unread->fetchColumn();
+        
+        $stmt_unread_support = $pdo->prepare("SELECT COUNT(DISTINCT user_id) FROM support_chats WHERE sender_type = 'user' AND is_read = 0");
+        $stmt_unread_support->execute();
+        $unread_support_count = $stmt_unread_support->fetchColumn();
     } catch (Exception $e) {
         // silently ignore error in sidebar
     }
@@ -243,6 +248,15 @@ if (isset($pdo) && isset($_SESSION['admin_id'])) {
             </div>
             <?php if ($unread_chat_count > 0): ?>
             <span class="chat-badge bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg pulse-animation"><?php echo $unread_chat_count; ?></span>
+            <?php endif; ?>
+        </a>
+        <a href="support_chats.php" class="admin-nav-link justify-between <?php echo ($current_page == 'support_chats') ? 'active' : ''; ?>" data-title="User Support">
+            <div class="flex items-center">
+                <i class="fas fa-headset mr-3 text-lg"></i>
+                <span>User Support</span>
+            </div>
+            <?php if ($unread_support_count > 0): ?>
+            <span class="chat-badge bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg pulse-animation"><?php echo $unread_support_count; ?></span>
             <?php endif; ?>
         </a>
         <a href="activity_logs.php" class="admin-nav-link <?php echo ($current_page == 'activity_logs') ? 'active' : ''; ?>" data-title="Activity Logs">
