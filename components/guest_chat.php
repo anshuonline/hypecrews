@@ -31,8 +31,8 @@
         <div class="bg-white/90 backdrop-blur-xl border-b border-gray-100 p-4 shrink-0 relative z-10">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-[#f0f4ff] flex items-center justify-center text-[#007aff] text-xl font-bold border border-[#007aff]/10">
-                        HC
+                    <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center border border-gray-800 shrink-0 shadow-inner overflow-hidden">
+                        <img src="graphics/logos/hypecrews logo white.png" alt="Hypecrews" class="w-6 h-6 object-contain">
                     </div>
                     <div>
                         <h3 class="font-semibold text-[15px] text-gray-900 leading-tight tracking-tight">Hypecrews Support</h3>
