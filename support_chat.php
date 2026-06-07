@@ -515,7 +515,8 @@ try {
                 });
             }
 
-            function startNewChat() {
+            window.startNewChat = function() {
+                const messagesDiv = document.getElementById('chatMessages');
                 const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
                 if (!sessionId) return;
                 
