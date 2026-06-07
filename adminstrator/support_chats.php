@@ -170,7 +170,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold mr-3 shrink-0">
                                 <?php echo substr(htmlspecialchars($session_data['first_name']), 0, 1); ?>
                             </div>
-                            <div>
+                            <div class="cursor-pointer hover:bg-black/5 p-2 rounded-lg transition-colors -ml-2" onclick="toggleUserProfile()">
                                 <h2 class="text-lg font-bold leading-tight flex items-center gap-2">
                                     <?php echo htmlspecialchars($session_data['first_name'] . ' ' . $session_data['last_name']); ?>
                                     <span class="text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded font-medium">#<?php echo $session_data['id']; ?></span>
@@ -279,9 +279,17 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
             
             <!-- User Profile Sidebar (Right) -->
             <?php if ($chat_with): ?>
-            <div class="w-full md:w-80 glass-panel border-l border-black/5 flex flex-col h-full shrink-0 z-20 shadow-xl overflow-y-auto hidden xl:flex bg-white/70">
-                <div class="p-5 border-b border-black/5 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur z-10">
-                    <h2 class="text-lg font-bold text-gray-800"><i class="fas fa-user-circle mr-2 text-purple-600"></i> User Profile</h2>
+            <!-- Mobile Overlay -->
+            <div id="userProfileOverlay" class="fixed inset-0 bg-black/20 z-40 hidden xl:hidden" onclick="toggleUserProfile()"></div>
+            
+            <div id="userProfileSidebar" class="fixed inset-y-0 right-0 w-full max-w-sm bg-white/95 backdrop-blur-xl border-l border-black/5 flex flex-col h-full shrink-0 z-50 shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 xl:static xl:translate-x-0 xl:w-80 xl:bg-white/70 xl:shadow-xl xl:z-20 xl:flex">
+                <div class="p-5 border-b border-black/5 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur z-10 shrink-0">
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleUserProfile()" class="xl:hidden w-8 h-8 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 text-gray-600 transition-colors">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <h2 class="text-lg font-bold text-gray-800"><i class="fas fa-user-circle mr-2 text-purple-600"></i> User Profile</h2>
+                    </div>
                 </div>
                 
                 <div id="userProfileContent" class="p-5 space-y-6">
@@ -820,6 +828,22 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 });
+        }
+        
+        function toggleUserProfile() {
+            const sidebar = document.getElementById('userProfileSidebar');
+            const overlay = document.getElementById('userProfileOverlay');
+            
+            if (sidebar.classList.contains('translate-x-full')) {
+                // Open
+                sidebar.classList.remove('translate-x-full');
+                sidebar.classList.remove('hidden'); // Ensure flex takes over if hidden was applied
+                overlay.classList.remove('hidden');
+            } else {
+                // Close
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            }
         }
     </script>
 </body>
