@@ -13,7 +13,7 @@ try {
     if ($filter === 'open') {
         $whereClause .= " AND s.status = 'open'";
     } else if ($filter === 'resolved') {
-        $whereClause .= " AND s.status = 'resolved'";
+        $whereClause .= " AND s.status IN ('resolved', 'archived')";
     } else if ($filter === 'mine') {
         $whereClause .= " AND s.assigned_admin_id = ?";
     }
@@ -127,7 +127,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                         <div class="text-center p-6 text-apple_muted">No support chats yet.</div>
                     <?php else: ?>
                         <?php foreach($threads as $t): ?>
-                            <a href="?session=<?php echo $t['session_id']; ?>&filter=<?php echo htmlspecialchars($filter); ?>&search=<?php echo htmlspecialchars($search); ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo $t['status'] === 'resolved' ? 'opacity-60' : ''; ?>">
+                            <a href="?session=<?php echo $t['session_id']; ?>&filter=<?php echo htmlspecialchars($filter); ?>&search=<?php echo htmlspecialchars($search); ?>" class="flex items-center p-3 rounded-2xl transition-all duration-300 <?php echo $chat_with == $t['session_id'] ? 'bg-primary/10 border border-primary/20 shadow-sm' : 'hover:bg-white/50 border border-transparent'; ?> <?php echo in_array($t['status'], ['resolved', 'archived']) ? 'opacity-60' : ''; ?>">
                                 <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center font-bold text-lg mr-3 shrink-0 relative">
                                     <?php echo substr(htmlspecialchars($t['first_name']), 0, 1); ?>
                                     
@@ -144,7 +144,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <p class="text-[11px] font-medium <?php echo $t['urgency'] === 'urgent' ? 'text-red-500' : ($t['urgency'] === 'normal' ? 'text-emerald-500' : 'text-blue-500'); ?>"><?php echo htmlspecialchars($t['topic']); ?></p>
-                                        <?php if($t['status'] === 'resolved'): ?><span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span><?php endif; ?>
+                                        <?php if(in_array($t['status'], ['resolved', 'archived'])): ?><span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span><?php endif; ?>
                                     </div>
                                     <?php if($t['assigned_admin_name']): ?>
                                         <p class="text-[10px] text-purple-600 font-bold mb-0.5"><i class="fas fa-user-check"></i> <?php echo htmlspecialchars($t['assigned_admin_name']); ?></p>
@@ -381,13 +381,13 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
                             data.data.forEach(t => {
                                 const isActive = (t.session_id == chatSession);
                                 const bgClass = isActive ? 'bg-primary/10 border-primary/20 shadow-sm' : 'hover:bg-white/50 border-transparent';
-                                const opacityClass = t.status === 'resolved' ? 'opacity-60' : '';
+                                const opacityClass = (t.status === 'resolved' || t.status === 'archived') ? 'opacity-60' : '';
                                 
                                 const initial = t.first_name ? t.first_name.charAt(0) : '?';
                                 const unreadBadge = t.unread_count > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">${t.unread_count}</span>` : '';
                                 
                                 const urgencyColor = t.urgency === 'urgent' ? 'text-red-500' : (t.urgency === 'normal' ? 'text-emerald-500' : 'text-blue-500');
-                                const resolvedBadge = t.status === 'resolved' ? '<span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span>' : '';
+                                const resolvedBadge = (t.status === 'resolved' || t.status === 'archived') ? '<span class="text-[9px] bg-gray-200 text-gray-500 px-1 rounded">Resolved</span>' : '';
                                 const lastMsgBold = t.unread_count > 0 ? 'font-bold text-apple_text' : '';
                                 
                                 const dateObj = new Date(t.last_activity);

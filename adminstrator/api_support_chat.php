@@ -20,7 +20,7 @@ if ($action === 'list_threads') {
     if ($filter === 'open') {
         $whereClause .= " AND s.status = 'open'";
     } else if ($filter === 'resolved') {
-        $whereClause .= " AND s.status = 'resolved'";
+        $whereClause .= " AND s.status IN ('resolved', 'archived')";
     } else if ($filter === 'mine') {
         $whereClause .= " AND s.assigned_admin_id = ?";
     }
