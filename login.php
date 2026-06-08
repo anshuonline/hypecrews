@@ -219,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <label class="block text-sm font-semibold text-gray-300">Password</label>
-                            <a href="#" class="text-xs font-medium text-primary hover:text-indigo-300 transition-colors">Forgot password?</a>
+                            <a href="#" class="text-xs font-medium text-primary hover:text-indigo-300 transition-colors hidden">Forgot password?</a>
                         </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -227,10 +227,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                             </div>
                             <input 
                                 type="password" 
+                                id="password"
                                 name="password" 
                                 required 
-                                class="glass-input w-full pl-11 pr-4 py-3.5 rounded-xl text-white placeholder-gray-500"
+                                class="glass-input w-full pl-11 pr-12 py-3.5 rounded-xl text-white placeholder-gray-500"
                                 placeholder="Enter your password">
+                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
                         </div>
                     </div>
                     
@@ -302,5 +306,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     </div>
     
     <script src="js/main.js"></script>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
 </body>
 </html>
