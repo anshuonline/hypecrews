@@ -3,7 +3,7 @@
 
 <!-- Cinematic Intro Overlay -->
 <div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#000000]/90 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-    <button id="hc-skip-intro" class="absolute bottom-12 right-12 text-white/40 hover:text-white/90 text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 opacity-0 pointer-events-auto cursor-pointer z-[10000]">Skip Intro ⇥</button>
+    <button id="hc-skip-intro" class="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/40 hover:text-white/90 text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 opacity-0 pointer-events-auto cursor-pointer z-[10000]">Skip Intro ⇥</button>
     
     <div id="hc-intro-text-1" class="absolute text-5xl md:text-8xl font-medium text-white tracking-tight opacity-0 drop-shadow-2xl">नमस्ते 🙏</div>
     <div id="hc-intro-text-2" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Namaste Sir ✨</div>
@@ -207,8 +207,8 @@
             .add({
                 targets: overlay,
                 opacity: [1, 0],
-                duration: 1000,
-                delay: 3000,
+                duration: 800,
+                delay: 500,
                 complete: function() {
                     overlay.classList.add('hidden');
                     sessionStorage.setItem('hypecrewsIntroPlayed', 'true');
@@ -255,7 +255,7 @@
         }
 
         // Tawk.to Style Bubble Animation (For everyone)
-        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 13000;
+        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 10500;
         
         setTimeout(() => {
             const bubble = document.getElementById('hc-floating-bubble');
