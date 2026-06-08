@@ -1,3 +1,13 @@
+<!-- Anime.js for smooth animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<!-- Cinematic Intro Overlay -->
+<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-gray-900/80 backdrop-blur-xl flex flex-col items-center justify-center opacity-0 pointer-events-none hidden">
+    <div id="hc-intro-text-1" class="absolute text-3xl md:text-5xl font-bold text-white tracking-tight opacity-0">Welcome to Hypecrews</div>
+    <div id="hc-intro-text-2" class="absolute text-3xl md:text-5xl font-bold text-white tracking-tight opacity-0 text-center px-4">We Elevate Your Digital Presence</div>
+    <div id="hc-intro-text-3" class="absolute text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 opacity-0">Let's Chat!</div>
+</div>
+
 <!-- Live Chat Widget Component -->
 <div id="hc-live-chat" class="fixed bottom-6 right-6 z-[9999] font-sans">
     
@@ -124,7 +134,101 @@
             document.getElementById('hc-chat-messages-container').classList.remove('flex');
         }
 
+        // Cinematic Intro Logic
+        if (!sessionStorage.getItem('hypecrewsIntroPlayed')) {
+            const overlay = document.getElementById('hc-intro-overlay');
+            const chatBtn = document.getElementById('hc-chat-btn');
+            
+            overlay.classList.remove('hidden');
+            
+            let tl = anime.timeline({
+                easing: 'easeOutExpo',
+                duration: 1000
+            });
+            
+            tl.add({
+                targets: overlay,
+                opacity: [0, 1],
+                duration: 800
+            })
+            .add({
+                targets: '#hc-intro-text-1',
+                translateY: [40, 0],
+                opacity: [0, 1],
+                duration: 1200
+            })
+            .add({
+                targets: '#hc-intro-text-1',
+                translateY: [0, -40],
+                opacity: [1, 0],
+                duration: 800,
+                delay: 1000
+            })
+            .add({
+                targets: '#hc-intro-text-2',
+                translateY: [40, 0],
+                opacity: [0, 1],
+                duration: 1200
+            }, '-=400')
+            .add({
+                targets: '#hc-intro-text-2',
+                translateY: [0, -40],
+                opacity: [1, 0],
+                duration: 800,
+                delay: 1200
+            })
+            .add({
+                targets: '#hc-intro-text-3',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 1500,
+                easing: 'easeOutElastic(1, .8)'
+            }, '-=200')
+            .add({
+                targets: '#hc-intro-text-3',
+                scale: [1, 1.2],
+                opacity: [1, 0],
+                duration: 600,
+                delay: 800
+            })
+            .add({
+                targets: chatBtn,
+                scale: [1, 1.3, 1.1],
+                boxShadow: ['0px 0px 0px rgba(0,122,255,0)', '0px 0px 40px rgba(0,122,255,0.8)', '0px 0px 20px rgba(0,122,255,0.5)'],
+                duration: 1500,
+                begin: function() {
+                    anime({
+                        targets: chatBtn,
+                        scale: [1.1, 1.2],
+                        direction: 'alternate',
+                        loop: true,
+                        duration: 800,
+                        easing: 'easeInOutSine'
+                    });
+                }
+            })
+            .add({
+                targets: overlay,
+                opacity: [1, 0],
+                duration: 1000,
+                delay: 3000,
+                complete: function() {
+                    overlay.classList.add('hidden');
+                    sessionStorage.setItem('hypecrewsIntroPlayed', 'true');
+                    anime.remove(chatBtn);
+                    anime({
+                        targets: chatBtn,
+                        scale: 1,
+                        boxShadow: '0 25px 50px -12px rgba(0, 122, 255, 0.3)',
+                        duration: 500
+                    });
+                }
+            });
+        }
+
         // Tawk.to Style Bubble Animation (For everyone)
+        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 7000;
+        
         setTimeout(() => {
             const bubble = document.getElementById('hc-floating-bubble');
             const bubbleText = document.getElementById('hc-bubble-text');
@@ -154,7 +258,7 @@
                     }
                 }, 4000); // Change message every 4 seconds
             }
-        }, 1500);
+        }, bubbleDelay);
     });
 
     function closeHcBubble() {
