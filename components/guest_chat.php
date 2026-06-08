@@ -2,10 +2,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
 <!-- Cinematic Intro Overlay -->
-<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#000000]/80 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-    <div id="hc-intro-text-1" class="absolute text-5xl md:text-8xl font-medium text-white tracking-tight opacity-0 drop-shadow-2xl">नमस्ते</div>
-    <div id="hc-intro-text-2" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Namaste Sir</div>
-    <div id="hc-intro-text-3" class="absolute text-5xl md:text-7xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500 opacity-0 tracking-tighter">Welcome to Hypecrews</div>
+<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#000000]/90 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div id="hc-intro-text-1" class="absolute text-5xl md:text-8xl font-medium text-white tracking-tight opacity-0 drop-shadow-2xl">नमस्ते 🙏</div>
+    <div id="hc-intro-text-2" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Namaste Sir ✨</div>
+    <div id="hc-intro-text-3" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Did you know? 💡</div>
+    <div id="hc-intro-text-4" class="absolute text-3xl md:text-5xl lg:text-6xl font-medium text-gray-200 tracking-tight opacity-0 text-center px-8 md:px-16 leading-tight max-w-5xl drop-shadow-2xl italic">"Businesses with a strong digital presence grow 2x faster" 📈</div>
+    <div id="hc-intro-text-5" class="absolute text-4xl md:text-6xl font-semibold text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Need help for your business? 🤝</div>
+    <div id="hc-intro-text-6" class="absolute text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 text-center px-4 tracking-tighter">Let's build something amazing together 🚀</div>
 </div>
 
 <!-- Live Chat Widget Component -->
@@ -152,54 +155,29 @@
                 duration: 1000,
                 easing: 'linear'
             })
-            // 1. नमस्ते
-            .add({
-                targets: '#hc-intro-text-1',
-                scale: [0.95, 1],
-                opacity: [0, 1],
-                duration: 2000,
-                easing: 'easeOutCubic'
-            })
-            .add({
-                targets: '#hc-intro-text-1',
-                scale: [1, 1.05],
-                opacity: [1, 0],
-                duration: 1000,
-                delay: 600,
-                easing: 'easeInCubic'
-            })
-            // 2. Namaste Sir
-            .add({
-                targets: '#hc-intro-text-2',
-                scale: [0.95, 1],
-                opacity: [0, 1],
-                duration: 2000,
-                easing: 'easeOutCubic'
-            }, '-=200')
-            .add({
-                targets: '#hc-intro-text-2',
-                scale: [1, 1.05],
-                opacity: [1, 0],
-                duration: 1000,
-                delay: 600,
-                easing: 'easeInCubic'
-            })
-            // 3. Welcome to Hypecrews
-            .add({
-                targets: '#hc-intro-text-3',
-                scale: [0.95, 1],
-                opacity: [0, 1],
-                duration: 2200,
-                easing: 'easeOutCubic'
-            }, '-=200')
-            .add({
-                targets: '#hc-intro-text-3',
-                scale: [1, 1.05],
-                opacity: [1, 0],
-                duration: 1000,
-                delay: 800,
-                easing: 'easeInCubic'
-            })
+            // 1. नमस्ते 🙏
+            .add({ targets: '#hc-intro-text-1', scale: [0.95, 1], opacity: [0, 1], duration: 1000, easing: 'easeOutSine' })
+            .add({ targets: '#hc-intro-text-1', scale: [1, 1.05], opacity: [1, 0], duration: 500, delay: 500, easing: 'easeInSine' })
+            
+            // 2. Namaste Sir ✨
+            .add({ targets: '#hc-intro-text-2', scale: [0.95, 1], opacity: [0, 1], duration: 1000, easing: 'easeOutSine' }, '-=200')
+            .add({ targets: '#hc-intro-text-2', scale: [1, 1.05], opacity: [1, 0], duration: 500, delay: 500, easing: 'easeInSine' })
+            
+            // 3. Did you know? 💡
+            .add({ targets: '#hc-intro-text-3', scale: [0.95, 1], opacity: [0, 1], duration: 1000, easing: 'easeOutSine' }, '-=200')
+            .add({ targets: '#hc-intro-text-3', scale: [1, 1.05], opacity: [1, 0], duration: 500, delay: 500, easing: 'easeInSine' })
+            
+            // 4. Quote
+            .add({ targets: '#hc-intro-text-4', scale: [0.98, 1], opacity: [0, 1], duration: 1500, easing: 'easeOutSine' }, '-=200')
+            .add({ targets: '#hc-intro-text-4', scale: [1, 1.02], opacity: [1, 0], duration: 800, delay: 1500, easing: 'easeInSine' })
+            
+            // 5. Need help?
+            .add({ targets: '#hc-intro-text-5', scale: [0.95, 1], opacity: [0, 1], duration: 1200, easing: 'easeOutSine' }, '-=200')
+            .add({ targets: '#hc-intro-text-5', scale: [1, 1.05], opacity: [1, 0], duration: 800, delay: 1000, easing: 'easeInSine' })
+            
+            // 6. Let's build together
+            .add({ targets: '#hc-intro-text-6', scale: [0.95, 1], opacity: [0, 1], duration: 1200, easing: 'easeOutSine' }, '-=200')
+            .add({ targets: '#hc-intro-text-6', scale: [1, 1.05], opacity: [1, 0], duration: 800, delay: 1000, easing: 'easeInSine' })
             .add({
                 targets: chatBtn,
                 scale: [1, 1.3, 1.1],
@@ -236,7 +214,7 @@
         }
 
         // Tawk.to Style Bubble Animation (For everyone)
-        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 9000;
+        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 13000;
         
         setTimeout(() => {
             const bubble = document.getElementById('hc-floating-bubble');
