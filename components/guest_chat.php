@@ -2,10 +2,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
 <!-- Cinematic Intro Overlay -->
-<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-gray-900/80 backdrop-blur-xl flex flex-col items-center justify-center opacity-0 pointer-events-none hidden">
-    <div id="hc-intro-text-1" class="absolute text-3xl md:text-5xl font-bold text-white tracking-tight opacity-0">Welcome to Hypecrews</div>
-    <div id="hc-intro-text-2" class="absolute text-3xl md:text-5xl font-bold text-white tracking-tight opacity-0 text-center px-4">We Elevate Your Digital Presence</div>
-    <div id="hc-intro-text-3" class="absolute text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 opacity-0">Let's Chat!</div>
+<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#000000]/80 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div id="hc-intro-text-1" class="absolute text-5xl md:text-8xl font-medium text-white tracking-tight opacity-0 drop-shadow-2xl">नमस्ते</div>
+    <div id="hc-intro-text-2" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Namaste Sir</div>
+    <div id="hc-intro-text-3" class="absolute text-5xl md:text-7xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500 opacity-0 tracking-tighter">Welcome to Hypecrews</div>
 </div>
 
 <!-- Live Chat Widget Component -->
@@ -149,47 +149,56 @@
             tl.add({
                 targets: overlay,
                 opacity: [0, 1],
-                duration: 800
+                duration: 1000,
+                easing: 'linear'
+            })
+            // 1. नमस्ते
+            .add({
+                targets: '#hc-intro-text-1',
+                scale: [0.95, 1],
+                opacity: [0, 1],
+                duration: 2000,
+                easing: 'easeOutCubic'
             })
             .add({
                 targets: '#hc-intro-text-1',
-                translateY: [40, 0],
-                opacity: [0, 1],
-                duration: 1200
-            })
-            .add({
-                targets: '#hc-intro-text-1',
-                translateY: [0, -40],
+                scale: [1, 1.05],
                 opacity: [1, 0],
-                duration: 800,
-                delay: 1000
+                duration: 1000,
+                delay: 600,
+                easing: 'easeInCubic'
             })
+            // 2. Namaste Sir
             .add({
                 targets: '#hc-intro-text-2',
-                translateY: [40, 0],
+                scale: [0.95, 1],
                 opacity: [0, 1],
-                duration: 1200
-            }, '-=400')
+                duration: 2000,
+                easing: 'easeOutCubic'
+            }, '-=200')
             .add({
                 targets: '#hc-intro-text-2',
-                translateY: [0, -40],
+                scale: [1, 1.05],
                 opacity: [1, 0],
-                duration: 800,
-                delay: 1200
+                duration: 1000,
+                delay: 600,
+                easing: 'easeInCubic'
             })
+            // 3. Welcome to Hypecrews
             .add({
                 targets: '#hc-intro-text-3',
-                scale: [0.8, 1],
+                scale: [0.95, 1],
                 opacity: [0, 1],
-                duration: 1500,
-                easing: 'easeOutElastic(1, .8)'
+                duration: 2200,
+                easing: 'easeOutCubic'
             }, '-=200')
             .add({
                 targets: '#hc-intro-text-3',
-                scale: [1, 1.2],
+                scale: [1, 1.05],
                 opacity: [1, 0],
-                duration: 600,
-                delay: 800
+                duration: 1000,
+                delay: 800,
+                easing: 'easeInCubic'
             })
             .add({
                 targets: chatBtn,
@@ -227,7 +236,7 @@
         }
 
         // Tawk.to Style Bubble Animation (For everyone)
-        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 7000;
+        let bubbleDelay = sessionStorage.getItem('hypecrewsIntroPlayed') ? 1500 : 9000;
         
         setTimeout(() => {
             const bubble = document.getElementById('hc-floating-bubble');
@@ -258,7 +267,7 @@
                     }
                 }, 4000); // Change message every 4 seconds
             }
-        }, bubbleDelay);
+        }, bubbleDelay); // Delay the Tawk.to style bubble appearance slightly if intro plays
     });
 
     function closeHcBubble() {
