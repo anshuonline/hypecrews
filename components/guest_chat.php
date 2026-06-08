@@ -132,16 +132,27 @@
                 bubble.classList.remove('scale-0', 'opacity-0');
                 bubble.classList.add('scale-100', 'opacity-100');
                 
-                // Animate text once after it appears
-                setTimeout(() => {
+                const messages = [
+                    "Hey, need help for your business? 👋",
+                    "Grow your brand with us! 🚀",
+                    "Looking for marketing experts? 📈",
+                    "Let's skyrocket your sales! 💸",
+                    "Chat with our experts now! 💬",
+                    "Have a project in mind? 💡"
+                ];
+                let msgIndex = 0;
+                
+                // Animate text continuously
+                setInterval(() => {
                     if(!hcChatOpen && !bubbleClosed) {
                         bubbleText.style.opacity = '0';
                         setTimeout(() => {
-                            bubbleText.innerHTML = 'Reach us now! 🚀';
+                            msgIndex = (msgIndex + 1) % messages.length;
+                            bubbleText.innerHTML = messages[msgIndex];
                             bubbleText.style.opacity = '1';
-                        }, 300);
+                        }, 300); // Wait for fade out before changing text and fading in
                     }
-                }, 4000);
+                }, 4000); // Change message every 4 seconds
             }
         }, 1500);
     });
