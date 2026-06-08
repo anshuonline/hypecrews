@@ -3,6 +3,8 @@
 
 <!-- Cinematic Intro Overlay -->
 <div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#000000]/90 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <button id="hc-skip-intro" class="absolute bottom-12 right-12 text-white/40 hover:text-white/90 text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 opacity-0 pointer-events-auto cursor-pointer z-[10000]">Skip Intro ⇥</button>
+    
     <div id="hc-intro-text-1" class="absolute text-5xl md:text-8xl font-medium text-white tracking-tight opacity-0 drop-shadow-2xl">नमस्ते 🙏</div>
     <div id="hc-intro-text-2" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Namaste Sir ✨</div>
     <div id="hc-intro-text-3" class="absolute text-5xl md:text-7xl font-medium text-white tracking-tight opacity-0 text-center px-4 drop-shadow-2xl">Did you know? 💡</div>
@@ -141,6 +143,7 @@
         if (!sessionStorage.getItem('hypecrewsIntroPlayed')) {
             const overlay = document.getElementById('hc-intro-overlay');
             const chatBtn = document.getElementById('hc-chat-btn');
+            const skipBtn = document.getElementById('hc-skip-intro');
             
             overlay.classList.remove('hidden');
             
@@ -155,6 +158,13 @@
                 duration: 1000,
                 easing: 'linear'
             })
+            // Fade in skip button early
+            .add({
+                targets: skipBtn,
+                opacity: [0, 1],
+                duration: 1000,
+                easing: 'linear'
+            }, 1000)
             // 1. नमस्ते 🙏
             .add({ targets: '#hc-intro-text-1', scale: [0.95, 1], opacity: [0, 1], duration: 1000, easing: 'easeOutSine' })
             .add({ targets: '#hc-intro-text-1', scale: [1, 1.05], opacity: [1, 0], duration: 500, delay: 500, easing: 'easeInSine' })
@@ -210,6 +220,37 @@
                         duration: 500
                     });
                 }
+            });
+            
+            // Skip Logic
+            skipBtn.addEventListener('click', () => {
+                tl.pause();
+                anime({
+                    targets: overlay,
+                    opacity: 0,
+                    duration: 400,
+                    easing: 'linear',
+                    complete: function() {
+                        overlay.classList.add('hidden');
+                        sessionStorage.setItem('hypecrewsIntroPlayed', 'true');
+                        
+                        // Focus on chat button immediately
+                        anime({
+                            targets: chatBtn,
+                            scale: [1, 1.2, 1],
+                            boxShadow: ['0px 0px 0px rgba(0,122,255,0)', '0px 0px 40px rgba(0,122,255,0.8)', '0px 0px 0px rgba(0,122,255,0)'],
+                            duration: 1000,
+                            easing: 'easeOutSine'
+                        });
+                        
+                        // Show chat bubble immediately
+                        const bubble = document.getElementById('hc-floating-bubble');
+                        if(bubble && !hcChatOpen && !bubbleClosed) {
+                            bubble.classList.remove('scale-0', 'opacity-0');
+                            bubble.classList.add('scale-100', 'opacity-100');
+                        }
+                    }
+                });
             });
         }
 
