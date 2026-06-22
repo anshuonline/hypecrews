@@ -673,7 +673,6 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                         </div>
                         <div>
                             <h4 class="font-bold text-white">Sarah Jenkins</h4>
-                            <p class="text-xs text-gray-400">CMO, TechFlow</p>
                         </div>
                     </div>
                     <p class="text-gray-300 font-light leading-relaxed">"Hypecrews completely overhauled our digital presence. Our conversion rates tripled within the first month. Absolute game changers."</p>
@@ -687,7 +686,6 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                         </div>
                         <div>
                             <h4 class="font-bold text-white">Marcus Thorne</h4>
-                            <p class="text-xs text-gray-400">CEO, Global Dynamics</p>
                         </div>
                     </div>
                     <p class="text-gray-300 font-light leading-relaxed">"The level of precision and speed they deliver is unmatched. The 3D animations they built for our launch broke the internet."</p>
@@ -701,7 +699,6 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                         </div>
                         <div>
                             <h4 class="font-bold text-white">Elena Rostova</h4>
-                            <p class="text-xs text-gray-400">Founder, Vertex AI</p>
                         </div>
                     </div>
                     <p class="text-gray-300 font-light leading-relaxed">"Their copyright protection team took down 400+ unauthorized copies of our software in 48 hours. Elite service."</p>
