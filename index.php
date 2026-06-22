@@ -198,6 +198,84 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
             color: #6366f1;
         }
         @keyframes blink { 50% { opacity: 0; } }
+        
+        /* Ultra Modern Animations */
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+        @keyframes auroraflow { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
+
+        .aurora-bg {
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background-image: 
+                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%);
+            animation: auroraflow 25s linear infinite;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blur-reveal { opacity: 0; filter: blur(15px); transform: translateY(30px); transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+        .blur-reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+
+        .bento-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .bento-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
+        }
+
+        .bento-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255, 255, 255, 0.08), transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover::after { opacity: 1; }
+        .bento-content { position: relative; z-index: 1; }
+
+        .magic-btn-wrapper {
+            position: relative;
+            display: inline-flex;
+            overflow: hidden;
+            border-radius: 9999px;
+            padding: 1px;
+            transition: transform 0.3s;
+        }
+        .magic-btn-wrapper:hover {
+            transform: scale(1.05);
+        }
+        .magic-border {
+            position: absolute;
+            inset: -1000%;
+            animation: spin-slow 4s linear infinite;
+            background: conic-gradient(from 90deg at 50% 50%, #E2CBFF 0%, #393BB2 50%, #E2CBFF 100%);
+        }
+        
+        .glowing-sphere {
+            width: 320px; height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(99,102,241,0.6) 40%, rgba(11,15,25,1) 80%);
+            box-shadow: 
+                0 0 80px rgba(99, 102, 241, 0.5),
+                inset -20px -20px 60px rgba(0,0,0,0.9),
+                inset 20px 20px 40px rgba(255,255,255,0.3);
+            animation: float 6s ease-in-out infinite, auroraflow 30s linear infinite;
+            position: relative;
+        }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
 </head>
@@ -208,34 +286,37 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
 
     <!-- HERO SECTION: The visual masterpiece -->
     <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <!-- Animated Blob Backgrounds -->
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
-        <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-secondary/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-32 left-1/2 w-96 h-96 bg-accent/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
+        <!-- Aurora Background -->
+        <div class="aurora-bg"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
 
         <div class="container mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
             <!-- Left: Typography & CTA -->
             <div class="w-full lg:w-1/2 text-center lg:text-left">
-                <div class="reveal-up">
-                    <div class="inline-flex items-center justify-center lg:justify-start px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8">
-                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse mr-3 shadow-[0_0_10px_#6366f1]"></span>
-                        <span class="text-sm font-medium tracking-widest uppercase text-gray-300">The Future of Digital</span>
-                    </div>
+                <div class="blur-reveal delay-100">
+                    <a href="#" class="inline-flex items-center justify-center mb-8 px-4 py-1.5 text-sm font-medium transition-all rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 group relative overflow-hidden backdrop-blur-md">
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+                        <span class="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse shadow-[0_0_10px_#6366f1]"></span>
+                        <span class="text-gray-300 tracking-wider uppercase text-xs group-hover:text-white transition-colors">The Future of Digital</span>
+                    </a>
                 </div>
 
-                <h1 class="font-heading text-5xl md:text-7xl lg:text-[80px] font-black leading-[1.1] mb-6 tracking-tight reveal-up delay-100">
+                <h1 class="font-heading text-5xl md:text-7xl lg:text-[80px] font-black leading-[1.1] mb-6 tracking-tight blur-reveal delay-200">
                     We Build <br/>
                     <span class="text-gradient">Experiences</span><br/>
                     <span id="typing-text" class="text-white typing-cursor"></span>
                 </h1>
 
-                <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed reveal-up delay-200">
+                <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed blur-reveal delay-300">
                     Elevate your brand with award-winning design, flawless development, and strategic marketing that dominates the digital landscape.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 reveal-up delay-300">
-                    <a href="#services" class="btn-glow px-8 py-4 bg-white text-dark rounded-full font-bold tracking-wide transition-transform hover:scale-105 w-full sm:w-auto text-center shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-                        Explore Offerings
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 blur-reveal delay-400">
+                    <a href="#services" class="magic-btn-wrapper">
+                        <span class="magic-border"></span>
+                        <span class="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-8 py-4 text-sm font-bold text-white backdrop-blur-3xl transition-colors hover:bg-slate-900">
+                            Explore Offerings
+                        </span>
                     </a>
                     <a href="contact.php" class="px-8 py-4 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 transition-all w-full sm:w-auto text-center flex items-center justify-center group">
                         Let's Talk
@@ -244,7 +325,7 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                 </div>
 
                 <!-- Floating Stats -->
-                <div class="grid grid-cols-3 gap-4 mt-16 reveal-up delay-400 border-t border-white/10 pt-8 max-w-lg mx-auto lg:mx-0">
+                <div class="grid grid-cols-3 gap-4 mt-16 blur-reveal delay-500 border-t border-white/10 pt-8 max-w-lg mx-auto lg:mx-0">
                     <div>
                         <div class="text-3xl font-heading font-bold text-white mb-1"><span class="counter" data-target="1000">0</span>+</div>
                         <div class="text-sm text-gray-500 uppercase tracking-wider">Projects</div>
@@ -261,47 +342,34 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
             </div>
 
             <!-- Right: 3D Visual/Abstract Element -->
-            <div class="w-full lg:w-1/2 relative h-[500px] lg:h-[700px] reveal-left delay-300 hidden md:block">
-                <!-- Main Floating Card -->
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-96 glass-panel rounded-3xl animate-float z-20 border border-white/20 flex flex-col justify-between p-6 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
-                    <div class="relative z-10 flex justify-between items-start">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center shadow-lg">
-                            <i class="fas fa-bolt text-white"></i>
-                        </div>
-                        <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-semibold backdrop-blur-md">Live Status</span>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden mb-4">
-                            <div class="h-full bg-gradient-to-r from-primary to-accent w-3/4 animate-pulse"></div>
-                        </div>
-                        <h3 class="text-xl font-heading font-bold text-white">Optimization Active</h3>
-                        <p class="text-sm text-gray-400 mt-1">System running at peak performance.</p>
-                    </div>
-                </div>
+            <div class="w-full lg:w-1/2 relative h-[500px] lg:h-[700px] blur-reveal delay-400 hidden md:flex items-center justify-center">
+                <!-- Glowing 3D Sphere -->
+                <div class="glowing-sphere z-20"></div>
 
-                <!-- Secondary Floating Card -->
-                <div class="absolute top-1/4 right-10 w-48 h-48 glass-panel rounded-2xl animate-float-delayed z-30 p-5 flex flex-col items-center justify-center border border-secondary/30 shadow-[0_0_30px_rgba(139,92,246,0.15)]">
-                    <div class="w-16 h-16 rounded-full border-4 border-secondary/50 border-t-secondary animate-spin-slow mb-3 flex items-center justify-center">
-                        <i class="fas fa-chart-line text-secondary"></i>
-                    </div>
-                    <span class="font-bold text-lg">+342%</span>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">Growth</span>
+                <!-- Orbital Rings -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] border border-white/10 rounded-full animate-[spin_40s_linear_infinite] z-10">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_#6366f1]"></div>
                 </div>
-
-                <!-- Ring Decoration -->
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-white/5 rounded-full animate-[spin_30s_linear_infinite] z-10">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full shadow-[0_0_15px_#6366f1]"></div>
-                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-accent rounded-full shadow-[0_0_15px_#06b6d4]"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] border border-white/5 rounded-full animate-[spin_50s_linear_infinite_reverse] z-10">
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-accent rounded-full shadow-[0_0_20px_#06b6d4]"></div>
+                </div>
+                
+                <!-- Floating Glass Card -->
+                <div class="absolute top-1/4 right-0 w-48 h-48 glass-panel rounded-2xl animate-float-delayed z-30 p-5 flex flex-col items-center justify-center border border-secondary/30 shadow-[0_0_30px_rgba(139,92,246,0.15)] backdrop-blur-xl">
+                    <div class="w-16 h-16 rounded-full border-4 border-secondary/50 border-t-secondary animate-[spin_4s_linear_infinite] mb-3 flex items-center justify-center">
+                        <i class="fas fa-bolt text-secondary"></i>
+                    </div>
+                    <span class="font-bold text-lg text-white">Peak</span>
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Performance</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Infinite Client Marquee -->
-    <section class="py-10 border-y border-white/5 bg-black/20 backdrop-blur-md relative z-10 overflow-hidden">
+    <section class="py-10 border-y border-white/5 bg-black/20 backdrop-blur-md relative z-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
         <div class="flex overflow-hidden">
-            <div class="flex animate-marquee whitespace-nowrap items-center opacity-50">
+            <div class="flex animate-marquee whitespace-nowrap items-center opacity-60">
                 <!-- Logos -->
                 <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
                 <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
@@ -326,77 +394,75 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                 <p class="text-lg text-gray-400 font-light">We deliver state-of-the-art solutions across a diverse range of digital disciplines to ensure your absolute market dominance.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Service 1 -->
-                <div class="glass-card rounded-3xl p-8 reveal-up group">
-                    <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-6 border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors">
-                        <i class="fas fa-copyright text-indigo-400 text-2xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="bento-services-container">
+                <!-- Service 1 (Spans 2 columns) -->
+                <div class="bento-card md:col-span-2 p-10 blur-reveal group">
+                    <div class="bento-content h-full flex flex-col justify-center">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors">
+                                <i class="fas fa-copyright text-indigo-400 text-2xl"></i>
+                            </div>
+                            <a href="services.php#copyright" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 hover:bg-white/20 transition-all">
+                                <i class="fas fa-arrow-right text-white -rotate-45 group-hover:rotate-0 transition-transform"></i>
+                            </a>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold mb-3">Copyright Protection</h3>
+                        <p class="text-gray-400 font-light leading-relaxed max-w-lg">Advanced tracking and aggressive removal of unauthorized content to comprehensively protect your intellectual property worldwide.</p>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold mb-3">Copyright Protection</h3>
-                    <p class="text-gray-400 mb-6 font-light leading-relaxed">Advanced tracking and aggressive removal of unauthorized content to protect your intellectual property.</p>
-                    <a href="services.php#copyright" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-indigo-400 group-hover:text-indigo-300">
-                        Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
                 </div>
 
                 <!-- Service 2 -->
-                <div class="glass-card rounded-3xl p-8 reveal-up delay-100 group">
-                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors">
-                        <i class="fas fa-hashtag text-purple-400 text-2xl"></i>
+                <div class="bento-card p-8 blur-reveal delay-100 group">
+                    <div class="bento-content">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors">
+                            <i class="fas fa-hashtag text-purple-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-heading font-bold mb-3">Social Mastery</h3>
+                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Strategic social media management that builds viral momentum and engagement.</p>
+                        <a href="services.php#social" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-purple-400 group-hover:text-purple-300">
+                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
+                        </a>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold mb-3">Social Mastery</h3>
-                    <p class="text-gray-400 mb-6 font-light leading-relaxed">Strategic social media management that builds viral momentum and deeply engages your core audience.</p>
-                    <a href="services.php#social" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-purple-400 group-hover:text-purple-300">
-                        Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
                 </div>
 
                 <!-- Service 3 -->
-                <div class="glass-card rounded-3xl p-8 reveal-up delay-200 group">
-                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors">
-                        <i class="fas fa-laptop-code text-cyan-400 text-2xl"></i>
+                <div class="bento-card p-8 blur-reveal delay-200 group">
+                    <div class="bento-content">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors">
+                            <i class="fas fa-laptop-code text-cyan-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-heading font-bold mb-3">Web Architecture</h3>
+                        <p class="text-gray-400 mb-6 font-light leading-relaxed">High-performance, bespoke web applications engineered with modern stacks.</p>
+                        <a href="services.php#web" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-cyan-400 group-hover:text-cyan-300">
+                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
+                        </a>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold mb-3">Web Architecture</h3>
-                    <p class="text-gray-400 mb-6 font-light leading-relaxed">High-performance, bespoke web applications and websites engineered with the latest frontend stacks.</p>
-                    <a href="services.php#web" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-cyan-400 group-hover:text-cyan-300">
-                        Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
                 </div>
 
                 <!-- Service 4 -->
-                <div class="glass-card rounded-3xl p-8 reveal-up group">
-                    <div class="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center mb-6 border border-rose-500/20 group-hover:bg-rose-500/20 transition-colors">
-                        <i class="fas fa-video text-rose-400 text-2xl"></i>
+                <div class="bento-card p-8 blur-reveal delay-300 group">
+                    <div class="bento-content">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center mb-6 border border-rose-500/20 group-hover:bg-rose-500/20 transition-colors">
+                            <i class="fas fa-video text-rose-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-heading font-bold mb-3">Cinematic Video</h3>
+                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Stunning visual productions from concept to final cut to convert audiences.</p>
+                        <a href="services.php#video" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-rose-400 group-hover:text-rose-300">
+                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
+                        </a>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold mb-3">Cinematic Video</h3>
-                    <p class="text-gray-400 mb-6 font-light leading-relaxed">Stunning visual productions from concept to final cut, designed to captivate and convert.</p>
-                    <a href="services.php#video" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-rose-400 group-hover:text-rose-300">
-                        Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
                 </div>
 
                 <!-- Service 5 -->
-                <div class="glass-card rounded-3xl p-8 reveal-up delay-100 group">
-                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-                        <i class="fas fa-shield-alt text-emerald-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold mb-3">Digital Recovery</h3>
-                    <p class="text-gray-400 mb-6 font-light leading-relaxed">Expert recovery protocols for hacked accounts and aggressive reputation management solutions.</p>
-                    <a href="services.php#recovery" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-emerald-400 group-hover:text-emerald-300">
-                        Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                    </a>
-                </div>
-
-                <!-- Service 6 -->
-                <div class="glass-card rounded-3xl p-8 reveal-up delay-200 group bg-gradient-to-br from-surface to-primary/5">
-                    <div class="flex flex-col items-center text-center h-full justify-center">
-                        <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-                            <i class="fas fa-th-large text-dark text-2xl"></i>
+                <div class="bento-card p-8 blur-reveal delay-400 group">
+                    <div class="bento-content">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
+                            <i class="fas fa-shield-alt text-emerald-400 text-2xl"></i>
                         </div>
-                        <h3 class="text-xl font-heading font-bold mb-2">View All 13+ Services</h3>
-                        <p class="text-sm text-gray-400 mb-6">Marketing, PR, Distribution & More.</p>
-                        <a href="services.php" class="px-6 py-3 rounded-full border border-white/20 hover:bg-white hover:text-dark transition-all font-semibold w-full">
-                            Complete Catalog
+                        <h3 class="text-2xl font-heading font-bold mb-3">Digital Recovery</h3>
+                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Expert recovery protocols for hacked accounts and aggressive reputation management.</p>
+                        <a href="services.php#recovery" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-emerald-400 group-hover:text-emerald-300">
+                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
                         </a>
                     </div>
                 </div>
@@ -474,8 +540,11 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
             <h2 class="font-heading text-4xl md:text-6xl font-black mb-6">Ready to <span class="text-gradient">Dominate?</span></h2>
             <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light">Join hundreds of successful brands that have transformed their digital presence with our elite team.</p>
             
-            <a href="contact.php" class="inline-flex items-center justify-center px-10 py-5 bg-white text-dark text-lg font-bold rounded-full transition-all duration-300 hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                Start Your Project <i class="fas fa-rocket ml-3"></i>
+            <a href="contact.php" class="magic-btn-wrapper mt-4">
+                <span class="magic-border"></span>
+                <span class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-10 py-5 text-lg font-bold text-white backdrop-blur-3xl transition-colors hover:bg-slate-900">
+                    Start Your Project <i class="fas fa-rocket ml-3"></i>
+                </span>
             </a>
         </div>
     </section>
@@ -569,8 +638,22 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                 });
             }, observerOptions);
 
-            const revealElements = document.querySelectorAll('.reveal-up, .reveal-down, .reveal-left, .reveal-right, .scale-in');
+            const revealElements = document.querySelectorAll('.reveal-up, .reveal-down, .reveal-left, .reveal-right, .scale-in, .blur-reveal');
             revealElements.forEach(el => observer.observe(el));
+
+            // Spotlight effect for bento services grid
+            const bentoContainer = document.getElementById("bento-services-container");
+            if (bentoContainer) {
+                bentoContainer.addEventListener("mousemove", e => {
+                    for(const card of document.querySelectorAll("#bento-services-container .bento-card")) {
+                        const rect = card.getBoundingClientRect(),
+                              x = e.clientX - rect.left,
+                              y = e.clientY - rect.top;
+                        card.style.setProperty("--mouse-x", `${x}px`);
+                        card.style.setProperty("--mouse-y", `${y}px`);
+                    }
+                });
+            }
         });
     </script>
     <?php include 'components/guest_chat.php'; ?>
