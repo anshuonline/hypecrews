@@ -148,6 +148,47 @@ $pageTitle = "About Us - Hypecrews";
             transform: translateX(-50%);
         }
         
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        
+        .bento-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .bento-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
+        }
+
+        .bento-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255, 255, 255, 0.06), transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover::after {
+            opacity: 1;
+        }
+        
+        .bento-content {
+            position: relative;
+            z-index: 1;
+        }
+        
         @media (max-width: 768px) {
             .timeline-line {
                 left: 20px;
@@ -164,15 +205,17 @@ $pageTitle = "About Us - Hypecrews";
     <section class="pt-32 pb-20 relative overflow-hidden">
         <!-- Elegant subtle animated background -->
         <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-[120px] animate-[pulse_8s_infinite_alternate]"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-900/20 rounded-full blur-[120px] animate-[pulse_10s_infinite_alternate-reverse]"></div>
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/30 rounded-full blur-[120px] animate-[pulse_8s_infinite_alternate]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-900/30 rounded-full blur-[120px] animate-[pulse_10s_infinite_alternate-reverse]"></div>
         </div>
         
         <div class="container mx-auto px-6 lg:px-8 text-center relative z-10 reveal-up">
-            <div class="inline-flex items-center justify-center mb-8 px-4 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm">
+            <a href="#" class="inline-flex items-center justify-center mb-8 px-4 py-1.5 text-sm font-medium transition-all rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:scale-105 active:scale-95 group relative overflow-hidden backdrop-blur-md">
+                <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
                 <span class="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-                <span class="text-sm font-medium tracking-wider uppercase text-gray-300">Welcome to Hypecrews</span>
-            </div>
+                <span class="text-gray-300 tracking-wider uppercase text-xs group-hover:text-white transition-colors">Welcome to Hypecrews</span>
+            </a>
             
             <h1 class="font-heading text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">
                 Transforming Ideas Into <br>
@@ -184,10 +227,13 @@ $pageTitle = "About Us - Hypecrews";
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#story" class="px-8 py-4 bg-white text-dark font-semibold rounded-full transition-all duration-300 hover:bg-gray-200 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                    Discover Our Story
+                <a href="#story" class="relative inline-flex overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 transition-transform hover:scale-105">
+                    <span class="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]"></span>
+                    <span class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-4 text-sm font-medium text-white backdrop-blur-3xl transition-colors hover:bg-slate-900">
+                        Discover Our Story
+                    </span>
                 </a>
-                <a href="services.php" class="px-8 py-4 bg-transparent border border-white/20 text-white font-semibold rounded-full transition-all duration-300 hover:bg-white/10">
+                <a href="services.php" class="px-8 py-4 bg-transparent border border-white/20 text-white font-medium text-sm rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-105">
                     Explore Services
                 </a>
             </div>
@@ -239,49 +285,50 @@ $pageTitle = "About Us - Hypecrews";
             </div>
             
             <!-- What We Do Matrix -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
-                <div class="glass-card p-10 rounded-3xl reveal-up">
-                    <div class="flex items-center mb-8">
-                        <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mr-6 border border-white/5">
-                            <i class="fas fa-layer-group text-indigo-400 text-2xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24" id="what-we-do-container">
+                <div class="bento-card md:col-span-2 p-10 reveal-up flex flex-col justify-between">
+                    <div class="bento-content">
+                        <div class="flex items-center mb-8">
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mr-6 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]">
+                                <i class="fas fa-layer-group text-indigo-400 text-2xl"></i>
+                            </div>
+                            <h3 class="font-heading text-2xl font-bold">What We Do</h3>
                         </div>
-                        <h3 class="font-heading text-2xl font-bold">What We Do</h3>
+                        <p class="text-slate-400 mb-8 font-light max-w-lg">We operate at the intersection of entertainment and technology. Our 360-degree approach covers everything from brand identity to full-scale digital deployment.</p>
+                        <ul class="space-y-4 grid sm:grid-cols-2 gap-4">
+                            <li class="flex items-start">
+                                <i class="fas fa-arrow-right text-indigo-400 mt-1 mr-4"></i>
+                                <p class="text-gray-300 font-light"><strong class="text-white">Digital Growth:</strong> Marketing & Social Media</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-arrow-right text-indigo-400 mt-1 mr-4"></i>
+                                <p class="text-gray-300 font-light"><strong class="text-white">Creative:</strong> Video Production & PR</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-arrow-right text-indigo-400 mt-1 mr-4"></i>
+                                <p class="text-gray-300 font-light"><strong class="text-white">Development:</strong> Web & App Solutions</p>
+                            </li>
+                        </ul>
                     </div>
-                    <p class="text-slate-400 mb-8 font-light">We operate at the intersection of entertainment and technology. Our 360-degree approach includes:</p>
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <i class="fas fa-arrow-right text-indigo-400 mt-1 mr-4"></i>
-                            <p class="text-gray-300 font-light"><strong class="text-white">Digital Growth:</strong> Expert Digital Marketing & Social Media</p>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-arrow-right text-indigo-400 mt-1 mr-4"></i>
-                            <p class="text-gray-300 font-light"><strong class="text-white">Creative Services:</strong> Music, Video Production & Artist PR</p>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-arrow-right text-indigo-400 mt-1 mr-4"></i>
-                            <p class="text-gray-300 font-light"><strong class="text-white">Development:</strong> Custom Web & App Development</p>
-                        </li>
-                    </ul>
                 </div>
 
-                <div class="glass-card p-10 rounded-3xl reveal-up" style="transition-delay: 200ms;">
-                    <div class="flex items-center mb-8">
-                        <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mr-6 border border-white/5">
+                <div class="bento-card p-10 reveal-up flex flex-col justify-between relative overflow-hidden group" style="transition-delay: 200ms;">
+                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-yellow-500/20 rounded-full blur-[40px] group-hover:bg-yellow-500/30 transition-colors"></div>
+                    <div class="bento-content">
+                        <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mb-6 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]">
                             <i class="fas fa-shield-alt text-yellow-400 text-2xl"></i>
                         </div>
-                        <h3 class="font-heading text-2xl font-bold">Security & Protection</h3>
+                        <h3 class="font-heading text-2xl font-bold mb-4">Security</h3>
+                        <p class="text-slate-400 font-light mb-6 text-sm">In the digital age, your assets are vulnerable. We stand apart by offering specialized protection.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-yellow-400 mr-3"></i> <span class="text-gray-300">Content Protection</span>
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-yellow-400 mr-3"></i> <span class="text-gray-300">Account Recovery</span>
+                            </li>
+                        </ul>
                     </div>
-                    <p class="text-slate-400 mb-8 font-light">In the digital age, your assets are vulnerable. We stand apart by offering specialized security services:</p>
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-yellow-400 mt-1 mr-4"></i>
-                            <p class="text-gray-300 font-light"><strong class="text-white">Content Protection:</strong> Robust Anti-Piracy & Copyright Takedowns</p>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-yellow-400 mt-1 mr-4"></i>
-                            <p class="text-gray-300 font-light"><strong class="text-white">Account Recovery:</strong> Restore compromised digital identities</p>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
@@ -362,7 +409,7 @@ $pageTitle = "About Us - Hypecrews";
                 <p class="text-slate-400 max-w-2xl mx-auto font-light">The foundational principles that guide every decision and action at Hypecrews.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cards-container">
                 <!-- Value Cards -->
                 <?php
                 $values = [
@@ -376,12 +423,14 @@ $pageTitle = "About Us - Hypecrews";
                 $delay = 0;
                 foreach ($values as $value) {
                     echo '
-                    <div class="glass-card p-8 rounded-3xl text-center reveal-up group" style="transition-delay: '.$delay.'ms;">
-                        <div class="w-16 h-16 rounded-2xl '.$value['bg'].' flex items-center justify-center mx-auto mb-6 border border-white/5 transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_10px_20px_rgba(0,0,0,0.3)]">
-                            <i class="fas '.$value['icon'].' '.$value['color'].' text-2xl"></i>
+                    <div class="bento-card p-8 text-center reveal-up group" style="transition-delay: '.$delay.'ms;">
+                        <div class="bento-content">
+                            <div class="w-16 h-16 rounded-2xl '.$value['bg'].' flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)] transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_10px_20px_rgba(0,0,0,0.3)]">
+                                <i class="fas '.$value['icon'].' '.$value['color'].' text-2xl"></i>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold mb-4">'.$value['title'].'</h3>
+                            <p class="text-slate-400 font-light text-sm leading-relaxed">'.$value['desc'].'</p>
                         </div>
-                        <h3 class="font-heading text-xl font-bold mb-4">'.$value['title'].'</h3>
-                        <p class="text-slate-400 font-light text-sm">'.$value['desc'].'</p>
                     </div>';
                     $delay += 100;
                 }
@@ -457,6 +506,28 @@ $pageTitle = "About Us - Hypecrews";
 
             const revealElements = document.querySelectorAll('.reveal-up');
             revealElements.forEach(el => observer.observe(el));
+
+            // Spotlight effect for bento cards
+            document.getElementById("cards-container")?.addEventListener("mousemove", e => {
+                for(const card of document.querySelectorAll("#cards-container .bento-card")) {
+                    const rect = card.getBoundingClientRect(),
+                          x = e.clientX - rect.left,
+                          y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", `${x}px`);
+                    card.style.setProperty("--mouse-y", `${y}px`);
+                }
+            });
+            
+            // Spotlight effect for What We Do cards
+            document.getElementById("what-we-do-container")?.addEventListener("mousemove", e => {
+                for(const card of document.querySelectorAll("#what-we-do-container .bento-card")) {
+                    const rect = card.getBoundingClientRect(),
+                          x = e.clientX - rect.left,
+                          y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", `${x}px`);
+                    card.style.setProperty("--mouse-y", `${y}px`);
+                }
+            });
         });
     </script>
 </body>
