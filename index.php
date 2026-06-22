@@ -258,6 +258,24 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
         .blur-reveal { opacity: 0; filter: blur(15px); transform: translateY(30px); transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
         .blur-reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
 
+        /* Sparkles */
+        .sparkle { position: absolute; background: white; border-radius: 50%; pointer-events: none; animation: sparkle-anim 2s linear forwards; box-shadow: 0 0 10px 2px rgba(255,255,255,0.8); }
+        @keyframes sparkle-anim { 0% { transform: scale(0) translateY(0); opacity: 1; } 50% { transform: scale(1) translateY(-20px); opacity: 1; } 100% { transform: scale(0) translateY(-40px); opacity: 0; } }
+        .sparkles-container { position: absolute; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
+
+        /* Meteors */
+        .meteor { position: absolute; top: 50%; left: 50%; width: 100px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); transform: rotate(215deg); animation: meteor-fall 5s linear infinite; border-radius: 9999px; box-shadow: 0 0 10px rgba(255,255,255,0.2); pointer-events: none; }
+        .meteor::before { content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 15px 2px #fff; }
+        @keyframes meteor-fall { 0% { transform: rotate(215deg) translateX(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotate(215deg) translateX(-1000px); opacity: 0; } }
+
+        /* Tracing Beam */
+        .tracing-beam-container { position: absolute; left: 20px; top: 0; bottom: 0; width: 40px; pointer-events: none; z-index: 10; }
+        .tracing-beam-line { width: 2px; background: rgba(255,255,255,0.1); height: 100%; position: absolute; left: 20px; }
+        .tracing-beam-glow { width: 4px; background: linear-gradient(to bottom, transparent, #6366f1, #06b6d4, transparent); position: absolute; left: 19px; top: 0; height: 300px; transition: transform 0.1s; box-shadow: 0 0 20px 2px rgba(99, 102, 241, 0.5); border-radius: 9999px; }
+
+        /* Infinite Testimonial Cards */
+        .testimonial-card { flex-shrink: 0; width: 350px; background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 2rem; position: relative; overflow: hidden; }
+
         .bento-card {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -341,7 +359,8 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                     </a>
                 </div>
 
-                <h1 class="font-heading text-5xl md:text-7xl lg:text-[80px] font-black leading-[1.1] mb-6 tracking-tight blur-reveal delay-200">
+                <h1 class="font-heading text-5xl md:text-7xl lg:text-[80px] font-black leading-[1.1] mb-6 tracking-tight blur-reveal delay-200 relative inline-block">
+                    <div id="hero-sparkles" class="sparkles-container"></div>
                     We Build <br/>
                     <span class="text-gradient">Experiences</span><br/>
                     <span id="typing-text" class="text-white typing-cursor"></span>
@@ -443,8 +462,9 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
     </section>
 
     <!-- Premium Services Grid -->
-    <section id="services" class="py-32 relative z-10">
-        <div class="container mx-auto px-6 lg:px-8">
+    <section id="services" class="py-32 relative z-10 overflow-hidden">
+        <div id="meteor-container" class="absolute inset-0 pointer-events-none z-0"></div>
+        <div class="container mx-auto px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-20 reveal-up">
                 <h2 class="font-heading text-4xl md:text-6xl font-bold mb-6">Our <span class="text-gradient">Expertise</span></h2>
                 <p class="text-lg text-gray-400 font-light">We deliver state-of-the-art solutions across a diverse range of digital disciplines to ensure your absolute market dominance.</p>
@@ -527,8 +547,12 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
     </section>
 
     <!-- Sticky Scroll Section -->
-    <section class="relative z-10 bg-black/40 border-y border-white/5 py-24">
-        <div class="container mx-auto px-6 lg:px-8">
+    <section class="relative z-10 bg-black/40 border-y border-white/5 py-24" id="sticky-section-wrapper">
+        <div class="tracing-beam-container hidden lg:block">
+            <div class="tracing-beam-line"></div>
+            <div id="tracing-beam-glow" class="tracing-beam-glow"></div>
+        </div>
+        <div class="container mx-auto px-6 lg:px-8 pl-6 lg:pl-24">
             <div class="flex flex-col lg:flex-row gap-16 relative items-start">
                 <!-- Sticky Text Left -->
                 <div class="w-full lg:w-1/2 lg:sticky lg:top-32 space-y-0 lg:space-y-32 py-10" id="sticky-scroll-text">
@@ -586,6 +610,104 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                     <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-emerald-900/40 to-transparent">
                         <i class="fas fa-shield-alt text-9xl text-emerald-500/50"></i>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infinite Scrolling Testimonial Cards -->
+    <section class="py-24 relative z-10 overflow-hidden">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal-up">
+            <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">Client <span class="text-gradient">Success</span></h2>
+            <p class="text-lg text-gray-400 font-light">Don't just take our word for it. Here is what industry leaders say about our impact.</p>
+        </div>
+        
+        <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] py-4">
+            <div class="flex gap-6 animate-marquee items-center pl-6 hover:[animation-play-state:paused]">
+                <!-- Card 1 -->
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left text-primary/30 text-4xl absolute top-6 right-6"></i>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                            <i class="fas fa-user text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Sarah Jenkins</h4>
+                            <p class="text-xs text-gray-400">CMO, TechFlow</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed">"Hypecrews completely overhauled our digital presence. Our conversion rates tripled within the first month. Absolute game changers."</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left text-accent/30 text-4xl absolute top-6 right-6"></i>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30">
+                            <i class="fas fa-user text-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Marcus Thorne</h4>
+                            <p class="text-xs text-gray-400">CEO, Global Dynamics</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed">"The level of precision and speed they deliver is unmatched. The 3D animations they built for our launch broke the internet."</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left text-secondary/30 text-4xl absolute top-6 right-6"></i>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center border border-secondary/30">
+                            <i class="fas fa-user text-secondary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Elena Rostova</h4>
+                            <p class="text-xs text-gray-400">Founder, Vertex AI</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed">"Their copyright protection team took down 400+ unauthorized copies of our software in 48 hours. Elite service."</p>
+                </div>
+                
+                <!-- Card 1 Dupe -->
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left text-primary/30 text-4xl absolute top-6 right-6"></i>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                            <i class="fas fa-user text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Sarah Jenkins</h4>
+                            <p class="text-xs text-gray-400">CMO, TechFlow</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed">"Hypecrews completely overhauled our digital presence. Our conversion rates tripled within the first month. Absolute game changers."</p>
+                </div>
+                <!-- Card 2 Dupe -->
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left text-accent/30 text-4xl absolute top-6 right-6"></i>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30">
+                            <i class="fas fa-user text-accent"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Marcus Thorne</h4>
+                            <p class="text-xs text-gray-400">CEO, Global Dynamics</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed">"The level of precision and speed they deliver is unmatched. The 3D animations they built for our launch broke the internet."</p>
+                </div>
+                <!-- Card 3 Dupe -->
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left text-secondary/30 text-4xl absolute top-6 right-6"></i>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center border border-secondary/30">
+                            <i class="fas fa-user text-secondary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Elena Rostova</h4>
+                            <p class="text-xs text-gray-400">Founder, Vertex AI</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed">"Their copyright protection team took down 400+ unauthorized copies of our software in 48 hours. Elite service."</p>
                 </div>
             </div>
         </div>
@@ -739,6 +861,49 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                             text.classList.remove('lg:opacity-100', 'lg:translate-x-0');
                         }
                     });
+                });
+            }
+            // Sparkles Logic
+            const sparklesContainer = document.getElementById('hero-sparkles');
+            if (sparklesContainer) {
+                setInterval(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.width = Math.random() * 3 + 1 + 'px';
+                    sparkle.style.height = sparkle.style.width;
+                    sparklesContainer.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, 150);
+            }
+
+            // Meteors Logic
+            const meteorContainer = document.getElementById('meteor-container');
+            if (meteorContainer) {
+                for(let j=0; j<15; j++) {
+                    const meteor = document.createElement('div');
+                    meteor.classList.add('meteor');
+                    meteor.style.left = Math.random() * 100 + '%';
+                    meteor.style.top = Math.random() * 100 + '%';
+                    meteor.style.animationDelay = Math.random() * 5 + 's';
+                    meteor.style.animationDuration = Math.random() * 3 + 3 + 's';
+                    meteorContainer.appendChild(meteor);
+                }
+            }
+
+            // Tracing Beam Logic
+            const tracingBeam = document.getElementById('tracing-beam-glow');
+            const stickySectionWrapper = document.getElementById('sticky-section-wrapper');
+            if(tracingBeam && stickySectionWrapper) {
+                window.addEventListener('scroll', () => {
+                    if (window.innerWidth < 1024) return;
+                    const rect = stickySectionWrapper.getBoundingClientRect();
+                    // Calculate scroll percentage through the section
+                    let scrollPercent = -rect.top / (rect.height - window.innerHeight);
+                    scrollPercent = Math.max(0, Math.min(1, scrollPercent));
+                    const translateY = scrollPercent * (rect.height - 300); // 300 is glow height
+                    tracingBeam.style.transform = `translateY(${translateY}px)`;
                 });
             }
         });
