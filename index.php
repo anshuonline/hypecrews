@@ -201,18 +201,58 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
         
         /* Ultra Modern Animations */
         @keyframes shimmer { 100% { transform: translateX(100%); } }
-        @keyframes auroraflow { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
-
-        .aurora-bg {
+        /* Spotlight Effect */
+        @keyframes spotlight { 
+            0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%,-40%) scale(1); }
+        }
+        .spotlight {
             position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background-image: 
-                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%);
-            animation: auroraflow 25s linear infinite;
-            filter: blur(80px);
-            z-index: 0;
+            top: 0; left: 0;
+            width: 138%; height: 138%;
+            background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 100%);
+            animation: spotlight 2s ease forwards;
             pointer-events: none;
+            z-index: 10;
+        }
+
+        /* 3D Animated Grid Floor */
+        .grid-3d-floor {
+            position: absolute;
+            bottom: -50%; left: -50%; width: 200%; height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(99, 102, 241, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg) translateY(100px) translateZ(-200px);
+            animation: grid-move 10s linear infinite;
+            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+            z-index: 0;
+        }
+        @keyframes grid-move { 0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } 100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); } }
+
+        /* Double Marquee */
+        @keyframes marquee-reverse { 0% { transform: translateX(-100%); } 100% { transform: translateX(0%); } }
+        .animate-marquee-reverse { animation: marquee-reverse 25s linear infinite; }
+
+        /* Lamp Effect */
+        .lamp-glow-top {
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 400px; height: 150px;
+            background: rgba(99, 102, 241, 0.5);
+            filter: blur(80px);
+            border-radius: 50%;
+        }
+        .lamp-cone {
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 100%;
+            background: conic-gradient(from 180deg at 50% -20%, transparent 120deg, rgba(99, 102, 241, 0.3) 180deg, transparent 240deg);
+            filter: blur(20px);
+            mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
         }
 
         .blur-reveal { opacity: 0; filter: blur(15px); transform: translateY(30px); transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -286,9 +326,9 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
 
     <!-- HERO SECTION: The visual masterpiece -->
     <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <!-- Aurora Background -->
-        <div class="aurora-bg"></div>
-        <div class="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        <!-- Spotlight & 3D Grid Background -->
+        <div class="spotlight"></div>
+        <div class="grid-3d-floor"></div>
 
         <div class="container mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
             <!-- Left: Typography & CTA -->
@@ -366,22 +406,38 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
         </div>
     </section>
 
-    <!-- Infinite Client Marquee -->
-    <section class="py-10 border-y border-white/5 bg-black/20 backdrop-blur-md relative z-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div class="flex overflow-hidden">
-            <div class="flex animate-marquee whitespace-nowrap items-center opacity-60">
-                <!-- Logos -->
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-shield-alt text-secondary"></i> Secure Assets</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-globe text-primary"></i> Global Reach</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-chart-pie text-accent"></i> Data Driven</span>
-                <!-- Repeat for infinite loop -->
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-shield-alt text-secondary"></i> Secure Assets</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-globe text-primary"></i> Global Reach</span>
-                <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-chart-pie text-accent"></i> Data Driven</span>
+    <!-- Dual 3D Marquee -->
+    <section class="py-24 relative z-10 overflow-hidden bg-black/50 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
+        <div class="flex flex-col gap-8 transform -rotate-3 scale-110 shadow-2xl">
+            <!-- Row 1 Left -->
+            <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                <div class="flex animate-marquee whitespace-nowrap items-center opacity-60">
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-shield-alt text-secondary"></i> Secure Assets</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-globe text-primary"></i> Global Reach</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-chart-pie text-accent"></i> Data Driven</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-shield-alt text-secondary"></i> Secure Assets</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-globe text-primary"></i> Global Reach</span>
+                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-chart-pie text-accent"></i> Data Driven</span>
+                </div>
+            </div>
+            <!-- Row 2 Right -->
+            <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                <div class="flex animate-marquee-reverse whitespace-nowrap items-center opacity-40 text-xl">
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Web Architecture</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Social Mastery</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Cinematic Video</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Digital Recovery</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Copyright Protection</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Web Architecture</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Social Mastery</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Cinematic Video</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Digital Recovery</span>
+                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Copyright Protection</span>
+                </div>
             </div>
         </div>
     </section>
@@ -470,74 +526,49 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
         </div>
     </section>
 
-    <!-- Advanced Feature Split Section -->
-    <section class="py-24 relative z-10 overflow-hidden bg-black/40 border-y border-white/5">
+    <!-- Sticky Scroll Section -->
+    <section class="relative z-10 bg-black/40 border-y border-white/5 py-24">
         <div class="container mx-auto px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center gap-16">
-                <div class="w-full lg:w-1/2 reveal-left">
-                    <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Data-Driven.<br/>Results-Oriented.</h2>
-                    <p class="text-gray-400 font-light text-lg mb-8">We don't just guess. Every campaign, line of code, and design choice is backed by analytics and deep market research to ensure maximum ROI.</p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 mr-4 border border-accent/20">
-                                <i class="fas fa-crosshairs text-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold mb-1">Precision Targeting</h4>
-                                <p class="text-sm text-gray-500">Reaching exactly who matters most to your business.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mr-4 border border-primary/20">
-                                <i class="fas fa-tachometer-alt text-primary"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold mb-1">High Velocity</h4>
-                                <p class="text-sm text-gray-500">Rapid deployment and scaling of digital assets.</p>
-                            </div>
-                        </div>
+            <div class="flex flex-col lg:flex-row gap-16 relative items-start">
+                <!-- Sticky Text Left -->
+                <div class="w-full lg:w-1/2 lg:sticky lg:top-32 space-y-32 py-10" id="sticky-scroll-text">
+                    <div class="scroll-item transition-all duration-500 opacity-100 transform translate-x-0">
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Data-Driven.</h2>
+                        <p class="text-gray-400 font-light text-lg">We don't just guess. Every campaign is backed by analytics and deep market research to ensure maximum ROI.</p>
+                    </div>
+                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Results-Oriented.</h2>
+                        <p class="text-gray-400 font-light text-lg">Rapid deployment and scaling of digital assets for immediate impact.</p>
+                    </div>
+                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Absolute Dominance.</h2>
+                        <p class="text-gray-400 font-light text-lg">Reaching exactly who matters most to your business.</p>
                     </div>
                 </div>
 
-                <div class="w-full lg:w-1/2 relative reveal-right">
-                    <!-- Dashboard Mockup Element -->
-                    <div class="glass-panel rounded-2xl p-4 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transform lg:-rotate-2 hover:rotate-0 transition-transform duration-700">
-                        <div class="flex items-center gap-2 mb-4 px-2 border-b border-white/5 pb-4">
-                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="bg-white/5 rounded-xl p-4 border border-white/5">
-                                <div class="text-xs text-gray-400 mb-1 uppercase tracking-wider">Traffic</div>
-                                <div class="text-2xl font-bold text-accent">+124.5%</div>
-                            </div>
-                            <div class="bg-white/5 rounded-xl p-4 border border-white/5">
-                                <div class="text-xs text-gray-400 mb-1 uppercase tracking-wider">Conversion</div>
-                                <div class="text-2xl font-bold text-primary">4.8%</div>
-                            </div>
-                        </div>
-                        <div class="h-32 bg-gradient-to-t from-primary/20 to-transparent rounded-xl border-b-2 border-primary relative flex items-end px-2">
-                            <!-- Faux chart bars -->
-                            <div class="w-1/6 h-1/4 bg-white/20 mx-1 rounded-t-sm"></div>
-                            <div class="w-1/6 h-2/4 bg-white/20 mx-1 rounded-t-sm"></div>
-                            <div class="w-1/6 h-1/3 bg-white/20 mx-1 rounded-t-sm"></div>
-                            <div class="w-1/6 h-3/4 bg-primary/50 mx-1 rounded-t-sm"></div>
-                            <div class="w-1/6 h-full bg-primary mx-1 rounded-t-sm shadow-[0_0_15px_#6366f1]"></div>
-                        </div>
+                <!-- Scrolling Visuals Right -->
+                <div class="w-full lg:w-1/2 space-y-24 py-10 hidden lg:block" id="sticky-scroll-visuals">
+                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-indigo-900/40 to-transparent">
+                        <i class="fas fa-chart-pie text-9xl text-indigo-500/50"></i>
+                    </div>
+                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-transparent">
+                        <i class="fas fa-rocket text-9xl text-purple-500/50"></i>
+                    </div>
+                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-cyan-900/40 to-transparent">
+                        <i class="fas fa-trophy text-9xl text-cyan-500/50"></i>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Formal Call to Action -->
-    <section class="py-32 relative z-10 text-center px-4">
-        <div class="glass-panel max-w-4xl mx-auto rounded-[3rem] p-12 md:p-20 relative overflow-hidden border border-white/10 reveal-up">
-            <div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none"></div>
-            
-            <h2 class="font-heading text-4xl md:text-6xl font-black mb-6">Ready to <span class="text-gradient">Dominate?</span></h2>
+    <!-- Lamp Component Call to Action -->
+    <section class="pt-40 pb-32 relative z-10 text-center px-4 overflow-hidden bg-dark">
+        <div class="lamp-glow-top"></div>
+        <div class="lamp-cone"></div>
+        
+        <div class="relative z-10 reveal-up mt-20">
+            <h2 class="font-heading text-5xl md:text-7xl font-black mb-6 text-white text-shadow-glow">Ready to <span class="text-gradient">Dominate?</span></h2>
             <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light">Join hundreds of successful brands that have transformed their digital presence with our elite team.</p>
             
             <a href="contact.php" class="magic-btn-wrapper mt-4">
@@ -652,6 +683,31 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                         card.style.setProperty("--mouse-x", `${x}px`);
                         card.style.setProperty("--mouse-y", `${y}px`);
                     }
+                });
+            }
+
+            // Sticky Scroll Logic
+            const stickyTexts = document.querySelectorAll('#sticky-scroll-text .scroll-item');
+            const stickyVisuals = document.querySelectorAll('#sticky-scroll-visuals .glass-panel');
+            
+            if (stickyTexts.length > 0 && stickyVisuals.length > 0) {
+                window.addEventListener('scroll', () => {
+                    let index = 0;
+                    stickyVisuals.forEach((visual, i) => {
+                        const rect = visual.getBoundingClientRect();
+                        if (rect.top <= window.innerHeight / 2) {
+                            index = i;
+                        }
+                    });
+                    stickyTexts.forEach((text, i) => {
+                        if (i === index) {
+                            text.classList.remove('opacity-30', '-translate-x-4');
+                            text.classList.add('opacity-100', 'translate-x-0');
+                        } else {
+                            text.classList.add('opacity-30', '-translate-x-4');
+                            text.classList.remove('opacity-100', 'translate-x-0');
+                        }
+                    });
                 });
             }
         });
