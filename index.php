@@ -630,7 +630,7 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                         entry.target.classList.add('active');
                         
                         // Check if it's the stats container to run counters
-                        if(entry.target.classList.contains('delay-400') && entry.target.querySelector('.counter') && !countersAnimated) {
+                        if(entry.target.classList.contains('delay-500') && entry.target.querySelector('.counter') && !countersAnimated) {
                             animateCounters();
                             countersAnimated = true;
                         }
