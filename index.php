@@ -531,26 +531,41 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
         <div class="container mx-auto px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-16 relative items-start">
                 <!-- Sticky Text Left -->
-                <div class="w-full lg:w-1/2 lg:sticky lg:top-32 space-y-32 py-10" id="sticky-scroll-text">
-                    <div class="scroll-item transition-all duration-500 opacity-100 transform translate-x-0">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Copyright Protection.</h2>
-                        <p class="text-gray-400 font-light text-lg">Advanced tracking and aggressive removal of unauthorized content to comprehensively protect your intellectual property worldwide.</p>
+                <div class="w-full lg:w-1/2 lg:sticky lg:top-32 space-y-0 lg:space-y-32 py-10" id="sticky-scroll-text">
+                    <div class="scroll-item transition-all duration-500 transform lg:translate-x-0 lg:opacity-100 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
+                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
+                           <i class="fas fa-copyright text-indigo-500"></i>
+                        </div>
+                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Copyright Protection.</h2>
+                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Advanced tracking and aggressive removal of unauthorized content to comprehensively protect your intellectual property worldwide.</p>
                     </div>
-                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Social Mastery.</h2>
-                        <p class="text-gray-400 font-light text-lg">Strategic social media management that builds viral momentum and engagement.</p>
+                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
+                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
+                           <i class="fas fa-hashtag text-purple-500"></i>
+                        </div>
+                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Social Mastery.</h2>
+                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Strategic social media management that builds viral momentum and engagement.</p>
                     </div>
-                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Web Architecture.</h2>
-                        <p class="text-gray-400 font-light text-lg">High-performance, bespoke web applications engineered with modern stacks.</p>
+                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
+                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
+                           <i class="fas fa-laptop-code text-cyan-500"></i>
+                        </div>
+                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Web Architecture.</h2>
+                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">High-performance, bespoke web applications engineered with modern stacks.</p>
                     </div>
-                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Cinematic Video.</h2>
-                        <p class="text-gray-400 font-light text-lg">Stunning visual productions from concept to final cut to convert audiences.</p>
+                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
+                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
+                           <i class="fas fa-video text-rose-500"></i>
+                        </div>
+                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Cinematic Video.</h2>
+                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Stunning visual productions from concept to final cut to convert audiences.</p>
                     </div>
-                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Digital Recovery.</h2>
-                        <p class="text-gray-400 font-light text-lg">Expert recovery protocols for hacked accounts and aggressive reputation management.</p>
+                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
+                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
+                           <i class="fas fa-shield-alt text-emerald-500"></i>
+                        </div>
+                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Digital Recovery.</h2>
+                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Expert recovery protocols for hacked accounts and aggressive reputation management.</p>
                     </div>
                 </div>
 
@@ -706,6 +721,8 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
             
             if (stickyTexts.length > 0 && stickyVisuals.length > 0) {
                 window.addEventListener('scroll', () => {
+                    if (window.innerWidth < 1024) return; // Disable sticky opacity logic on mobile
+
                     let index = 0;
                     stickyVisuals.forEach((visual, i) => {
                         const rect = visual.getBoundingClientRect();
@@ -715,11 +732,11 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                     });
                     stickyTexts.forEach((text, i) => {
                         if (i === index) {
-                            text.classList.remove('opacity-30', '-translate-x-4');
-                            text.classList.add('opacity-100', 'translate-x-0');
+                            text.classList.remove('lg:opacity-30', 'lg:-translate-x-4');
+                            text.classList.add('lg:opacity-100', 'lg:translate-x-0');
                         } else {
-                            text.classList.add('opacity-30', '-translate-x-4');
-                            text.classList.remove('opacity-100', 'translate-x-0');
+                            text.classList.add('lg:opacity-30', 'lg:-translate-x-4');
+                            text.classList.remove('lg:opacity-100', 'lg:translate-x-0');
                         }
                     });
                 });
