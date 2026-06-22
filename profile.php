@@ -116,31 +116,36 @@ if (isset($_GET['logout'])) {
     </script>
     <style>
         body { background-color: #0B0F19; color: #f8fafc; overflow-x: hidden; }
+        
+        /* Aurora Flow Background */
+        @keyframes auroraflow { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
         .ambient-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.05), transparent 25%),
-                        radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05), transparent 25%);
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1;
+            background-image: 
+                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%);
+            animation: auroraflow 25s linear infinite;
+            filter: blur(80px);
             pointer-events: none;
         }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        
+        /* Magic Button */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .magic-btn-wrapper { position: relative; display: inline-flex; overflow: hidden; border-radius: 9999px; padding: 2px; }
+        .magic-border { position: absolute; inset: -1000%; animation: spin 2s linear infinite; background: conic-gradient(from 90deg at 50% 50%, #e2cbff 0%, #393bb2 50%, #e2cbff 100%); }
+        
+        /* Bento Card Hover Spotlight */
+        .bento-card { position: relative; border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; background: rgba(15,23,42,0.4); backdrop-filter: blur(20px); }
+        .bento-card::before {
+            content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%); z-index: 1; pointer-events: none;
         }
-        .input-glass {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .input-glass:focus {
-            background: rgba(0, 0, 0, 0.2);
-            border-color: #6366f1;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-            outline: none;
-        }
+        .bento-card:hover::before { opacity: 1; }
+        
+        .input-glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
+        .input-glass:focus { background: rgba(0, 0, 0, 0.2); border-color: #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); outline: none; }
+        
+        /* Reveal Animations */
         .reveal-up { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal-left { opacity: 0; transform: translateX(-30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal-right { opacity: 0; transform: translateX(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
@@ -152,6 +157,7 @@ if (isset($_GET['logout'])) {
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
     <div class="ambient-bg"></div>
+    <div class="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-[-1]"></div>
     <?php include 'components/nav.php'; ?>
     
     <div class="pt-32 pb-20 min-h-screen relative z-10">
@@ -190,7 +196,7 @@ if (isset($_GET['logout'])) {
                 <!-- Forms -->
                 <div class="w-full lg:w-3/4 xl:w-4/5 space-y-8">
                     <!-- Profile Update -->
-                    <div class="glass-card rounded-3xl p-8 reveal-right delay-200 relative overflow-hidden">
+                    <div class="bento-card p-8 reveal-right delay-200 relative" id="profile-bento">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full blur-[60px] pointer-events-none"></div>
                         <h3 class="font-heading text-2xl font-bold mb-6 flex items-center gap-3">
                             <i class="fas fa-id-card text-secondary"></i> Identity Parameters
@@ -240,9 +246,12 @@ if (isset($_GET['logout'])) {
                                 </div>
                             </div>
                             
-                            <div class="flex justify-end">
-                                <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-full bg-white text-dark font-bold hover:scale-105 hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center justify-center gap-2">
-                                    Sync Data <i class="fas fa-sync-alt text-sm"></i>
+                            <div class="flex justify-end relative z-10 mt-6">
+                                <button type="submit" class="magic-btn-wrapper w-full sm:w-auto hover:scale-105 transition-transform group">
+                                    <span class="magic-border"></span>
+                                    <span class="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-8 py-3 text-sm font-bold text-white backdrop-blur-3xl transition-colors group-hover:bg-slate-900 gap-2">
+                                        Sync Data <i class="fas fa-sync-alt"></i>
+                                    </span>
                                 </button>
                             </div>
                         </form>
@@ -267,6 +276,18 @@ if (isset($_GET['logout'])) {
             }, { threshold: 0.1 });
             
             document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+            // Spotlight effect for profile bento card
+            const profileCard = document.getElementById("profile-bento");
+            if (profileCard) {
+                profileCard.addEventListener("mousemove", e => {
+                    const rect = profileCard.getBoundingClientRect(),
+                          x = e.clientX - rect.left,
+                          y = e.clientY - rect.top;
+                    profileCard.style.setProperty("--mouse-x", `${x}px`);
+                    profileCard.style.setProperty("--mouse-y", `${y}px`);
+                });
+            }
         });
     </script>
 </body>

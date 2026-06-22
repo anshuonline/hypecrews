@@ -533,29 +533,43 @@ $pageTitle = "Hypecrews - Peak Digital Excellence";
                 <!-- Sticky Text Left -->
                 <div class="w-full lg:w-1/2 lg:sticky lg:top-32 space-y-32 py-10" id="sticky-scroll-text">
                     <div class="scroll-item transition-all duration-500 opacity-100 transform translate-x-0">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Data-Driven.</h2>
-                        <p class="text-gray-400 font-light text-lg">We don't just guess. Every campaign is backed by analytics and deep market research to ensure maximum ROI.</p>
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Copyright Protection.</h2>
+                        <p class="text-gray-400 font-light text-lg">Advanced tracking and aggressive removal of unauthorized content to comprehensively protect your intellectual property worldwide.</p>
                     </div>
                     <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Results-Oriented.</h2>
-                        <p class="text-gray-400 font-light text-lg">Rapid deployment and scaling of digital assets for immediate impact.</p>
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Social Mastery.</h2>
+                        <p class="text-gray-400 font-light text-lg">Strategic social media management that builds viral momentum and engagement.</p>
                     </div>
                     <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
-                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Absolute Dominance.</h2>
-                        <p class="text-gray-400 font-light text-lg">Reaching exactly who matters most to your business.</p>
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Web Architecture.</h2>
+                        <p class="text-gray-400 font-light text-lg">High-performance, bespoke web applications engineered with modern stacks.</p>
+                    </div>
+                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Cinematic Video.</h2>
+                        <p class="text-gray-400 font-light text-lg">Stunning visual productions from concept to final cut to convert audiences.</p>
+                    </div>
+                    <div class="scroll-item transition-all duration-500 opacity-30 transform -translate-x-4">
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6 leading-tight">Digital Recovery.</h2>
+                        <p class="text-gray-400 font-light text-lg">Expert recovery protocols for hacked accounts and aggressive reputation management.</p>
                     </div>
                 </div>
 
                 <!-- Scrolling Visuals Right -->
                 <div class="w-full lg:w-1/2 space-y-24 py-10 hidden lg:block" id="sticky-scroll-visuals">
                     <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-indigo-900/40 to-transparent">
-                        <i class="fas fa-chart-pie text-9xl text-indigo-500/50"></i>
+                        <i class="fas fa-copyright text-9xl text-indigo-500/50"></i>
                     </div>
                     <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-transparent">
-                        <i class="fas fa-rocket text-9xl text-purple-500/50"></i>
+                        <i class="fas fa-hashtag text-9xl text-purple-500/50"></i>
                     </div>
                     <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-cyan-900/40 to-transparent">
-                        <i class="fas fa-trophy text-9xl text-cyan-500/50"></i>
+                        <i class="fas fa-laptop-code text-9xl text-cyan-500/50"></i>
+                    </div>
+                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-rose-900/40 to-transparent">
+                        <i class="fas fa-video text-9xl text-rose-500/50"></i>
+                    </div>
+                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-emerald-900/40 to-transparent">
+                        <i class="fas fa-shield-alt text-9xl text-emerald-500/50"></i>
                     </div>
                 </div>
             </div>
