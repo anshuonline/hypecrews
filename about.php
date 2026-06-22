@@ -44,11 +44,6 @@ $pageTitle = "About Us - Hypecrews";
                     "@type": "Person",
                     "name": "Dheeraj Jyoti Saikia",
                     "jobTitle": "CEO & Founder"
-                },
-                {
-                    "@type": "Person",
-                    "name": "Jitu Moni Hazarika",
-                    "jobTitle": "Co Founder"
                 }
             ],
             "address": {
@@ -403,7 +398,7 @@ $pageTitle = "About Us - Hypecrews";
                 <div class="w-16 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 gap-10 max-w-md mx-auto">
                 <!-- Dheeraj Jyoti Saikia - CEO & Founder -->
                 <div class="glass-card rounded-3xl p-6 text-center reveal-up group">
                     <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-white/10 shadow-2xl group-hover:border-primary/50 transition-colors duration-500">
@@ -414,24 +409,6 @@ $pageTitle = "About Us - Hypecrews";
                     <p class="text-slate-400 font-light mb-6">Visionary leader driving innovation and growth</p>
                     <div class="flex justify-center space-x-4">
                         <a href="https://www.linkedin.com/in/dheerajjyotisaikia/" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-blue-600 hover:text-white transition-all duration-300 border border-white/10" target="_blank">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-sky-500 hover:text-white transition-all duration-300 border border-white/10">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Jitu Moni Hazarika - Co Founder -->
-                <div class="glass-card rounded-3xl p-6 text-center reveal-up group" style="transition-delay: 200ms;">
-                    <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-white/10 shadow-2xl group-hover:border-secondary/50 transition-colors duration-500">
-                        <img src="graphics/our-team/co-founder.png" alt="Jitu Moni Hazarika" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
-                    </div>
-                    <h3 class="font-heading text-2xl font-bold mb-1">Jitu Moni Hazarika</h3>
-                    <p class="text-secondary font-semibold mb-4 tracking-wider text-sm uppercase">Co Founder</p>
-                    <p class="text-slate-400 font-light mb-6">Strategic partner in business development and operations</p>
-                    <div class="flex justify-center space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-blue-600 hover:text-white transition-all duration-300 border border-white/10">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-sky-500 hover:text-white transition-all duration-300 border border-white/10">
