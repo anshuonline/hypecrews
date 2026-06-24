@@ -4,6 +4,15 @@
     <title>Database Setup</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCMZ1CPN6G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCMZ1CPN6G');
+</script>
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8">

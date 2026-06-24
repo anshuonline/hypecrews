@@ -98,6 +98,15 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         .chat-scroll::-webkit-scrollbar-track { background: transparent; }
         .chat-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
     </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCMZ1CPN6G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCMZ1CPN6G');
+</script>
 </head>
 <body class="text-apple_text">
     <div class="glass-bg"></div>
@@ -1065,3 +1074,4 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
     </script>
 </body>
 </html>
+

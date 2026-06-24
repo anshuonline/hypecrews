@@ -216,6 +216,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background: rgba(245, 245, 247, 0.8);
         }
     </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCMZ1CPN6G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCMZ1CPN6G');
+</script>
 </head>
 <body class="flex h-screen overflow-hidden">
     
@@ -520,3 +529,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 </body>
 </html>
+

@@ -52,6 +52,15 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCMZ1CPN6G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YCMZ1CPN6G');
+</script>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen relative">
     
@@ -350,3 +359,4 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
 </body>
 </html>
+
