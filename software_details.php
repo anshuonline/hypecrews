@@ -52,6 +52,7 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <?php include 'components/google_analytics.php'; ?>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen relative">
     
@@ -350,3 +351,4 @@ $screenshots = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
 </body>
 </html>
+

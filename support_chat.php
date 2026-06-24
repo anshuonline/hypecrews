@@ -129,6 +129,7 @@ try {
             outline: none;
         }
     </style>
+    <?php include 'components/google_analytics.php'; ?>
 </head>
 <body class="antialiased selection:bg-secondary selection:text-white">
     <div class="ambient-bg"></div>
@@ -692,3 +693,4 @@ try {
     </script>
 </body>
 </html>
+

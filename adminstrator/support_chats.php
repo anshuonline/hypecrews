@@ -98,6 +98,7 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
         .chat-scroll::-webkit-scrollbar-track { background: transparent; }
         .chat-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
     </style>
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body class="text-apple_text">
     <div class="glass-bg"></div>
@@ -1065,3 +1066,4 @@ $chat_with = isset($_GET['session']) ? $_GET['session'] : null;
     </script>
 </body>
 </html>
+

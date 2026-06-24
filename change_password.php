@@ -136,6 +136,7 @@ if (isset($_GET['logout'])) {
         .delay-200 { transition-delay: 200ms; }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include 'components/google_analytics.php'; ?>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
     <div class="ambient-bg"></div>
@@ -229,3 +230,4 @@ if (isset($_GET['logout'])) {
     </script>
 </body>
 </html>
+

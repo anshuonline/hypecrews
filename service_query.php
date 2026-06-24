@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             50% { transform: translateY(-20px) scale(1.1); }
         }
     </style>
+    <?php include 'components/google_analytics.php'; ?>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white min-h-screen flex flex-col relative bg-dark">
     <?php include 'components/nav.php'; ?>

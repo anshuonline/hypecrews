@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body>
     <div class="login-container w-full max-w-md p-8">

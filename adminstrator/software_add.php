@@ -216,6 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background: rgba(245, 245, 247, 0.8);
         }
     </style>
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body class="flex h-screen overflow-hidden">
     
@@ -520,3 +521,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 </body>
 </html>
+

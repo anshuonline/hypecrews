@@ -279,6 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
     </style>
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body class="text-apple_text">
 
@@ -512,3 +513,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </body>
 </html>
+

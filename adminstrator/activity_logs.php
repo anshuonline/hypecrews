@@ -144,6 +144,7 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body class="text-apple_text">
 
@@ -326,3 +327,4 @@ $actions = $stmt_actions->fetchAll(PDO::FETCH_COLUMN);
     </script>
 </body>
 </html>
+

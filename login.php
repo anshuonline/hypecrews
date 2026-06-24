@@ -163,6 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include 'components/google_analytics.php'; ?>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white min-h-screen flex flex-col">
     <?php include 'components/nav.php'; ?>

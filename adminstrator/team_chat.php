@@ -164,6 +164,7 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body class="text-apple_text overflow-hidden">
 
@@ -863,3 +864,4 @@ $chat_with = isset($_GET['chat']) ? $_GET['chat'] : 'group';
     </script>
 </body>
 </html>
+

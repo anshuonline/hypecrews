@@ -141,6 +141,7 @@ try {
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include '../components/google_analytics.php'; ?>
 </head>
 <body class="text-apple_text">
 
@@ -272,3 +273,4 @@ try {
     </div>
 </body>
 </html>
+

@@ -214,6 +214,7 @@ try {
         }
     </style>
     <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
+    <?php include 'components/google_analytics.php'; ?>
 </head>
 <body class="text-white antialiased selection:bg-primary selection:text-white">
     <?php include 'components/nav.php'; ?>
@@ -442,3 +443,4 @@ try {
     <script src="js/main.js"></script>
 </body>
 </html>
+
