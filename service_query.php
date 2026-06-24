@@ -118,15 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             50% { transform: translateY(-20px) scale(1.1); }
         }
     </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCMZ1CPN6G"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-YCMZ1CPN6G');
-</script>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white min-h-screen flex flex-col relative bg-dark">
     <?php include 'components/nav.php'; ?>

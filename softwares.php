@@ -34,15 +34,6 @@ try {
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .software-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3); border-color: rgba(99, 102, 241, 0.3); }
     </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCMZ1CPN6G"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-YCMZ1CPN6G');
-</script>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen relative">
     
@@ -163,4 +154,3 @@ try {
     </script>
 </body>
 </html>
-
