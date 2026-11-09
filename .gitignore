@@ -13,3 +13,4 @@ schemas/
 # Ignore other sensitive files
 .env
 *.log
+*/default.php
