@@ -1,6 +1,6 @@
 <?php
 session_start();
-$pageTitle = "Careers - Hypecrews";
+$pageTitle = "Careers — Hypecrews";
 require_once 'config/db.php';
 
 $success = '';
@@ -13,25 +13,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_job'])) {
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $cover_letter = trim($_POST['cover_letter']);
-    
+
     // File upload
     $resume_path = '';
     if (isset($_FILES['resume']) && $_FILES['resume']['error'] == 0) {
         $allowed = ['pdf', 'doc', 'docx'];
         $filename = $_FILES['resume']['name'];
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
+
         if (in_array($ext, $allowed)) {
-            // Check file size (max 5MB)
             if ($_FILES['resume']['size'] <= 5242880) {
                 $new_filename = uniqid('resume_') . '.' . $ext;
                 $upload_dir = 'uploads/resumes/';
-                
-                // create dir if not exists
                 if (!is_dir($upload_dir)) {
                     mkdir($upload_dir, 0755, true);
                 }
-                
                 $destination = $upload_dir . $new_filename;
                 if (move_uploaded_file($_FILES['resume']['tmp_name'], $destination)) {
                     $resume_path = $destination;
@@ -47,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_job'])) {
     } else {
         $error = "Resume is required.";
     }
-    
+
     // Validate mandatory fields
     if (empty($phone)) {
         $error = "Phone number is required.";
@@ -55,10 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_job'])) {
     if (empty($cover_letter)) {
         $error = "Cover letter is required.";
     }
-    
+
     if (empty($error)) {
         try {
-            // Check if already applied with this email
             $stmt = $pdo->prepare("SELECT id FROM job_applications WHERE job_id = ? AND email = ?");
             $stmt->execute([$job_id, $email]);
             if ($stmt->fetch()) {
@@ -67,10 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_job'])) {
                 $stmt = $pdo->prepare("INSERT INTO job_applications (job_id, applicant_name, email, phone, resume_path, cover_letter) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$job_id, $name, $email, $phone, $resume_path, $cover_letter]);
                 $success = "Your application has been submitted successfully!";
-                
-                // Set cookie for 30 days to mark as applied
+
                 setcookie("applied_job_" . $job_id, "1", time() + (86400 * 30), "/");
-                // Manually populate it for the current request so the UI updates immediately
                 $_COOKIE["applied_job_" . $job_id] = "1";
             }
         } catch (PDOException $e) {
@@ -87,360 +80,184 @@ try {
 } catch (PDOException $e) {
     $jobs = [];
 }
+$pageDescription = "Join Hypecrews. Explore open roles in design, development, marketing and content with a premium digital brand company from Assam, India.";
+$canonical = "https://hypecrews.com/careers.php";
+include 'components/head.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
-    <meta name="description" content="Explore career opportunities at Hypecrews. Join our creative digital agency team in Golaghat, Assam and build your future with us.">
-    <meta name="keywords" content="hypecrews careers, jobs digital agency, work at hypecrews, digital agency jobs, creative careers, hypecrews jobs">
-    <link rel="canonical" href="https://hypecrews.com/careers.php">
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Careers - Hypecrews | Join Our Creative Team">
-    <meta property="og:description" content="Explore career opportunities at Hypecrews. Join our creative digital agency team and build your future with us.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://hypecrews.com/careers.php">
-    <meta property="og:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
-    <meta property="og:site_name" content="Hypecrews">
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Careers - Hypecrews | Join Our Creative Team">
-    <meta name="twitter:description" content="Explore career opportunities at Hypecrews. Join our creative digital agency team and build your future with us.">
-    <meta name="twitter:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Careers - Hypecrews",
-        "description": "Explore career opportunities at Hypecrews. Join our creative digital agency team in Golaghat, Assam and build your future with us.",
-        "url": "https://hypecrews.com/careers.php",
-        "publisher": {
-            "@type": "Organization",
-            "name": "Hypecrews",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png"
-            },
-            "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Golaghat",
-                "addressRegion": "Assam",
-                "addressCountry": "IN"
-            }
-        }
-    }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0B0F19',
-                        light: '#1e293b'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #0B0F19;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.05) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%);
-            color: #f8fafc;
-        }
+<style>
+    .job-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(11,28,47,.6); backdrop-filter: blur(6px); }
+    .job-modal.active { display: flex; }
+    .job-modal-panel { width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; background: #fff; border-radius: 24px; box-shadow: var(--shadow-lg); position: relative; }
+</style>
+<body class="antialiased">
+<?php include 'components/nav.php'; ?>
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:hover {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.15);
-            transform: translateY(-4px);
-        }
-
-        .reveal-up {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-
-        .reveal-up.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .modal {
-            display: none;
-            background: rgba(11, 15, 25, 0.8);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .modal.active {
-            display: flex;
-        }
-        
-        /* Modal animation */
-        .modal-content {
-            transform: scale(0.95);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .modal.active .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-    </style>
-    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
-    <?php include 'components/google_analytics.php'; ?>
-</head>
-<body class="text-white antialiased selection:bg-primary selection:text-white">
-    <?php include 'components/nav.php'; ?>
-
-    <!-- Hero Section -->
-    <section class="pt-32 pb-20 relative overflow-hidden">
-        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-[120px] animate-[pulse_8s_infinite_alternate]"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-900/20 rounded-full blur-[120px] animate-[pulse_10s_infinite_alternate-reverse]"></div>
-        </div>
-        
-        <div class="container mx-auto px-6 lg:px-8 text-center relative z-10 reveal-up">
-            <div class="inline-flex items-center justify-center mb-8 px-4 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm">
-                <span class="w-2 h-2 rounded-full bg-secondary mr-2 animate-pulse"></span>
-                <span class="text-sm font-medium tracking-wider uppercase text-gray-300">Join the Crew</span>
+<!-- ============================================================ HERO -->
+<section class="page-hero">
+    <div class="hero-mesh"></div>
+    <div class="grid-lines"></div>
+    <div class="orb orb-1" style="width: 300px; height: 300px; top: 0; right: -6%;"></div>
+    <div class="shell shell-wide relative z-1">
+        <div class="grid lg:grid-cols-[1.1fr_.9fr] gap-14 items-center">
+            <div>
+                <div class="chip" data-aos="fade-up"><span style="width:7px;height:7px;border-radius:99px;background:#1a9f6e;box-shadow:0 0 0 4px rgba(26,159,110,.13);display:inline-block;"></span> We’re hiring across teams</div>
+                <h1 class="display-1 text-balance" style="margin-top: 22px;" data-aos="fade-up" data-aos-delay="60">
+                    Build your future<br>with <span class="gradient-text">Hypecrews.</span>
+                </h1>
+                <p class="lead" style="margin-top: 20px;" data-aos="fade-up" data-aos-delay="120">
+                    We’re always looking for talented people to join our growing team. Explore open roles and take your career to the next level in a culture built on craft, curiosity and ownership.
+                </p>
+                <div class="flex flex-wrap gap-3" style="margin-top: 30px;" data-aos="fade-up" data-aos-delay="180">
+                    <a href="#openings" class="btn btn-primary btn-lg">View open roles <i class="fas fa-arrow-down"></i></a>
+                    <a href="mailto:careers@hypecrews.com" class="btn btn-outline btn-lg">Send a speculative CV</a>
+                </div>
             </div>
-            
-            <h1 class="font-heading text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">
-                Build Your Future <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-primary">With Hypecrews</span>
-            </h1>
-            
-            <p class="text-xl max-w-3xl mx-auto text-slate-400 mb-12 font-light leading-relaxed">
-                We're always looking for talented individuals to join our growing team. Explore our open positions and elevate your career to the next level.
-            </p>
-        </div>
-    </section>
-
-    <!-- Jobs Section -->
-    <section class="py-16 relative z-10 min-h-[50vh]">
-        <div class="container mx-auto px-6 lg:px-8">
-            
-            <?php if (!empty($error)): ?>
-            <div class="max-w-4xl mx-auto mb-10 bg-red-900/20 border border-red-500/50 backdrop-blur-md text-red-200 px-6 py-4 rounded-2xl flex items-start shadow-lg reveal-up">
-                <i class="fas fa-exclamation-circle text-red-400 text-xl mt-0.5 mr-4 shrink-0"></i>
-                <p class="font-medium"><?php echo htmlspecialchars($error); ?></p>
-            </div>
-            <?php endif; ?>
-            
-            <?php if (!empty($success)): ?>
-            <div class="max-w-4xl mx-auto mb-10 bg-emerald-900/20 border border-emerald-500/50 backdrop-blur-md text-emerald-200 px-6 py-4 rounded-2xl flex items-start shadow-lg reveal-up">
-                <i class="fas fa-check-circle text-emerald-400 text-xl mt-0.5 mr-4 shrink-0"></i>
-                <p class="font-medium"><?php echo htmlspecialchars($success); ?></p>
-            </div>
-            <?php endif; ?>
-
-            <div class="max-w-4xl mx-auto space-y-8">
-                <?php if (empty($jobs)): ?>
-                    <div class="glass-card p-16 rounded-3xl text-center reveal-up border-dashed border-2 border-white/10">
-                        <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-                            <i class="fas fa-briefcase text-3xl text-slate-500"></i>
-                        </div>
-                        <h3 class="font-heading text-2xl font-bold mb-3 text-white">No Open Positions</h3>
-                        <p class="text-slate-400 font-light">We currently don't have any open positions. Please check back later!</p>
-                    </div>
-                <?php else: ?>
-                    <?php 
-                    $delay = 0;
-                    foreach ($jobs as $job): 
-                    ?>
-                    <div class="glass-card rounded-3xl p-8 lg:p-10 reveal-up" style="transition-delay: <?php echo $delay; ?>ms;">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-white/10">
-                            <div>
-                                <h2 class="font-heading text-3xl font-bold text-white mb-4"><?php echo htmlspecialchars($job['title']); ?></h2>
-                                <div class="flex flex-wrap gap-4">
-                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-sm text-indigo-300 font-medium">
-                                        <i class="fas fa-building mr-2"></i><?php echo htmlspecialchars($job['department']); ?>
-                                    </span>
-                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-300 font-medium">
-                                        <i class="fas fa-map-marker-alt mr-2"></i><?php echo htmlspecialchars($job['location']); ?>
-                                    </span>
-                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-300 font-medium">
-                                        <i class="fas fa-clock mr-2"></i><?php echo htmlspecialchars($job['employment_type']); ?>
-                                    </span>
-                                </div>
-                            </div>
-                            <?php $hasApplied = isset($_COOKIE['applied_job_' . $job['id']]); ?>
-                            <?php if ($hasApplied): ?>
-                                <button disabled class="mt-6 md:mt-0 bg-white/5 border border-white/10 text-slate-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed flex items-center shrink-0">
-                                    <i class="fas fa-check-circle mr-2"></i> Applied
-                                </button>
-                            <?php else: ?>
-                                <button onclick="openApplyModal(<?php echo $job['id']; ?>, '<?php echo addslashes($job['title']); ?>')" class="mt-6 md:mt-0 bg-white text-dark hover:bg-gray-200 px-8 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center shrink-0">
-                                    Apply Now <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                                </button>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-300 font-light">
-                            <div>
-                                <h3 class="font-heading font-bold text-xl text-white mb-4 flex items-center">
-                                    <i class="fas fa-align-left text-primary mr-3"></i> Description
-                                </h3>
-                                <p class="whitespace-pre-wrap leading-relaxed text-slate-400"><?php echo htmlspecialchars($job['description']); ?></p>
-                            </div>
-                            <?php if (!empty($job['requirements'])): ?>
-                            <div>
-                                <h3 class="font-heading font-bold text-xl text-white mb-4 flex items-center">
-                                    <i class="fas fa-list-check text-secondary mr-3"></i> Requirements
-                                </h3>
-                                <p class="whitespace-pre-wrap leading-relaxed text-slate-400"><?php echo htmlspecialchars($job['requirements']); ?></p>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <?php 
-                    $delay += 100;
-                    endforeach; 
-                    ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- Application Modal -->
-    <div id="applyModal" class="modal fixed inset-0 z-[100] items-center justify-center p-4">
-        <div class="modal-content glass-card border border-white/10 rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-            <!-- decorative background -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[60px] pointer-events-none"></div>
-            
-            <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center relative z-10 bg-dark/40">
-                <h3 class="font-heading text-2xl font-bold text-white" id="modalTitle">Apply for Job</h3>
-                <button onclick="closeApplyModal()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors border border-white/5">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar relative z-10">
-                <form action="careers.php" method="POST" enctype="multipart/form-data" class="space-y-6">
-                    <input type="hidden" name="apply_job" value="1">
-                    <input type="hidden" name="job_id" id="modalJobId" value="">
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Full Name <span class="text-red-400">*</span></label>
-                        <input type="text" name="name" required class="w-full bg-[#0B0F19]/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors shadow-inner">
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-300 mb-2">Email Address <span class="text-red-400">*</span></label>
-                            <input type="email" name="email" required class="w-full bg-[#0B0F19]/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors shadow-inner">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-300 mb-2">Phone Number <span class="text-red-400">*</span></label>
-                            <input type="tel" name="phone" required class="w-full bg-[#0B0F19]/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors shadow-inner placeholder:text-slate-600" placeholder="+91 9876543210">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Resume / CV <span class="text-red-400">*</span></label>
-                        <div class="relative">
-                            <input type="file" name="resume" accept=".pdf,.doc,.docx" required class="w-full bg-[#0B0F19]/80 border border-white/10 rounded-xl px-4 py-3 text-slate-300 focus:border-primary focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/20 file:text-primary hover:file:bg-primary/30 cursor-pointer">
-                        </div>
-                        <p class="text-xs text-slate-500 mt-2 font-medium"><i class="fas fa-info-circle mr-1"></i> Accepted formats: PDF, DOC, DOCX. Max size: 5MB</p>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">Cover Letter <span class="text-red-400">*</span></label>
-                        <textarea name="cover_letter" rows="5" required class="w-full bg-[#0B0F19]/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors shadow-inner resize-y placeholder:text-slate-600" placeholder="Tell us why you're a great fit for this role..."></textarea>
-                    </div>
-                    
-                    <div class="pt-4">
-                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-indigo-600 hover:to-purple-600 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transform hover:-translate-y-1">
-                            Submit Application <i class="fas fa-paper-plane ml-2"></i>
-                        </button>
-                    </div>
-                </form>
+            <div data-aos="fade-left" data-aos-delay="120">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card card-pad" style="padding: 24px;"><div class="icon-tile icon-tile-sm"><i class="fas fa-rocket"></i></div><strong style="display:block;font-family:var(--font-head);font-size:20px;color:var(--navy);margin-top:14px;">Fast growth</strong><p style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;">Real ownership from day one.</p></div>
+                    <div class="card card-pad" style="padding: 24px;"><div class="icon-tile icon-tile-sm"><i class="fas fa-globe"></i></div><strong style="display:block;font-family:var(--font-head);font-size:20px;color:var(--navy);margin-top:14px;">Remote friendly</strong><p style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;">Work from where you do best.</p></div>
+                    <div class="card card-pad" style="padding: 24px;"><div class="icon-tile icon-tile-sm"><i class="fas fa-graduation-cap"></i></div><strong style="display:block;font-family:var(--font-head);font-size:20px;color:var(--navy);margin-top:14px;">Keep learning</strong><p style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;">Budgets and time to grow.</p></div>
+                    <div class="card card-pad" style="padding: 24px;"><div class="icon-tile icon-tile-sm"><i class="fas fa-heart"></i></div><strong style="display:block;font-family:var(--font-head);font-size:20px;color:var(--navy);margin-top:14px;">Real balance</strong><p style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;">Sustainable pace, no burnout.</p></div>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <?php include 'components/footer.php'; ?>
-    
-    <script>
-        function openApplyModal(jobId, jobTitle) {
-            document.getElementById('modalJobId').value = jobId;
-            document.getElementById('modalTitle').innerText = 'Apply: ' + jobTitle;
-            const modal = document.getElementById('applyModal');
-            modal.classList.add('active');
-            // Small delay to allow display block to apply before animating opacity/transform
-            setTimeout(() => {
-                modal.querySelector('.modal-content').style.opacity = '1';
-                modal.querySelector('.modal-content').style.transform = 'scale(1)';
-            }, 10);
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeApplyModal() {
-            const modal = document.getElementById('applyModal');
-            modal.querySelector('.modal-content').style.opacity = '0';
-            modal.querySelector('.modal-content').style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }, 300);
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('applyModal');
-            if (event.target == modal) {
-                closeApplyModal();
-            }
-        }
-        
-        // Intersection Observer for scroll animations
-        document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.15
-            };
+<!-- ======================================================== OPENINGS -->
+<section class="section" id="openings" style="background: var(--mist);">
+    <div class="shell shell-wide">
+        <div class="section-head section-head-center" data-aos="fade-up">
+            <span class="eyebrow eyebrow-center">Open positions</span>
+            <h2 class="display-2">Find your next role.</h2>
+            <p class="lead">Current openings across design, development, marketing and content. Don’t see a fit? Send a speculative application — we read every one.</p>
+        </div>
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, observerOptions);
+        <?php if (!empty($error)): ?>
+        <div class="alert alert-error" style="max-width: 900px; margin: 0 auto 24px;" data-aos="fade-up"><i class="fas fa-circle-exclamation"></i><span><?php echo htmlspecialchars($error); ?></span></div>
+        <?php endif; ?>
+        <?php if (!empty($success)): ?>
+        <div class="alert alert-success" style="max-width: 900px; margin: 0 auto 24px;" data-aos="fade-up"><i class="fas fa-circle-check"></i><span><?php echo htmlspecialchars($success); ?></span></div>
+        <?php endif; ?>
 
-            const revealElements = document.querySelectorAll('.reveal-up');
-            revealElements.forEach(el => observer.observe(el));
-        });
-    </script>
-    <script src="js/main.js"></script>
+        <div style="max-width: 900px; margin-inline: auto; display: grid; gap: 18px;">
+            <?php if (empty($jobs)): ?>
+                <div class="card" style="padding: 56px 26px; text-align: center;" data-aos="fade-up">
+                    <div class="icon-tile icon-tile-lg" style="margin: 0 auto 18px;"><i class="fas fa-briefcase"></i></div>
+                    <h3 style="font-size: 24px;">No open positions right now</h3>
+                    <p style="font-size: 13.5px; color: var(--muted); margin-top: 8px;">We currently don’t have any open positions. Please check back later — or send us a speculative application.</p>
+                    <a href="mailto:careers@hypecrews.com" class="btn btn-primary" style="margin-top: 22px;">Send a speculative CV <i class="fas fa-arrow-right"></i></a>
+                </div>
+            <?php else: ?>
+                <?php foreach ($jobs as $i => $job): ?>
+                <article class="card card-hover" style="padding: clamp(22px, 3.4vw, 34px);" data-aos="fade-up" data-aos-delay="<?php echo ($i % 3) * 60; ?>">
+                    <div class="flex flex-wrap items-start justify-between gap-5">
+                        <div>
+                            <h3 style="font-size: clamp(20px, 2.6vw, 26px);"><?php echo htmlspecialchars($job['title']); ?></h3>
+                            <div class="flex flex-wrap gap-2" style="margin-top: 14px;">
+                                <span class="chip" style="font-size: 11px;"><i class="fas fa-building" style="color: var(--blue);"></i> <?php echo htmlspecialchars($job['department']); ?></span>
+                                <span class="chip" style="font-size: 11px;"><i class="fas fa-location-dot" style="color: var(--blue);"></i> <?php echo htmlspecialchars($job['location']); ?></span>
+                                <span class="chip" style="font-size: 11px;"><i class="fas fa-clock" style="color: var(--blue);"></i> <?php echo htmlspecialchars($job['employment_type']); ?></span>
+                            </div>
+                        </div>
+                        <?php $hasApplied = isset($_COOKIE['applied_job_' . $job['id']]); ?>
+                        <?php if ($hasApplied): ?>
+                            <button disabled class="btn btn-outline btn-sm" style="cursor: not-allowed;"><i class="fas fa-circle-check" style="color:#15805a;"></i> Applied</button>
+                        <?php else: ?>
+                            <button type="button" onclick="openApplyModal(<?php echo $job['id']; ?>, '<?php echo addslashes($job['title']); ?>')" class="btn btn-primary btn-sm">Apply now <i class="fas fa-arrow-right"></i></button>
+                        <?php endif; ?>
+                    </div>
+                    <div style="height: 1px; background: var(--line); margin: 20px 0;"></div>
+                    <div class="grid md:grid-cols-2 gap-7">
+                        <div>
+                            <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted-2); margin-bottom: 8px;">Description</h4>
+                            <p style="font-size: 13px; color: var(--muted); line-height: 1.8; white-space: pre-wrap;"><?php echo htmlspecialchars($job['description']); ?></p>
+                        </div>
+                        <?php if (!empty($job['requirements'])): ?>
+                        <div>
+                            <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted-2); margin-bottom: 8px;">Requirements</h4>
+                            <p style="font-size: 13px; color: var(--muted); line-height: 1.8; white-space: pre-wrap;"><?php echo htmlspecialchars($job['requirements']); ?></p>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================== CULTURE -->
+<section class="section" style="background: #fff;">
+    <div class="shell shell-wide">
+        <div class="grid lg:grid-cols-2 gap-14 items-center">
+            <div data-aos="fade-right">
+                <span class="eyebrow">Life at Hypecrews</span>
+                <h2 class="display-2" style="margin-top: 16px;">Craft over noise.<br><span class="gradient-text">Ownership always.</span></h2>
+                <p class="lead" style="margin-top: 18px;">We’re a small, senior team that cares about the details. You’ll work directly with founders and clients, ship real work quickly, and see the impact of what you make.</p>
+                <div class="grid sm:grid-cols-2 gap-5" style="margin-top: 28px;">
+                    <div><h3 style="font-size: 14.5px;">No politics</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-top: 4px;">Good ideas win, regardless of title.</p></div>
+                    <div><h3 style="font-size: 14.5px;">Senior mentorship</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-top: 4px;">Learn from people who’ve done it before.</p></div>
+                    <div><h3 style="font-size: 14.5px;">Flexible hours</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-top: 4px;">Focus on outcomes, not clock-watching.</p></div>
+                    <div><h3 style="font-size: 14.5px;">Real progression</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-top: 4px;">Clear paths and honest feedback.</p></div>
+                </div>
+            </div>
+            <div data-aos="fade-left">
+                <div style="border-radius: 28px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-md);">
+                    <img src="/graphics/516as4d8a16s5d64as.jpg" alt="The Hypecrews team" style="width: 100%; height: 420px; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================= APPLICATION MODAL -->
+<div id="applyModal" class="job-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="job-modal-panel">
+        <div class="flex items-center justify-between" style="padding: 22px 26px; border-bottom: 1px solid var(--line); background: var(--mist); border-radius: 24px 24px 0 0;">
+            <div>
+                <p style="font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--blue);">Application</p>
+                <h3 id="modalTitle" style="font-size: 20px; margin-top: 3px;">Apply for job</h3>
+            </div>
+            <button type="button" onclick="closeApplyModal()" aria-label="Close" style="width: 38px; height: 38px; border-radius: 99px; border: 1px solid var(--line); background: #fff; color: var(--muted);"><i class="fas fa-times"></i></button>
+        </div>
+        <form action="careers.php" method="POST" enctype="multipart/form-data" style="padding: 26px;">
+            <input type="hidden" name="apply_job" value="1">
+            <input type="hidden" name="job_id" id="modalJobId" value="">
+
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="field" style="margin-bottom: 0;"><label class="label">Full name</label><input type="text" name="name" required class="input" placeholder="Your name"></div>
+                <div class="field" style="margin-bottom: 0;"><label class="label">Email address</label><input type="email" name="email" required class="input" placeholder="you@email.com"></div>
+            </div>
+            <div class="field" style="margin-top: 18px;"><label class="label">Phone number</label><input type="tel" name="phone" required class="input" placeholder="+91 9876543210"></div>
+            <div class="field"><label class="label">Resume</label><input type="file" name="resume" accept=".pdf,.doc,.docx" required class="input" style="padding: 12px; cursor: pointer;"><p style="font-size: 11px; color: var(--muted-2); margin-top: 6px;"><i class="fas fa-circle-info" style="margin-right: 4px;"></i> PDF, DOC or DOCX. Max size 5MB.</p></div>
+            <div class="field"><label class="label">Cover letter</label><textarea name="cover_letter" rows="5" required class="textarea" placeholder="Tell us why you’re a great fit for this role…"></textarea></div>
+            <button type="submit" class="btn btn-primary btn-block">Submit application <i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+</div>
+
+<script>
+function openApplyModal(jobId, jobTitle) {
+    document.getElementById('modalJobId').value = jobId;
+    document.getElementById('modalTitle').innerText = 'Apply: ' + jobTitle;
+    document.getElementById('applyModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeApplyModal() {
+    document.getElementById('applyModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+window.addEventListener('click', function (event) {
+    const modal = document.getElementById('applyModal');
+    if (event.target == modal) closeApplyModal();
+});
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeApplyModal();
+});
+</script>
+
+<?php include 'components/footer.php'; ?>
+<?php include 'components/guest_chat.php'; ?>
 </body>
 </html>
-

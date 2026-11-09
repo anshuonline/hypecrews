@@ -17,7 +17,7 @@ try {
     $stmt = $pdo->prepare("SELECT username, first_name, last_name, email, mobile_number, country, age, company_name, company_website, created_at FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch();
-    
+
     if (!$user) {
         session_destroy();
         header("Location: login.php");
@@ -37,32 +37,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $age = (int)$_POST['age'];
     $company_name = trim($_POST['company_name']);
     $company_website = trim($_POST['company_website']);
-    
-    // Validation
-    if (empty($first_name) || empty($last_name) || empty($email) || 
+
+    if (empty($first_name) || empty($last_name) || empty($email) ||
         empty($mobile_number) || empty($country) || empty($age)) {
         $error = "Please fill in all required fields.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     } else {
         try {
-            // Check if email is already used by another user
             $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
             $stmt->execute([$email, $user_id]);
             if ($stmt->fetch()) {
                 $error = "Email already used by another account.";
             } else {
-                // Update user data
                 $stmt = $pdo->prepare("UPDATE users SET first_name = ?, last_name = ?, email = ?, mobile_number = ?, country = ?, age = ?, company_name = ?, company_website = ? WHERE id = ?");
                 $stmt->execute([$first_name, $last_name, $email, $mobile_number, $country, $age, $company_name, $company_website, $user_id]);
-                
-                // Update session data
+
                 $_SESSION['first_name'] = $first_name;
                 $_SESSION['last_name'] = $last_name;
-                
                 $success = "Profile updated successfully!";
-                
-                // Refresh user data
+
                 $stmt = $pdo->prepare("SELECT username, first_name, last_name, email, mobile_number, country, age, company_name, company_website, created_at FROM users WHERE id = ?");
                 $stmt->execute([$user_id]);
                 $user = $stmt->fetch();
@@ -73,223 +67,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
-
-
 // Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: login.php");
     exit();
 }
+$pageTitle = "My Profile — Hypecrews";
+$robots = "noindex, nofollow";
+include 'components/head.php';
 ?>
+<body class="antialiased">
+<?php include 'components/nav.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Peak Experience</title>
-    <!-- SEO Meta Tags -->
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="Manage your Hypecrews profile, update personal information, and change your security credentials.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        accent: '#06b6d4',
-                        dark: '#0B0F19',
-                        surface: '#151b2b'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #0B0F19; color: #f8fafc; overflow-x: hidden; }
-        
-        /* Aurora Flow Background */
-        @keyframes auroraflow { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
-        .ambient-bg {
-            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1;
-            background-image: 
-                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%);
-            animation: auroraflow 25s linear infinite;
-            filter: blur(80px);
-            pointer-events: none;
-        }
-        
-        /* Magic Button */
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .magic-btn-wrapper { position: relative; display: inline-flex; overflow: hidden; border-radius: 9999px; padding: 2px; }
-        .magic-border { position: absolute; inset: -1000%; animation: spin 2s linear infinite; background: conic-gradient(from 90deg at 50% 50%, #e2cbff 0%, #393bb2 50%, #e2cbff 100%); }
-        
-        /* Bento Card Hover Spotlight */
-        .bento-card { position: relative; border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; background: rgba(15,23,42,0.4); backdrop-filter: blur(20px); }
-        .bento-card::before {
-            content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%); z-index: 1; pointer-events: none;
-        }
-        .bento-card:hover::before { opacity: 1; }
-        
-        .input-glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
-        .input-glass:focus { background: rgba(0, 0, 0, 0.2); border-color: #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); outline: none; }
-        
-        /* Reveal Animations */
-        .reveal-up { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-left { opacity: 0; transform: translateX(-30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-right { opacity: 0; transform: translateX(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-up.active, .reveal-left.active, .reveal-right.active { opacity: 1; transform: translate(0); }
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
-    </style>
-    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
-    <?php include 'components/google_analytics.php'; ?>
-</head>
-<body class="antialiased selection:bg-primary selection:text-white">
-    <div class="ambient-bg"></div>
-    <div class="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-[-1]"></div>
-    <?php include 'components/nav.php'; ?>
-    
-    <div class="pt-32 pb-20 min-h-screen relative z-10">
-        <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
-            <div class="flex justify-between items-end mb-10 reveal-up">
-                <div>
-                    <h1 class="font-heading text-4xl md:text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Command Center</h1>
-                    <p class="text-gray-400 font-light">Manage your digital identity and security settings.</p>
-                </div>
+<main class="dash-wrap">
+    <div class="shell shell-wide">
+        <div class="flex flex-wrap items-end justify-between gap-5" style="margin-bottom: 30px;" data-aos="fade-up">
+            <div>
+                <span class="eyebrow">Client portal</span>
+                <h1 class="dash-title" style="margin-top: 12px;">Welcome back, <?php echo htmlspecialchars($user['first_name']); ?>.</h1>
+                <p style="font-size: 13.5px; color: var(--muted); margin-top: 6px;">Manage your identity, security and workspace from one place.</p>
+            </div>
+            <a href="/track_orders.php" class="btn btn-primary">Track my orders <i class="fas fa-arrow-right"></i></a>
+        </div>
 
-            </div>
-            
-            <?php if ($error): ?>
-            <div class="mb-8 p-4 rounded-2xl bg-red-900/20 border border-red-500/30 backdrop-blur-md reveal-up flex items-center shadow-[0_0_20px_rgba(239,68,68,0.1)]">
-                <i class="fas fa-exclamation-circle text-red-400 text-xl mr-4 animate-pulse"></i>
-                <p class="text-red-200 font-medium"><?php echo htmlspecialchars($error); ?></p>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($success): ?>
-            <div class="mb-8 p-4 rounded-2xl bg-emerald-900/20 border border-emerald-500/30 backdrop-blur-md reveal-up flex items-center shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-                <i class="fas fa-check-circle text-emerald-400 text-xl mr-4"></i>
-                <p class="text-emerald-200 font-medium"><?php echo htmlspecialchars($success); ?></p>
-            </div>
-            <?php endif; ?>
-            
-            <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Sidebar Menu -->
-                <div class="w-full lg:w-1/4 xl:w-1/5 reveal-left delay-100 flex flex-col h-full">
-                    <?php 
-                    $current_user_page = 'profile';
-                    include 'components/user_sidebar.php'; 
-                    ?>
-                </div>
-                
-                <!-- Forms -->
-                <div class="w-full lg:w-3/4 xl:w-4/5 space-y-8">
-                    <!-- Profile Update -->
-                    <div class="bento-card p-8 reveal-right delay-200 relative" id="profile-bento">
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full blur-[60px] pointer-events-none"></div>
-                        <h3 class="font-heading text-2xl font-bold mb-6 flex items-center gap-3">
-                            <i class="fas fa-id-card text-secondary"></i> Identity Parameters
-                        </h3>
-                        
-                        <form method="POST">
-                            <input type="hidden" name="update_profile" value="1">
-                            
-                            <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden mb-8 backdrop-blur-sm shadow-lg">
-                                <!-- Row 1 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">First Name</label>
-                                    <input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <!-- Row 2 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Last Name</label>
-                                    <input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <!-- Row 3 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Primary Email</label>
-                                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <!-- Row 4 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Mobile Directive</label>
-                                    <input type="tel" name="mobile_number" value="<?php echo htmlspecialchars($user['mobile_number']); ?>" required class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <!-- Row 5 (Age/Country) -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Age / Country</label>
-                                    <div class="w-full sm:w-2/3 flex gap-4">
-                                        <input type="number" name="age" value="<?php echo htmlspecialchars($user['age']); ?>" required min="13" max="120" class="w-16 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium border-r border-white/10 pr-3">
-                                        <input type="text" name="country" value="<?php echo htmlspecialchars($user['country']); ?>" required class="flex-1 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium pl-1">
-                                    </div>
-                                </div>
-                                <!-- Row 6 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 border-b border-white/5 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Enterprise Name <span class="text-[10px] text-gray-500 font-normal ml-1">(Opt)</span></label>
-                                    <input type="text" name="company_name" value="<?php echo htmlspecialchars($user['company_name']); ?>" placeholder="Leave blank if none" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                                <!-- Row 7 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center px-5 py-4 group transition-colors hover:bg-white/[0.02]">
-                                    <label class="w-full sm:w-1/3 text-sm font-semibold text-gray-300 group-focus-within:text-primary transition-colors mb-2 sm:mb-0">Enterprise URL <span class="text-[10px] text-gray-500 font-normal ml-1">(Opt)</span></label>
-                                    <input type="url" name="company_website" value="<?php echo htmlspecialchars($user['company_website']); ?>" placeholder="https://" class="w-full sm:w-2/3 bg-transparent text-white text-base focus:outline-none placeholder-gray-600 font-medium">
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-end relative z-10 mt-6">
-                                <button type="submit" class="magic-btn-wrapper w-full sm:w-auto hover:scale-105 transition-transform group">
-                                    <span class="magic-border"></span>
-                                    <span class="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-8 py-3 text-sm font-bold text-white backdrop-blur-3xl transition-colors group-hover:bg-slate-900 gap-2">
-                                        Sync Data <i class="fas fa-sync-alt"></i>
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
+        <?php if ($error): ?><div class="alert alert-error" data-aos="fade-up"><i class="fas fa-circle-exclamation"></i><span><?php echo htmlspecialchars($error); ?></span></div><?php endif; ?>
+        <?php if ($success): ?><div class="alert alert-success" data-aos="fade-up"><i class="fas fa-circle-check"></i><span><?php echo htmlspecialchars($success); ?></span></div><?php endif; ?>
+
+        <div class="grid lg:grid-cols-[260px_1fr] gap-7 items-start">
+            <?php $current_user_page = 'profile'; include 'components/user_sidebar.php'; ?>
+
+            <div style="display: grid; gap: 22px;">
+                <!-- Snapshot -->
+                <div class="dash-card" data-aos="fade-up">
+                    <div class="flex flex-wrap items-center gap-5">
+                        <div class="side-avatar" style="width: 64px; height: 64px; font-size: 24px; background: linear-gradient(140deg, var(--navy), var(--blue)); color: #fff;"><?php echo strtoupper(substr(htmlspecialchars($user['first_name']), 0, 1)); ?></div>
+                        <div style="flex: 1; min-width: 180px;">
+                            <h2 style="font-size: 20px; margin: 0;"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+                            <p style="font-size: 12.5px; color: var(--muted); margin-top: 3px;">@<?php echo htmlspecialchars($user['username']); ?> · <?php echo htmlspecialchars($user['email']); ?></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="badge badge-green"><i class="fas fa-circle" style="font-size: 5px;"></i> Active client</span>
+                            <p style="font-size: 10.5px; color: var(--muted-2); margin-top: 7px;">Member since <?php echo date('M Y', strtotime($user['created_at'])); ?></p>
+                        </div>
                     </div>
-                    
+                </div>
 
+                <!-- Edit profile -->
+                <div class="dash-card" data-aos="fade-up" data-aos-delay="60">
+                    <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                        <h2 style="font-size: 19px; margin: 0;"><i class="fas fa-id-card" style="color: var(--blue); margin-right: 8px;"></i>Personal details</h2>
+                        <a href="/change_password.php" class="link-arrow" style="font-size: 10px;">Security <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <p style="font-size: 12.5px; color: var(--muted); margin-top: 5px;">Keep your contact and company information up to date.</p>
+
+                    <form method="POST" style="margin-top: 22px;">
+                        <input type="hidden" name="update_profile" value="1">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="field" style="margin-bottom: 0;"><label class="label">First name</label><input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required class="input"></div>
+                            <div class="field" style="margin-bottom: 0;"><label class="label">Last name</label><input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required class="input"></div>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-4" style="margin-top: 16px;">
+                            <div class="field" style="margin-bottom: 0;"><label class="label">Email address</label><input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required class="input"></div>
+                            <div class="field" style="margin-bottom: 0;"><label class="label">Mobile number</label><input type="tel" name="mobile_number" value="<?php echo htmlspecialchars($user['mobile_number']); ?>" required class="input"></div>
+                        </div>
+                        <div class="grid sm:grid-cols-3 gap-4" style="margin-top: 16px;">
+                            <div class="field" style="margin-bottom: 0;"><label class="label">Age</label><input type="number" name="age" value="<?php echo htmlspecialchars($user['age']); ?>" required min="13" max="120" class="input"></div>
+                            <div class="field" style="margin-bottom: 0; grid-column: span 2;"><label class="label">Country</label><input type="text" name="country" value="<?php echo htmlspecialchars($user['country']); ?>" required class="input"></div>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-4" style="margin-top: 16px;">
+                            <div class="field" style="margin-bottom: 0;"><label class="label">Company <span style="color:var(--muted-2);font-weight:600;">(optional)</span></label><input type="text" name="company_name" value="<?php echo htmlspecialchars($user['company_name']); ?>" placeholder="Leave blank if none" class="input"></div>
+                            <div class="field" style="margin-bottom: 0;"><label class="label">Company website <span style="color:var(--muted-2);font-weight:600;">(optional)</span></label><input type="url" name="company_website" value="<?php echo htmlspecialchars($user['company_website']); ?>" placeholder="https://" class="input"></div>
+                        </div>
+                        <div class="flex justify-end" style="margin-top: 24px;">
+                            <button type="submit" class="btn btn-primary">Save changes <i class="fas fa-check"></i></button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    <?php include 'components/footer.php'; ?>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+</main>
 
-            // Spotlight effect for profile bento card
-            const profileCard = document.getElementById("profile-bento");
-            if (profileCard) {
-                profileCard.addEventListener("mousemove", e => {
-                    const rect = profileCard.getBoundingClientRect(),
-                          x = e.clientX - rect.left,
-                          y = e.clientY - rect.top;
-                    profileCard.style.setProperty("--mouse-x", `${x}px`);
-                    profileCard.style.setProperty("--mouse-y", `${y}px`);
-                });
-            }
-        });
-    </script>
+<?php include 'components/footer.php'; ?>
 </body>
 </html>

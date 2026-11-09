@@ -1,908 +1,467 @@
 <?php
 session_start();
-$pageTitle = "Hypecrews - Peak Digital Excellence";
+$pageTitle = "Hypecrews — Peak Digital Excellence";
+$pageDescription = "Hypecrews is a premium digital brand company delivering web development, copyright protection, social media management and creative growth solutions.";
+$pageKeywords = "digital brand company, web development, copyright protection, social media management, creative agency, Hypecrews";
+$canonical = "https://hypecrews.com/";
+$jsonLd = '{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hypecrews",
+  "legalName": "Hypecrews Software Private Limited",
+  "url": "https://hypecrews.com",
+  "logo": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png",
+  "description": "Premium digital brand company offering web development, copyright protection, social media management and creative growth solutions.",
+  "address": { "@type": "PostalAddress", "addressLocality": "Golaghat", "addressRegion": "Assam", "addressCountry": "IN" }
+}';
+include 'components/head.php';
 ?>
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
-    <!-- Google Search Console Verification -->
-    <meta name="google-site-verification" content="_JU3E8DA157M7_ibIQi_qx6wtqnbnuei76ShghWBGJ4" />
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Hypecrews is a leading digital marketing agency in India offering web development, copyright protection, social media management, and creative digital solutions.">
-    <meta name="keywords" content="digital marketing agency india, web development, copyright protection, social media management, hypecrews">
-    <link rel="canonical" href="https://hypecrews.com/">
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Hypecrews - Peak Digital Excellence">
-    <meta property="og:description" content="Elevate your brand with award-winning design, flawless development, and strategic marketing that dominates the digital landscape.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://hypecrews.com/">
-    <meta property="og:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
-    <meta property="og:site_name" content="Hypecrews">
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Hypecrews - Peak Digital Excellence">
-    <meta name="twitter:description" content="Elevate your brand with award-winning design, flawless development, and strategic marketing that dominates the digital landscape.">
-    <meta name="twitter:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
-    <!-- JSON-LD Structured Data: Organization -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Hypecrews",
-        "legalName": "Hypecrews Software Private Limited",
-        "url": "https://hypecrews.com",
-        "logo": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png",
-        "description": "Leading digital marketing agency in India offering web development, copyright protection, social media management, and creative digital solutions.",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Golaghat",
-            "addressRegion": "Assam",
-            "addressCountry": "IN"
-        },
-        "sameAs": [],
-        "serviceArea": {
-            "@type": "Country",
-            "name": "India"
-        }
-    }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        accent: '#06b6d4',
-                        dark: '#0B0F19',
-                        surface: '#151b2b'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif']
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'float-delayed': 'float 6s ease-in-out 3s infinite',
-                        'spin-slow': 'spin 15s linear infinite',
-                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'marquee': 'marquee 25s linear infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        'pulse-glow': {
-                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-                            '50%': { opacity: '.7', transform: 'scale(1.05)' },
-                        },
-                        marquee: {
-                            '0%': { transform: 'translateX(0%)' },
-                            '100%': { transform: 'translateX(-100%)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #0B0F19;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
+<body class="antialiased">
+<?php include 'components/nav.php'; ?>
 
-        /* Ambient Background */
-        .ambient-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
-            pointer-events: none;
-        }
+<!-- ============================================================ HERO -->
+<section class="hero-home">
+    <div class="hero-mesh"></div>
+    <div class="grid-lines"></div>
+    <div class="orb orb-1" style="width: 320px; height: 320px; top: 4%; left: -8%;"></div>
+    <div class="orb orb-2" style="width: 240px; height: 240px; bottom: 0; right: 6%;"></div>
 
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: rgba(21, 27, 43, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .glass-card:hover {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-        }
-
-        /* Text Gradients */
-        .text-gradient {
-            background: linear-gradient(to right, #818cf8, #c084fc, #2dd4bf);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Scroll Reveal Animations */
-        .reveal-up { opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-down { opacity: 0; transform: translateY(-50px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-right { opacity: 0; transform: translateX(50px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
-        .scale-in { opacity: 0; transform: scale(0.9); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
-        
-        .reveal-up.active, .reveal-down.active, .reveal-left.active, .reveal-right.active, .scale-in.active {
-            opacity: 1; transform: translate(0) scale(1);
-        }
-
-        /* Staggered delays */
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
-        .delay-300 { transition-delay: 300ms; }
-        .delay-400 { transition-delay: 400ms; }
-        .delay-500 { transition-delay: 500ms; }
-
-        /* Custom Buttons */
-        .btn-glow {
-            position: relative;
-        }
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4, #6366f1);
-            z-index: -1;
-            border-radius: inherit;
-            background-size: 400%;
-            animation: glow-spin 20s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .btn-glow:hover::before { opacity: 1; }
-        
-        @keyframes glow-spin {
-            0% { background-position: 0 0; }
-            50% { background-position: 400% 0; }
-            100% { background-position: 0 0; }
-        }
-
-        /* Typing cursor */
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-start infinite;
-            color: #6366f1;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-        
-        /* Ultra Modern Animations */
-        @keyframes shimmer { 100% { transform: translateX(100%); } }
-        /* Spotlight Effect */
-        @keyframes spotlight { 
-            0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
-            100% { opacity: 1; transform: translate(-50%,-40%) scale(1); }
-        }
-        .spotlight {
-            position: absolute;
-            top: 0; left: 0;
-            width: 138%; height: 138%;
-            background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 100%);
-            animation: spotlight 2s ease forwards;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* 3D Animated Grid Floor */
-        .grid-3d-floor {
-            position: absolute;
-            bottom: -50%; left: -50%; width: 200%; height: 100%;
-            background-image: 
-                linear-gradient(to right, rgba(99, 102, 241, 0.2) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg) translateY(100px) translateZ(-200px);
-            animation: grid-move 10s linear infinite;
-            mask-image: linear-gradient(to top, black 40%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
-            z-index: 0;
-        }
-        @keyframes grid-move { 0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } 100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); } }
-
-        /* Double Marquee */
-        @keyframes marquee-reverse { 0% { transform: translateX(-100%); } 100% { transform: translateX(0%); } }
-        .animate-marquee-reverse { animation: marquee-reverse 25s linear infinite; }
-
-        /* Lamp Effect */
-        .lamp-glow-top {
-            position: absolute;
-            top: 0; left: 50%; transform: translateX(-50%);
-            width: 400px; height: 150px;
-            background: rgba(99, 102, 241, 0.5);
-            filter: blur(80px);
-            border-radius: 50%;
-        }
-        .lamp-cone {
-            position: absolute;
-            top: 0; left: 50%; transform: translateX(-50%);
-            width: 600px; height: 100%;
-            background: conic-gradient(from 180deg at 50% -20%, transparent 120deg, rgba(99, 102, 241, 0.3) 180deg, transparent 240deg);
-            filter: blur(20px);
-            mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-        }
-
-        .blur-reveal { opacity: 0; filter: blur(15px); transform: translateY(30px); transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
-        .blur-reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
-
-        /* Sparkles */
-        .sparkle { position: absolute; background: white; border-radius: 50%; pointer-events: none; animation: sparkle-anim 2s linear forwards; box-shadow: 0 0 10px 2px rgba(255,255,255,0.8); }
-        @keyframes sparkle-anim { 0% { transform: scale(0) translateY(0); opacity: 1; } 50% { transform: scale(1) translateY(-20px); opacity: 1; } 100% { transform: scale(0) translateY(-40px); opacity: 0; } }
-        .sparkles-container { position: absolute; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
-
-        /* Meteors */
-        .meteor { position: absolute; top: 50%; left: 50%; width: 100px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); transform: rotate(215deg); animation: meteor-fall 5s linear infinite; border-radius: 9999px; box-shadow: 0 0 10px rgba(255,255,255,0.2); pointer-events: none; }
-        .meteor::before { content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 15px 2px #fff; }
-        @keyframes meteor-fall { 0% { transform: rotate(215deg) translateX(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotate(215deg) translateX(-1000px); opacity: 0; } }
-
-        /* Tracing Beam */
-        .tracing-beam-container { position: absolute; left: 20px; top: 0; bottom: 0; width: 40px; pointer-events: none; z-index: 10; }
-        .tracing-beam-line { width: 2px; background: rgba(255,255,255,0.1); height: 100%; position: absolute; left: 20px; }
-        .tracing-beam-glow { width: 4px; background: linear-gradient(to bottom, transparent, #6366f1, #06b6d4, transparent); position: absolute; left: 19px; top: 0; height: 300px; transition: transform 0.1s; box-shadow: 0 0 20px 2px rgba(99, 102, 241, 0.5); border-radius: 9999px; }
-
-        /* Infinite Testimonial Cards */
-        .testimonial-card { flex-shrink: 0; width: 350px; background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 2rem; position: relative; overflow: hidden; }
-
-        .bento-card {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.5s ease;
-        }
-
-        .bento-card:hover {
-            border-color: rgba(99, 102, 241, 0.3);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
-        }
-
-        .bento-card::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255, 255, 255, 0.08), transparent 40%);
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .bento-card:hover::after { opacity: 1; }
-        .bento-content { position: relative; z-index: 1; }
-
-        .magic-btn-wrapper {
-            position: relative;
-            display: inline-flex;
-            overflow: hidden;
-            border-radius: 9999px;
-            padding: 1px;
-            transition: transform 0.3s;
-        }
-        .magic-btn-wrapper:hover {
-            transform: scale(1.05);
-        }
-        .magic-border {
-            position: absolute;
-            inset: -1000%;
-            animation: spin-slow 4s linear infinite;
-            background: conic-gradient(from 90deg at 50% 50%, #E2CBFF 0%, #393BB2 50%, #E2CBFF 100%);
-        }
-        
-        .glowing-sphere {
-            width: 320px; height: 320px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(99,102,241,0.6) 40%, rgba(11,15,25,1) 80%);
-            box-shadow: 
-                0 0 80px rgba(99, 102, 241, 0.5),
-                inset -20px -20px 60px rgba(0,0,0,0.9),
-                inset 20px 20px 40px rgba(255,255,255,0.3);
-            animation: float 6s ease-in-out infinite, auroraflow 30s linear infinite;
-            position: relative;
-        }
-    </style>
-    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
-    <?php include 'components/google_analytics.php'; ?>
-</head>
-<body class="antialiased selection:bg-primary selection:text-white">
-    <div class="ambient-bg"></div>
-
-    <?php include 'components/nav.php'; ?>
-
-    <!-- HERO SECTION: The visual masterpiece -->
-    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <!-- Spotlight & 3D Grid Background -->
-        <div class="spotlight"></div>
-        <div class="grid-3d-floor"></div>
-
-        <div class="container mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
-            <!-- Left: Typography & CTA -->
-            <div class="w-full lg:w-1/2 text-center lg:text-left">
-                <div class="blur-reveal delay-100">
-                    <a href="#" class="inline-flex items-center justify-center mb-8 px-4 py-1.5 text-sm font-medium transition-all rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 group relative overflow-hidden backdrop-blur-md">
-                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
-                        <span class="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse shadow-[0_0_10px_#6366f1]"></span>
-                        <span class="text-gray-300 tracking-wider uppercase text-xs group-hover:text-white transition-colors">The Future of Digital</span>
-                    </a>
+    <div class="shell shell-wide relative z-1">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="chip" data-aos="fade-up">
+                    <span style="width: 7px; height: 7px; border-radius: 99px; background: #1a9f6e; box-shadow: 0 0 0 4px rgba(26,159,110,.13); display: inline-block;"></span>
+                    Available for Q1 2027 projects
                 </div>
 
-                <h1 class="font-heading text-5xl md:text-7xl lg:text-[80px] font-black leading-[1.1] mb-6 tracking-tight blur-reveal delay-200 relative inline-block">
-                    <div id="hero-sparkles" class="sparkles-container"></div>
-                    We Build <br/>
-                    <span class="text-gradient">Experiences</span><br/>
-                    <span id="typing-text" class="text-white typing-cursor"></span>
+                <h1 class="display-1 text-balance" style="margin-top: 24px;" data-aos="fade-up" data-aos-delay="60">
+                    We build brands<br>
+                    <span class="gradient-text">worth following.</span>
                 </h1>
 
-                <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed blur-reveal delay-300">
-                    Elevate your brand with award-winning design, flawless development, and strategic marketing that dominates the digital landscape.
+                <p class="lead" style="margin-top: 22px;" data-aos="fade-up" data-aos-delay="120">
+                    Hypecrews is a premium digital brand company. We combine identity, product and growth into one sharp system — built to make ambitious businesses impossible to ignore.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 blur-reveal delay-400">
-                    <a href="#services" class="magic-btn-wrapper">
-                        <span class="magic-border"></span>
-                        <span class="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-8 py-4 text-sm font-bold text-white backdrop-blur-3xl transition-colors hover:bg-slate-900">
-                            Explore Offerings
-                        </span>
-                    </a>
-                    <a href="contact.php" class="px-8 py-4 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 transition-all w-full sm:w-auto text-center flex items-center justify-center group">
-                        Let's Talk
-                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
-                    </a>
+                <div class="flex flex-wrap gap-3" style="margin-top: 32px;" data-aos="fade-up" data-aos-delay="180">
+                    <a href="/contact.php" class="btn btn-primary btn-lg">Start a Project <i class="fas fa-arrow-right"></i></a>
+                    <a href="/services.php" class="btn btn-outline btn-lg">Explore Services</a>
                 </div>
 
-                <!-- Floating Stats -->
-                <div class="grid grid-cols-3 gap-4 mt-16 blur-reveal delay-500 border-t border-white/10 pt-8 max-w-lg mx-auto lg:mx-0">
-                    <div>
-                        <div class="text-3xl font-heading font-bold text-white mb-1"><span class="counter" data-target="1000">0</span>+</div>
-                        <div class="text-sm text-gray-500 uppercase tracking-wider">Projects</div>
+                <div class="flex flex-wrap items-center gap-8" style="margin-top: 42px;" data-aos="fade-up" data-aos-delay="240">
+                    <div class="flex items-center" style="gap: 0;">
+                        <span class="nav-avatar" style="width: 36px; height: 36px; border: 2px solid #fff; margin-right: -8px; background: linear-gradient(140deg, #A0E0EF, #60C1E5);">A</span>
+                        <span class="nav-avatar" style="width: 36px; height: 36px; border: 2px solid #fff; margin-right: -8px; background: linear-gradient(140deg, #60C1E5, #005A9C); color: #fff;">R</span>
+                        <span class="nav-avatar" style="width: 36px; height: 36px; border: 2px solid #fff; margin-right: -8px; background: linear-gradient(140deg, #1B365D, #005A9C); color: #fff;">M</span>
+                        <span class="nav-avatar" style="width: 36px; height: 36px; border: 2px solid #fff; background: #fff; color: #1B365D; font-size: 10px;">+</span>
                     </div>
                     <div>
-                        <div class="text-3xl font-heading font-bold text-white mb-1"><span class="counter" data-target="750">0</span>+</div>
-                        <div class="text-sm text-gray-500 uppercase tracking-wider">Clients</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-heading font-bold text-white mb-1"><span class="counter" data-target="98">0</span>%</div>
-                        <div class="text-sm text-gray-500 uppercase tracking-wider">Success</div>
+                        <div style="color: #F0A92E; font-size: 12px; letter-spacing: 2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p style="font-size: 12px; color: var(--muted); font-weight: 700;">Trusted by 750+ brands across India</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: 3D Visual/Abstract Element -->
-            <div class="w-full lg:w-1/2 relative h-[500px] lg:h-[700px] blur-reveal delay-400 hidden md:flex items-center justify-center">
-                <!-- Glowing 3D Sphere -->
-                <div class="glowing-sphere z-20"></div>
-
-                <!-- Orbital Rings -->
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] border border-white/10 rounded-full animate-[spin_40s_linear_infinite] z-10">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_#6366f1]"></div>
-                </div>
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] border border-white/5 rounded-full animate-[spin_50s_linear_infinite_reverse] z-10">
-                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-accent rounded-full shadow-[0_0_20px_#06b6d4]"></div>
-                </div>
-                
-                <!-- Floating Glass Card -->
-                <div class="absolute top-1/4 right-0 w-48 h-48 glass-panel rounded-2xl animate-float-delayed z-30 p-5 flex flex-col items-center justify-center border border-secondary/30 shadow-[0_0_30px_rgba(139,92,246,0.15)] backdrop-blur-xl">
-                    <div class="w-16 h-16 rounded-full border-4 border-secondary/50 border-t-secondary animate-[spin_4s_linear_infinite] mb-3 flex items-center justify-center">
-                        <i class="fas fa-bolt text-secondary"></i>
-                    </div>
-                    <span class="font-bold text-lg text-white">Peak</span>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">Performance</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dual 3D Marquee -->
-    <section class="py-24 relative z-10 overflow-hidden bg-black/50 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
-        <div class="flex flex-col gap-8 transform -rotate-3 scale-110 shadow-2xl">
-            <!-- Row 1 Left -->
-            <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-                <div class="flex animate-marquee whitespace-nowrap items-center opacity-60">
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-shield-alt text-secondary"></i> Secure Assets</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-globe text-primary"></i> Global Reach</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-chart-pie text-accent"></i> Data Driven</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-gem text-primary"></i> Premium Brands</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-bolt text-accent"></i> Fast Execution</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-shield-alt text-secondary"></i> Secure Assets</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-globe text-primary"></i> Global Reach</span>
-                    <span class="mx-12 text-2xl font-heading font-bold tracking-widest uppercase text-gray-400 flex items-center gap-3"><i class="fas fa-chart-pie text-accent"></i> Data Driven</span>
-                </div>
-            </div>
-            <!-- Row 2 Right -->
-            <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-                <div class="flex animate-marquee-reverse whitespace-nowrap items-center opacity-40 text-xl">
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Web Architecture</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Social Mastery</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Cinematic Video</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Digital Recovery</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Copyright Protection</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Web Architecture</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Social Mastery</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Cinematic Video</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Digital Recovery</span>
-                    <span class="mx-12 font-heading font-bold tracking-widest uppercase text-gray-500 flex items-center gap-3">Copyright Protection</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Premium Services Grid -->
-    <section id="services" class="py-32 relative z-10 overflow-hidden">
-        <div id="meteor-container" class="absolute inset-0 pointer-events-none z-0"></div>
-        <div class="container mx-auto px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto mb-20 reveal-up">
-                <h2 class="font-heading text-4xl md:text-6xl font-bold mb-6">Our <span class="text-gradient">Expertise</span></h2>
-                <p class="text-lg text-gray-400 font-light">We deliver state-of-the-art solutions across a diverse range of digital disciplines to ensure your absolute market dominance.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="bento-services-container">
-                <!-- Service 1 (Spans 2 columns) -->
-                <div class="bento-card md:col-span-2 p-10 blur-reveal group">
-                    <div class="bento-content h-full flex flex-col justify-center">
-                        <div class="flex items-center justify-between mb-6">
-                            <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors">
-                                <i class="fas fa-copyright text-indigo-400 text-2xl"></i>
+            <!-- Brand intelligence mockup -->
+            <div class="relative" data-aos="fade-left" data-aos-delay="120">
+                <div class="mockup">
+                    <div class="mockup-bar"><span></span><span></span><span></span><div></div></div>
+                    <div class="mockup-body">
+                        <div class="flex items-center justify-between" style="margin-bottom: 14px;">
+                            <div class="flex items-center gap-3">
+                                <div class="icon-tile icon-tile-sm"><i class="fas fa-wave-square"></i></div>
+                                <div>
+                                    <p style="font-size: 11px; font-weight: 800; color: var(--navy);">Brand Command Center</p>
+                                    <p style="font-size: 9px; color: var(--muted-2);">Live growth overview</p>
+                                </div>
                             </div>
-                            <a href="services.php#copyright" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 hover:bg-white/20 transition-all">
-                                <i class="fas fa-arrow-right text-white -rotate-45 group-hover:rotate-0 transition-transform"></i>
-                            </a>
+                            <span class="badge badge-green">Live</span>
                         </div>
-                        <h3 class="text-3xl font-heading font-bold mb-3">Copyright Protection</h3>
-                        <p class="text-gray-400 font-light leading-relaxed max-w-lg">Advanced tracking and aggressive removal of unauthorized content to comprehensively protect your intellectual property worldwide.</p>
+                        <div class="mockup-kpis">
+                            <div class="mockup-kpi"><p>Reach</p><strong>2.4M</strong><span class="up"><i class="fas fa-arrow-trend-up"></i> 38%</span></div>
+                            <div class="mockup-kpi"><p>Leads</p><strong>8.9k</strong><span class="up"><i class="fas fa-arrow-trend-up"></i> 24%</span></div>
+                            <div class="mockup-kpi"><p>ROAS</p><strong>6.2x</strong><span class="up"><i class="fas fa-arrow-trend-up"></i> 17%</span></div>
+                        </div>
+                        <div class="mockup-chart">
+                            <div class="mockup-chart-head"><p>Campaign performance</p><span>Last 90 days</span></div>
+                            <div class="mockup-bars">
+                                <i style="height: 34%"></i><i style="height: 52%"></i><i style="height: 42%"></i><i style="height: 66%"></i><i style="height: 58%"></i><i style="height: 78%"></i><i style="height: 70%"></i><i style="height: 92%"></i><i style="height: 82%"></i><i style="height: 100%"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2" style="margin-top: 12px;">
+                            <div style="border: 1px solid var(--line); border-radius: 11px; padding: 10px; background: #fbfdff;"><p style="font-size: 8px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2);">Content</p><p style="font-size: 12px; font-weight: 800; color: var(--navy); margin-top: 3px;">128 assets</p></div>
+                            <div style="border: 1px solid var(--line); border-radius: 11px; padding: 10px; background: #fbfdff;"><p style="font-size: 8px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2);">Assets</p><p style="font-size: 12px; font-weight: 800; color: var(--navy); margin-top: 3px;">340 protected</p></div>
+                            <div style="border: 1px solid var(--line); border-radius: 11px; padding: 10px; background: #fbfdff;"><p style="font-size: 8px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2);">Sentiment</p><p style="font-size: 12px; font-weight: 800; color: #15805a; margin-top: 3px;">98% positive</p></div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Service 2 -->
-                <div class="bento-card p-8 blur-reveal delay-100 group">
-                    <div class="bento-content">
-                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 group-hover:bg-purple-500/20 transition-colors">
-                            <i class="fas fa-hashtag text-purple-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-heading font-bold mb-3">Social Mastery</h3>
-                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Strategic social media management that builds viral momentum and engagement.</p>
-                        <a href="services.php#social" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-purple-400 group-hover:text-purple-300">
-                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
+                <div class="mockup-float mockup-float-1">
+                    <div class="icon-tile"><i class="fas fa-arrow-trend-up"></i></div>
+                    <div><strong>+212% growth</strong><small>Organic reach this quarter</small></div>
                 </div>
-
-                <!-- Service 3 -->
-                <div class="bento-card p-8 blur-reveal delay-200 group">
-                    <div class="bento-content">
-                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-colors">
-                            <i class="fas fa-laptop-code text-cyan-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-heading font-bold mb-3">Web Architecture</h3>
-                        <p class="text-gray-400 mb-6 font-light leading-relaxed">High-performance, bespoke web applications engineered with modern stacks.</p>
-                        <a href="services.php#web" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-cyan-400 group-hover:text-cyan-300">
-                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Service 4 -->
-                <div class="bento-card p-8 blur-reveal delay-300 group">
-                    <div class="bento-content">
-                        <div class="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center mb-6 border border-rose-500/20 group-hover:bg-rose-500/20 transition-colors">
-                            <i class="fas fa-video text-rose-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-heading font-bold mb-3">Cinematic Video</h3>
-                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Stunning visual productions from concept to final cut to convert audiences.</p>
-                        <a href="services.php#video" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-rose-400 group-hover:text-rose-300">
-                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Service 5 -->
-                <div class="bento-card p-8 blur-reveal delay-400 group">
-                    <div class="bento-content">
-                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-                            <i class="fas fa-shield-alt text-emerald-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-heading font-bold mb-3">Digital Recovery</h3>
-                        <p class="text-gray-400 mb-6 font-light leading-relaxed">Expert recovery protocols for hacked accounts and aggressive reputation management.</p>
-                        <a href="services.php#recovery" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-emerald-400 group-hover:text-emerald-300">
-                            Explore <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
+                <div class="mockup-float mockup-float-2">
+                    <div class="icon-tile"><i class="fas fa-shield-halved"></i></div>
+                    <div><strong>340 assets secured</strong><small>Copyright protection live</small></div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Sticky Scroll Section -->
-    <section class="relative z-10 bg-black/40 border-y border-white/5 py-24" id="sticky-section-wrapper">
-        <div class="tracing-beam-container hidden lg:block">
-            <div class="tracing-beam-line"></div>
-            <div id="tracing-beam-glow" class="tracing-beam-glow"></div>
-        </div>
-        <div class="container mx-auto px-6 lg:px-8 pl-6 lg:pl-24">
-            <div class="flex flex-col lg:flex-row gap-16 relative items-start">
-                <!-- Sticky Text Left -->
-                <div class="w-full lg:w-1/2 lg:sticky lg:top-32 space-y-0 lg:space-y-32 py-10" id="sticky-scroll-text">
-                    <div class="scroll-item transition-all duration-500 transform lg:translate-x-0 lg:opacity-100 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
-                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
-                           <i class="fas fa-copyright text-indigo-500"></i>
-                        </div>
-                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Copyright Protection.</h2>
-                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Advanced tracking and aggressive removal of unauthorized content to comprehensively protect your intellectual property worldwide.</p>
-                    </div>
-                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
-                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
-                           <i class="fas fa-hashtag text-purple-500"></i>
-                        </div>
-                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Social Mastery.</h2>
-                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Strategic social media management that builds viral momentum and engagement.</p>
-                    </div>
-                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
-                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
-                           <i class="fas fa-laptop-code text-cyan-500"></i>
-                        </div>
-                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Web Architecture.</h2>
-                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">High-performance, bespoke web applications engineered with modern stacks.</p>
-                    </div>
-                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
-                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
-                           <i class="fas fa-video text-rose-500"></i>
-                        </div>
-                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Cinematic Video.</h2>
-                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Stunning visual productions from concept to final cut to convert audiences.</p>
-                    </div>
-                    <div class="scroll-item transition-all duration-500 transform lg:-translate-x-4 lg:opacity-30 bg-white/5 lg:bg-transparent p-8 lg:p-0 rounded-3xl border border-white/10 lg:border-transparent mb-6 lg:mb-0 relative overflow-hidden reveal-up">
-                        <div class="lg:hidden absolute -right-6 -top-6 opacity-[0.05] text-[150px] pointer-events-none">
-                           <i class="fas fa-shield-alt text-emerald-500"></i>
-                        </div>
-                        <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 lg:mb-6 leading-tight relative z-10">Digital Recovery.</h2>
-                        <p class="text-gray-400 font-light text-base lg:text-lg relative z-10">Expert recovery protocols for hacked accounts and aggressive reputation management.</p>
-                    </div>
+<!-- ==================================================== TRUSTED BY -->
+<section style="padding: 34px 0 38px; background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+    <div class="shell shell-wide">
+        <p class="text-center" style="font-size: 10px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 24px;">Brands that trust Hypecrews</p>
+        <div class="marquee" style="--bg: #fff;">
+            <div class="marquee-track">
+                <div class="logo-cloud">
+                    <span class="logo-text">AMAZON</span>
+                    <img src="/graphics/logos/axis-bank.png" alt="Axis Bank">
+                    <img src="/graphics/logos/decathlon.png" alt="Decathlon">
+                    <span class="logo-text">INFOSYS</span>
+                    <img src="/graphics/logos/samsung.png" alt="Samsung">
+                    <span class="logo-text">SONY MUSIC</span>
+                    <img src="/graphics/logos/amazon.png" alt="Amazon">
+                    <span class="logo-text">ZOMATO</span>
+                    <img src="/graphics/logos/infosys.png" alt="Infosys">
                 </div>
-
-                <!-- Scrolling Visuals Right -->
-                <div class="w-full lg:w-1/2 space-y-24 py-10 hidden lg:block" id="sticky-scroll-visuals">
-                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-indigo-900/40 to-transparent">
-                        <i class="fas fa-copyright text-9xl text-indigo-500/50"></i>
-                    </div>
-                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-transparent">
-                        <i class="fas fa-hashtag text-9xl text-purple-500/50"></i>
-                    </div>
-                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-cyan-900/40 to-transparent">
-                        <i class="fas fa-laptop-code text-9xl text-cyan-500/50"></i>
-                    </div>
-                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-rose-900/40 to-transparent">
-                        <i class="fas fa-video text-9xl text-rose-500/50"></i>
-                    </div>
-                    <div class="h-[400px] glass-panel rounded-2xl p-6 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center bg-gradient-to-br from-emerald-900/40 to-transparent">
-                        <i class="fas fa-shield-alt text-9xl text-emerald-500/50"></i>
-                    </div>
+                <div class="logo-cloud" aria-hidden="true">
+                    <span class="logo-text">AMAZON</span>
+                    <img src="/graphics/logos/axis-bank.png" alt="">
+                    <img src="/graphics/logos/decathlon.png" alt="">
+                    <span class="logo-text">INFOSYS</span>
+                    <img src="/graphics/logos/samsung.png" alt="">
+                    <span class="logo-text">SONY MUSIC</span>
+                    <img src="/graphics/logos/amazon.png" alt="">
+                    <span class="logo-text">ZOMATO</span>
+                    <img src="/graphics/logos/infosys.png" alt="">
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Infinite Scrolling Testimonial Cards -->
-    <section class="py-24 relative z-10 overflow-hidden">
-        <div class="text-center max-w-3xl mx-auto mb-16 reveal-up">
-            <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">Client <span class="text-gradient">Success</span></h2>
-            <p class="text-lg text-gray-400 font-light">Don't just take our word for it. Here is what industry leaders say about our impact.</p>
-        </div>
-        
-        <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] py-4">
-            <div class="flex gap-6 animate-marquee items-center pl-6 hover:[animation-play-state:paused]">
-                <!-- Card 1 -->
-                <div class="testimonial-card">
-                    <i class="fas fa-quote-left text-primary/30 text-4xl absolute top-6 right-6"></i>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
-                            <i class="fas fa-user text-primary"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white">Sarah Jenkins</h4>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 font-light leading-relaxed">"Hypecrews completely overhauled our digital presence. Our conversion rates tripled within the first month. Absolute game changers."</p>
-                </div>
-                <!-- Card 2 -->
-                <div class="testimonial-card">
-                    <i class="fas fa-quote-left text-accent/30 text-4xl absolute top-6 right-6"></i>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30">
-                            <i class="fas fa-user text-accent"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white">Marcus Thorne</h4>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 font-light leading-relaxed">"The level of precision and speed they deliver is unmatched. The 3D animations they built for our launch broke the internet."</p>
-                </div>
-                <!-- Card 3 -->
-                <div class="testimonial-card">
-                    <i class="fas fa-quote-left text-secondary/30 text-4xl absolute top-6 right-6"></i>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center border border-secondary/30">
-                            <i class="fas fa-user text-secondary"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white">Elena Rostova</h4>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 font-light leading-relaxed">"Their copyright protection team took down 400+ unauthorized copies of our software in 48 hours. Elite service."</p>
-                </div>
-                
-                <!-- Card 1 Dupe -->
-                <div class="testimonial-card">
-                    <i class="fas fa-quote-left text-primary/30 text-4xl absolute top-6 right-6"></i>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
-                            <i class="fas fa-user text-primary"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white">Sarah Jenkins</h4>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 font-light leading-relaxed">"Hypecrews completely overhauled our digital presence. Our conversion rates tripled within the first month. Absolute game changers."</p>
-                </div>
-                <!-- Card 2 Dupe -->
-                <div class="testimonial-card">
-                    <i class="fas fa-quote-left text-accent/30 text-4xl absolute top-6 right-6"></i>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30">
-                            <i class="fas fa-user text-accent"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white">Marcus Thorne</h4>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 font-light leading-relaxed">"The level of precision and speed they deliver is unmatched. The 3D animations they built for our launch broke the internet."</p>
-                </div>
-                <!-- Card 3 Dupe -->
-                <div class="testimonial-card">
-                    <i class="fas fa-quote-left text-secondary/30 text-4xl absolute top-6 right-6"></i>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center border border-secondary/30">
-                            <i class="fas fa-user text-secondary"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white">Elena Rostova</h4>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 font-light leading-relaxed">"Their copyright protection team took down 400+ unauthorized copies of our software in 48 hours. Elite service."</p>
+<!-- ==================================================== STATS BAND -->
+<section class="section-dark stat-band" style="padding: 64px 0;">
+    <div class="arc-lines"></div>
+    <div class="shell shell-wide relative z-1">
+        <div class="grid lg:grid-cols-4 gap-10 items-end">
+            <div data-aos="fade-right">
+                <span class="eyebrow eyebrow-light">By the numbers</span>
+                <h2 style="font-size: clamp(1.7rem, 2.6vw, 2.3rem); margin-top: 12px;">Quiet confidence,<br><span class="gradient-text-light">measured results.</span></h2>
+            </div>
+            <div class="lg:col-span-3" data-aos="fade-left">
+                <div class="stat-grid">
+                    <div class="stat-cell"><div class="num"><span data-count="1000" data-suffix="+">0+</span></div><p>Projects delivered</p></div>
+                    <div class="stat-cell"><div class="num"><span data-count="750" data-suffix="+">0+</span></div><p>Brands served</p></div>
+                    <div class="stat-cell"><div class="num"><span data-count="98" data-suffix="%">0%</span></div><p>Success rate</p></div>
+                    <div class="stat-cell"><div class="num"><span data-count="4.9" data-decimals="1" data-suffix="/5">0/5</span></div><p>Client rating</p></div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Lamp Component Call to Action -->
-    <section class="pt-40 pb-32 relative z-10 text-center px-4 overflow-hidden bg-dark">
-        <div class="lamp-glow-top"></div>
-        <div class="lamp-cone"></div>
-        
-        <div class="relative z-10 reveal-up mt-20">
-            <h2 class="font-heading text-5xl md:text-7xl font-black mb-6 text-white text-shadow-glow">Ready to <span class="text-gradient">Dominate?</span></h2>
-            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light">Join hundreds of successful brands that have transformed their digital presence with our elite team.</p>
-            
-            <a href="contact.php" class="magic-btn-wrapper mt-4">
-                <span class="magic-border"></span>
-                <span class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-10 py-5 text-lg font-bold text-white backdrop-blur-3xl transition-colors hover:bg-slate-900">
-                    Start Your Project <i class="fas fa-rocket ml-3"></i>
-                </span>
-            </a>
+<!-- ======================================================= SERVICES -->
+<section class="section" id="services" style="background: var(--mist);">
+    <div class="shell shell-wide">
+        <div class="flex flex-wrap items-end justify-between gap-8 section-head" style="max-width: none;">
+            <div style="max-width: 640px;">
+                <span class="eyebrow" data-aos="fade-up">What we do</span>
+                <h2 class="display-2" style="margin-top: 16px;" data-aos="fade-up" data-aos-delay="50">One partner for brand,<br><span class="gradient-text">product and growth.</span></h2>
+            </div>
+            <a href="/services.php" class="link-arrow" data-aos="fade-up" data-aos-delay="100">View all 13 services <i class="fas fa-arrow-right"></i></a>
         </div>
-    </section>
 
-    <?php include 'components/footer.php'; ?>
-    
-    <script>
-        // Typing Effect Logic
-        const words = ["that Convert.", "that Inspire.", "that Dominate."];
-        let i = 0;
-        let timer;
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Featured -->
+            <article class="card card-hover card-pad md:col-span-2" style="background: linear-gradient(135deg, #fff 25%, #eef8fd);" data-aos="fade-up">
+                <div class="flex flex-wrap items-start justify-between gap-6">
+                    <div style="max-width: 470px;">
+                        <div class="icon-tile icon-tile-lg"><i class="fas fa-copyright"></i></div>
+                        <h3 style="font-size: 26px; margin-top: 22px;">Copyright Protection</h3>
+                        <p style="font-size: 14px; color: var(--muted); line-height: 1.8; margin-top: 10px;">Proactive monitoring, fast DMCA takedowns and persistent follow-up to keep your creative work safe across every platform.</p>
+                        <a href="/services.php#copyright" class="link-arrow" style="margin-top: 24px;">Protect your work <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="hidden md:block" style="flex: 0 0 220px;">
+                        <div style="border-radius: 18px; background: #fff; border: 1px solid var(--line); padding: 16px; box-shadow: var(--shadow-sm);">
+                            <div class="flex items-center justify-between" style="margin-bottom: 14px;"><span class="badge badge-sky">Live scan</span><i class="fas fa-shield-halved" style="color: var(--sky);"></i></div>
+                            <div style="height: 8px; border-radius: 99px; background: #e9f3f9; overflow: hidden; margin-bottom: 8px;"><div style="width: 86%; height: 100%; background: linear-gradient(90deg, var(--blue), var(--sky)); border-radius: 99px;"></div></div>
+                            <p style="font-size: 10px; color: var(--muted-2); font-weight: 700;">340 assets monitored · 98% cleared</p>
+                            <div class="flex items-center gap-2" style="margin-top: 16px;">
+                                <span style="width: 7px; height: 7px; border-radius: 99px; background: #1a9f6e;"></span>
+                                <span style="font-size: 10px; font-weight: 800; color: #15805a;">All systems protected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
 
-        function typingEffect() {
-            let word = words[i].split("");
-            var loopTyping = function() {
-                if (word.length > 0) {
-                    document.getElementById('typing-text').innerHTML += word.shift();
-                } else {
-                    setTimeout(deletingEffect, 2000);
-                    return false;
-                };
-                timer = setTimeout(loopTyping, 100);
-            };
-            loopTyping();
-        }
+            <article class="card card-hover card-pad" data-aos="fade-up" data-aos-delay="60">
+                <div class="icon-tile"><i class="fas fa-hashtag"></i></div>
+                <h3 style="font-size: 20px; margin-top: 20px;">Social Media</h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.75; margin-top: 8px;">Strategy, content and community that turns followers into a real audience.</p>
+                <a href="/services.php#social" class="link-arrow" style="margin-top: 20px;">Explore <i class="fas fa-arrow-right"></i></a>
+            </article>
 
-        function deletingEffect() {
-            let word = words[i].split("");
-            var loopDeleting = function() {
-                if (word.length > 0) {
-                    word.pop();
-                    document.getElementById('typing-text').innerHTML = word.join("");
-                } else {
-                    if (words.length > (i + 1)) {
-                        i++;
-                    } else {
-                        i = 0;
-                    };
-                    setTimeout(typingEffect, 500);
-                    return false;
-                };
-                timer = setTimeout(loopDeleting, 50);
-            };
-            loopDeleting();
-        }
+            <article class="card card-hover card-pad" data-aos="fade-up" data-aos-delay="90">
+                <div class="icon-tile"><i class="fas fa-laptop-code"></i></div>
+                <h3 style="font-size: 20px; margin-top: 20px;">Web & Product</h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.75; margin-top: 8px;">High-performance websites and applications designed around real business outcomes.</p>
+                <a href="/services.php#web" class="link-arrow" style="margin-top: 20px;">Explore <i class="fas fa-arrow-right"></i></a>
+            </article>
 
-        // Counter Animation Logic
-        function animateCounters() {
-            const counters = document.querySelectorAll('.counter');
-            counters.forEach(counter => {
-                counter.innerText = '0';
-                const updateCounter = () => {
-                    const target = +counter.getAttribute('data-target');
-                    const c = +counter.innerText;
-                    const increment = target / 50; // Speed adjustment
+            <article class="card card-hover card-pad" data-aos="fade-up" data-aos-delay="120">
+                <div class="icon-tile"><i class="fas fa-bullhorn"></i></div>
+                <h3 style="font-size: 20px; margin-top: 20px;">Digital Marketing</h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.75; margin-top: 8px;">Paid media, SEO and lifecycle campaigns engineered for efficient growth.</p>
+                <a href="/services.php#digital" class="link-arrow" style="margin-top: 20px;">Explore <i class="fas fa-arrow-right"></i></a>
+            </article>
 
-                    if (c < target) {
-                        counter.innerText = `${Math.ceil(c + increment)}`;
-                        setTimeout(updateCounter, 30);
-                    } else {
-                        counter.innerText = target;
-                    }
-                };
-                updateCounter();
-            });
-        }
+            <article class="card card-hover card-pad" data-aos="fade-up" data-aos-delay="150">
+                <div class="icon-tile"><i class="fas fa-clapperboard"></i></div>
+                <h3 style="font-size: 20px; margin-top: 20px;">Video & Content</h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.75; margin-top: 8px;">Cinematic brand films, social content and campaigns that people remember.</p>
+                <a href="/services.php#video" class="link-arrow" style="margin-top: 20px;">Explore <i class="fas fa-arrow-right"></i></a>
+            </article>
 
-        // Intersection Observer for Reveal Animations & Counters
-        document.addEventListener('DOMContentLoaded', () => {
-            typingEffect();
+            <article class="card card-hover card-pad" data-aos="fade-up" data-aos-delay="180">
+                <div class="icon-tile"><i class="fas fa-pen-nib"></i></div>
+                <h3 style="font-size: 20px; margin-top: 20px;">Creative & Brand</h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.75; margin-top: 8px;">Identity systems, UI/UX and design language with a premium point of view.</p>
+                <a href="/services.php#creative" class="link-arrow" style="margin-top: 20px;">Explore <i class="fas fa-arrow-right"></i></a>
+            </article>
+        </div>
+    </div>
+</section>
 
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
+<!-- ====================================================== WHY US -->
+<section class="section" style="background: #fff;">
+    <div class="shell shell-wide">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="relative" data-aos="fade-right">
+                <div style="border-radius: 30px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-md); position: relative;">
+                    <img src="/graphics/516as4d8a16s5d64as.jpg" alt="Hypecrews team at work" style="width: 100%; height: 520px; object-fit: cover;">
+                    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgba(11,28,47,.72));"></div>
+                    <div style="position: absolute; left: 26px; right: 26px; bottom: 24px; color: #fff;">
+                        <p style="font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--ice);">Since 2022</p>
+                        <p style="font-family: var(--font-head); font-size: 20px; font-weight: 700; color: #fff; margin-top: 4px;">A senior team, obsessed with the details.</p>
+                    </div>
+                </div>
+                <div class="card" style="position: absolute; right: -16px; top: 34px; padding: 16px 18px; border-radius: 16px; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 12px; max-width: 210px;" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="icon-tile icon-tile-sm"><i class="fas fa-award"></i></div>
+                    <div><strong style="display: block; font-size: 12px; color: var(--navy);">Top-rated agency</strong><small style="font-size: 10px; color: var(--muted-2);">4.9/5 across 300+ reviews</small></div>
+                </div>
+            </div>
 
-            let countersAnimated = false;
+            <div data-aos="fade-left">
+                <span class="eyebrow">Why Hypecrews</span>
+                <h2 class="display-2" style="margin-top: 16px;">Built like a partner.<br><span class="gradient-text">Not a vendor.</span></h2>
+                <p class="lead" style="margin-top: 18px;">We work like an extension of your team — senior strategists, designers and engineers in one room, accountable for the outcome, not just the deliverable.</p>
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        
-                        // Check if it's the stats container to run counters
-                        if(entry.target.classList.contains('delay-500') && entry.target.querySelector('.counter') && !countersAnimated) {
-                            animateCounters();
-                            countersAnimated = true;
-                        }
-                    }
-                });
-            }, observerOptions);
+                <div class="grid sm:grid-cols-2 gap-5" style="margin-top: 32px;">
+                    <div class="flex items-start gap-3">
+                        <div class="icon-tile icon-tile-sm"><i class="fas fa-user-tie"></i></div>
+                        <div><h3 style="font-size: 14.5px;">Senior by default</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.65; margin-top: 4px;">No hand-offs to juniors after the pitch.</p></div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="icon-tile icon-tile-sm"><i class="fas fa-compass-drafting"></i></div>
+                        <div><h3 style="font-size: 14.5px;">Design with intent</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.65; margin-top: 4px;">Every screen maps to a business goal.</p></div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="icon-tile icon-tile-sm"><i class="fas fa-bolt"></i></div>
+                        <div><h3 style="font-size: 14.5px;">Momentum weekly</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.65; margin-top: 4px;">Visible progress, every single week.</p></div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="icon-tile icon-tile-sm"><i class="fas fa-shield-halved"></i></div>
+                        <div><h3 style="font-size: 14.5px;">Protection included</h3><p style="font-size: 12.5px; color: var(--muted); line-height: 1.65; margin-top: 4px;">Your assets stay yours. Always.</p></div>
+                    </div>
+                </div>
 
-            const revealElements = document.querySelectorAll('.reveal-up, .reveal-down, .reveal-left, .reveal-right, .scale-in, .blur-reveal');
-            revealElements.forEach(el => observer.observe(el));
+                <div class="flex flex-wrap items-center gap-4" style="margin-top: 34px;">
+                    <a href="/about.php" class="btn btn-primary">Meet the team <i class="fas fa-arrow-right"></i></a>
+                    <a href="/careers.php" class="btn btn-ghost">We’re hiring <i class="fas fa-arrow-up-right-from-square" style="font-size: 11px;"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-            // Spotlight effect for bento services grid
-            const bentoContainer = document.getElementById("bento-services-container");
-            if (bentoContainer) {
-                bentoContainer.addEventListener("mousemove", e => {
-                    for(const card of document.querySelectorAll("#bento-services-container .bento-card")) {
-                        const rect = card.getBoundingClientRect(),
-                              x = e.clientX - rect.left,
-                              y = e.clientY - rect.top;
-                        card.style.setProperty("--mouse-x", `${x}px`);
-                        card.style.setProperty("--mouse-y", `${y}px`);
-                    }
-                });
-            }
+<!-- ==================================================== CASE STUDIES -->
+<section class="section" style="background: var(--mist);">
+    <div class="shell shell-wide">
+        <div class="section-head section-head-center" data-aos="fade-up">
+            <span class="eyebrow eyebrow-center">Selected work</span>
+            <h2 class="display-2">Proof, not promises.</h2>
+            <p class="lead">A snapshot of recent brand, product and growth engagements. Demo case studies shown for preview.</p>
+        </div>
 
-            // Sticky Scroll Logic
-            const stickyTexts = document.querySelectorAll('#sticky-scroll-text .scroll-item');
-            const stickyVisuals = document.querySelectorAll('#sticky-scroll-visuals .glass-panel');
-            
-            if (stickyTexts.length > 0 && stickyVisuals.length > 0) {
-                window.addEventListener('scroll', () => {
-                    if (window.innerWidth < 1024) return; // Disable sticky opacity logic on mobile
+        <div class="grid md:grid-cols-3 gap-6">
+            <article class="case-card" data-aos="fade-up">
+                <div class="case-visual" style="background: linear-gradient(145deg, #1B365D, #005A9C);">
+                    <div class="case-window">
+                        <div class="row w40"></div><div class="row w85"></div><div class="row w70"></div>
+                        <div class="window-grid"><span></span><span></span><span></span></div>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="tags"><span class="tag">Brand identity</span><span class="tag">Web</span></div>
+                    <h3>Northline Capital</h3>
+                    <p>A complete rebrand and investor platform for a fast-growing financial advisory firm.</p>
+                    <div class="flex items-center justify-between" style="margin-top: 18px;">
+                        <span style="font-size: 11px; font-weight: 800; color: #15805a;"><i class="fas fa-arrow-trend-up"></i> +212% qualified leads</span>
+                        <a href="/contact.php" class="link-arrow" style="font-size: 10px;">View <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </article>
 
-                    let index = 0;
-                    stickyVisuals.forEach((visual, i) => {
-                        const rect = visual.getBoundingClientRect();
-                        if (rect.top <= window.innerHeight / 2) {
-                            index = i;
-                        }
-                    });
-                    stickyTexts.forEach((text, i) => {
-                        if (i === index) {
-                            text.classList.remove('lg:opacity-30', 'lg:-translate-x-4');
-                            text.classList.add('lg:opacity-100', 'lg:translate-x-0');
-                        } else {
-                            text.classList.add('lg:opacity-30', 'lg:-translate-x-4');
-                            text.classList.remove('lg:opacity-100', 'lg:translate-x-0');
-                        }
-                    });
-                });
-            }
-            // Sparkles Logic
-            const sparklesContainer = document.getElementById('hero-sparkles');
-            if (sparklesContainer) {
-                setInterval(() => {
-                    const sparkle = document.createElement('div');
-                    sparkle.classList.add('sparkle');
-                    sparkle.style.left = Math.random() * 100 + '%';
-                    sparkle.style.top = Math.random() * 100 + '%';
-                    sparkle.style.width = Math.random() * 3 + 1 + 'px';
-                    sparkle.style.height = sparkle.style.width;
-                    sparklesContainer.appendChild(sparkle);
-                    setTimeout(() => sparkle.remove(), 2000);
-                }, 150);
-            }
+            <article class="case-card" data-aos="fade-up" data-aos-delay="80">
+                <div class="case-visual" style="background: linear-gradient(145deg, #005A9C, #60C1E5);">
+                    <div class="case-window">
+                        <div class="row w40"></div><div class="row w55"></div><div class="row w85"></div>
+                        <div class="window-grid"><span></span><span></span><span></span></div>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="tags"><span class="tag">Social</span><span class="tag">Content</span></div>
+                    <h3>Verve Studios</h3>
+                    <p>Always-on social and creator strategy that took a boutique studio to national attention.</p>
+                    <div class="flex items-center justify-between" style="margin-top: 18px;">
+                        <span style="font-size: 11px; font-weight: 800; color: #15805a;"><i class="fas fa-arrow-trend-up"></i> 2.4M monthly reach</span>
+                        <a href="/contact.php" class="link-arrow" style="font-size: 10px;">View <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </article>
 
-            // Meteors Logic
-            const meteorContainer = document.getElementById('meteor-container');
-            if (meteorContainer) {
-                for(let j=0; j<15; j++) {
-                    const meteor = document.createElement('div');
-                    meteor.classList.add('meteor');
-                    meteor.style.left = Math.random() * 100 + '%';
-                    meteor.style.top = Math.random() * 100 + '%';
-                    meteor.style.animationDelay = Math.random() * 5 + 's';
-                    meteor.style.animationDuration = Math.random() * 3 + 3 + 's';
-                    meteorContainer.appendChild(meteor);
-                }
-            }
+            <article class="case-card" data-aos="fade-up" data-aos-delay="160">
+                <div class="case-visual" style="background: linear-gradient(145deg, #12263F, #1B365D);">
+                    <div class="case-window">
+                        <div class="row w40"></div><div class="row w70"></div><div class="row w55"></div>
+                        <div class="window-grid"><span></span><span></span><span></span></div>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="tags"><span class="tag">Product</span><span class="tag">Development</span></div>
+                    <h3>Aurora Labs</h3>
+                    <p>A product design system and web app that cut onboarding time by more than half.</p>
+                    <div class="flex items-center justify-between" style="margin-top: 18px;">
+                        <span style="font-size: 11px; font-weight: 800; color: #15805a;"><i class="fas fa-arrow-trend-up"></i> -58% onboarding time</span>
+                        <a href="/contact.php" class="link-arrow" style="font-size: 10px;">View <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
 
-            // Tracing Beam Logic
-            const tracingBeam = document.getElementById('tracing-beam-glow');
-            const stickySectionWrapper = document.getElementById('sticky-section-wrapper');
-            if(tracingBeam && stickySectionWrapper) {
-                window.addEventListener('scroll', () => {
-                    if (window.innerWidth < 1024) return;
-                    const rect = stickySectionWrapper.getBoundingClientRect();
-                    // Calculate scroll percentage through the section
-                    let scrollPercent = -rect.top / (rect.height - window.innerHeight);
-                    scrollPercent = Math.max(0, Math.min(1, scrollPercent));
-                    const translateY = scrollPercent * (rect.height - 300); // 300 is glow height
-                    tracingBeam.style.transform = `translateY(${translateY}px)`;
-                });
-            }
-        });
-    </script>
-    <?php include 'components/guest_chat.php'; ?>
+<!-- ======================================================== PROCESS -->
+<section class="section" style="background: #fff;">
+    <div class="shell shell-wide">
+        <div class="section-head section-head-center" data-aos="fade-up">
+            <span class="eyebrow eyebrow-center">How we work</span>
+            <h2 class="display-2">A calm, predictable process.</h2>
+            <p class="lead">Clear stages, clear owners, no surprises. You always know what’s happening and why.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 steps">
+            <div class="step" data-aos="fade-up">
+                <div class="step-num">01</div>
+                <h3>Discover</h3>
+                <p>We audit your brand, market and goals, then agree on the sharpest opportunity to chase.</p>
+            </div>
+            <div class="step" data-aos="fade-up" data-aos-delay="80">
+                <div class="step-num">02</div>
+                <h3>Define</h3>
+                <p>Strategy, positioning and scope are locked into a clear roadmap with measurable milestones.</p>
+            </div>
+            <div class="step" data-aos="fade-up" data-aos-delay="160">
+                <div class="step-num">03</div>
+                <h3>Design</h3>
+                <p>We build the identity, product and content system — reviewed in fast, focused iterations.</p>
+            </div>
+            <div class="step" data-aos="fade-up" data-aos-delay="240">
+                <div class="step-num">04</div>
+                <h3>Drive</h3>
+                <p>Launch, measure and compound. Ongoing optimisation turns a project into a growth engine.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================================================== TESTIMONIALS -->
+<section class="section" style="background: var(--mist);">
+    <div class="shell shell-wide">
+        <div class="flex flex-wrap items-end justify-between gap-6 section-head" style="max-width: none;">
+            <div>
+                <span class="eyebrow" data-aos="fade-up">Client voices</span>
+                <h2 class="display-2" style="margin-top: 16px;" data-aos="fade-up" data-aos-delay="50">The work speaks.<br><span class="gradient-text">So do our clients.</span></h2>
+            </div>
+            <div class="flex gap-2" data-aos="fade-up">
+                <div class="swiper-button-prev" style="position: static; margin: 0;"></div>
+                <div class="swiper-button-next" style="position: static; margin: 0;"></div>
+            </div>
+        </div>
+
+        <div class="swiper" data-swiper="testimonials" data-aos="fade-up">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <blockquote>“Hypecrews rebuilt our entire digital presence in ten weeks. The clarity of thinking was as impressive as the design — our qualified leads doubled.”</blockquote>
+                        <div class="who"><span class="avatar">SJ</span><div><strong>Sarah Jenkins</strong><small>CMO, Northline Capital</small></div></div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <blockquote>“Their copyright team removed 400+ unauthorised copies of our catalogue in 48 hours. That level of protection is rare — and genuinely valuable.”</blockquote>
+                        <div class="who"><span class="avatar">ER</span><div><strong>Elena Rostova</strong><small>Founder, Verve Studios</small></div></div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <blockquote>“The precision and speed are unmatched. They shipped a product design system our in-house team still uses every day.”</blockquote>
+                        <div class="who"><span class="avatar">MT</span><div><strong>Marcus Thorne</strong><small>VP Product, Aurora Labs</small></div></div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <blockquote>“A genuinely senior team. They challenged our assumptions, then delivered work that outperformed every benchmark we set.”</blockquote>
+                        <div class="who"><span class="avatar">AK</span><div><strong>Aarav Kapoor</strong><small>Director, Meridian Group</small></div></div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <blockquote>“From the first workshop to launch, everything felt considered. Hypecrews is the rare agency that treats your budget like their own.”</blockquote>
+                        <div class="who"><span class="avatar">LM</span><div><strong>Leila Mendez</strong><small>Head of Brand, Decathlon India</small></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================================================== FINAL CTA -->
+<section class="section-dark" style="padding: 92px 0; position: relative; overflow: hidden;">
+    <div class="hero-mesh-dark"></div>
+    <div class="orb orb-1" style="width: 260px; height: 260px; top: -10%; right: 8%; opacity: .18;"></div>
+    <div class="shell shell-wide relative z-1 text-center" data-aos="zoom-in">
+        <span class="eyebrow eyebrow-light eyebrow-center">Your move</span>
+        <h2 class="display-2" style="margin-top: 16px; color: #fff;">Let’s make your brand<br><span class="gradient-text-light">impossible to ignore.</span></h2>
+        <p class="lead lead-light" style="margin: 20px auto 32px; text-align: center;">Book a free strategy call. We’ll review your current presence and show you the three highest-impact moves for the next quarter.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="/contact.php" class="btn btn-sky btn-lg">Book a strategy call <i class="fas fa-arrow-right"></i></a>
+            <a href="/services.php" class="btn btn-outline-light btn-lg">See what we do</a>
+        </div>
+        <p style="margin-top: 22px; font-size: 11.5px; color: rgba(255,255,255,.45);"><i class="fas fa-lock" style="margin-right: 6px;"></i>No pressure, no obligation. Just useful clarity.</p>
+    </div>
+</section>
+
+<?php include 'components/footer.php'; ?>
+<?php include 'components/guest_chat.php'; ?>
 </body>
 </html>

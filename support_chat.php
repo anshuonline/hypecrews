@@ -15,7 +15,7 @@ try {
     $stmt = $pdo->prepare("SELECT username, first_name, last_name, email, mobile_number, country, created_at FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch();
-    
+
     if (!$user) {
         session_destroy();
         header("Location: login.php");
@@ -46,7 +46,7 @@ try {
     $stmt = $pdo->prepare("SELECT s.*, a.username as assigned_admin_name FROM support_sessions s LEFT JOIN administrators a ON s.assigned_admin_id = a.id WHERE s.user_id = ? AND s.status = 'resolved' ORDER BY s.updated_at DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $resolved_session = $stmt->fetch();
-    
+
     if(!$active_session && $resolved_session) {
         $active_session = $resolved_session; // Allow viewing it
     }
@@ -65,632 +65,633 @@ try {
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Chat - Peak Experience</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0B0F19',
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif']
+$pageTitle = "Support Desk — Hypecrews";
+$robots = "noindex, nofollow";
+include 'components/head.php';
+?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+    .support-shell { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 26px; align-items: start; }
+    .chat-panel {
+        background: #fff; border: 1px solid var(--line); border-radius: 24px;
+        display: flex; flex-direction: column; overflow: hidden;
+        height: calc(100vh - 220px); min-height: 580px;
+        box-shadow: var(--shadow-sm);
+    }
+    .chat-panel-head {
+        padding: 18px 22px; border-bottom: 1px solid var(--line);
+        background: linear-gradient(180deg, #ffffff, #fbfdff);
+        display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .chat-body {
+        flex: 1; overflow-y: auto; padding: 26px 24px;
+        background:
+            radial-gradient(circle at 100% 0%, rgba(96,193,229,.08), transparent 42%),
+            linear-gradient(180deg, #f8fbfe, #ffffff 60%);
+        scroll-behavior: smooth;
+    }
+    .chat-body::-webkit-scrollbar { width: 7px; }
+    .chat-body::-webkit-scrollbar-track { background: transparent; }
+    .chat-body::-webkit-scrollbar-thumb { background: #cfe3ef; border-radius: 10px; }
+    .chat-body::-webkit-scrollbar-thumb:hover { background: #a9cde0; }
+    .chat-foot { border-top: 1px solid var(--line); background: #fbfdff; padding: 16px 20px; flex-shrink: 0; }
+    .chat-input {
+        width: 100%; border: 1px solid var(--line); background: #fff; color: var(--ink);
+        border-radius: 999px; padding: 13px 50px 13px 20px; font-size: 13.5px; outline: none;
+        transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .chat-input::placeholder { color: var(--muted-2); }
+    .chat-input:focus { border-color: var(--sky); box-shadow: 0 0 0 4px rgba(96,193,229,.14); }
+    .chat-send {
+        width: 46px; height: 46px; flex-shrink: 0; border: 0; border-radius: 999px;
+        background: linear-gradient(140deg, var(--blue), var(--navy)); color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 10px 22px rgba(0,90,156,.28); transition: transform .25s ease;
+    }
+    .chat-send:hover { transform: translateY(-2px) scale(1.03); }
+    .msg-row { display: flex; margin-bottom: 16px; }
+    .msg-row.is-mine { justify-content: flex-end; }
+    .msg-row.is-system { justify-content: center; margin: 22px 0; }
+    .msg-meta { font-size: 10px; font-weight: 700; letter-spacing: .04em; color: var(--muted-2); margin-bottom: 6px; }
+    .msg-meta.is-right { text-align: right; margin-right: 4px; }
+    .msg-bubble {
+        max-width: 78%; padding: 13px 17px; font-size: 13.5px; line-height: 1.75;
+        border-radius: 18px; word-break: break-word; white-space: pre-line;
+    }
+    .msg-bubble.is-mine {
+        background: linear-gradient(145deg, var(--blue), #004a80); color: #fff;
+        border-bottom-right-radius: 5px; box-shadow: 0 10px 24px rgba(0,90,156,.2);
+    }
+    .msg-bubble.is-admin {
+        background: #fff; color: var(--ink); border: 1px solid var(--line);
+        border-bottom-left-radius: 5px; box-shadow: var(--shadow-xs);
+    }
+    .msg-bubble.is-system {
+        background: #eaf8fd; color: var(--blue); border: 1px solid #cdeef9;
+        font-size: 12px; font-weight: 700; padding: 10px 16px; border-radius: 12px; max-width: 90%;
+    }
+    .msg-avatar {
+        width: 34px; height: 34px; flex-shrink: 0; border-radius: 999px; overflow: hidden;
+        background: linear-gradient(140deg, var(--navy), var(--blue)); color: #fff;
+        display: flex; align-items: center; justify-content: center; font-size: 13px;
+        margin-right: 10px; align-self: flex-end; margin-bottom: 4px;
+    }
+    .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .msg-attach { margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+    .msg-attach img { max-width: 100%; max-height: 240px; object-fit: contain; cursor: zoom-in; display: block; }
+    .topic-select {
+        width: 100%; appearance: none; border: 1px solid var(--line); border-radius: 12px;
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235d7788' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 15px center;
+        padding: 12px 42px 12px 15px; font-size: 13.5px; color: var(--ink); outline: none;
+    }
+    .topic-select:focus { border-color: var(--sky); box-shadow: 0 0 0 4px rgba(96,193,229,.14); }
+    .urgency-opt { position: relative; cursor: pointer; }
+    .urgency-opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .urgency-opt span {
+        display: block; text-align: center; padding: 10px; border-radius: 11px;
+        border: 1px solid var(--line); background: #fff; font-size: 12px; font-weight: 800;
+        color: var(--muted); transition: all .22s ease;
+    }
+    .urgency-opt input:checked + span { background: #eaf8fd; border-color: var(--sky); color: var(--blue); box-shadow: 0 0 0 3px rgba(96,193,229,.12); }
+    .urgency-opt input[value="urgent"]:checked + span { background: #fdeeee; border-color: #f2b8b8; color: #b4453f; box-shadow: 0 0 0 3px rgba(180,69,63,.08); }
+    .urgency-opt input[value="low"]:checked + span { background: #eef8f2; border-color: #b9e3c9; color: #15805a; box-shadow: 0 0 0 3px rgba(21,128,90,.07); }
+    .lightbox {
+        position: fixed; inset: 0; z-index: 1200; display: none; align-items: center; justify-content: center;
+        background: rgba(5, 14, 25, .93); backdrop-filter: blur(8px); padding: 24px; opacity: 0; transition: opacity .25s ease;
+    }
+    .lightbox.is-open { display: flex; opacity: 1; }
+    .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 16px; box-shadow: 0 40px 100px rgba(0,0,0,.6); }
+    .typing-dots { display: inline-flex; gap: 4px; align-items: center; }
+    .typing-dots span { width: 6px; height: 6px; border-radius: 99px; background: var(--sky); animation: chatPulse 1.2s infinite ease-in-out; }
+    .typing-dots span:nth-child(2) { animation-delay: .18s; }
+    .typing-dots span:nth-child(3) { animation-delay: .36s; }
+    @keyframes chatPulse { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+    @media (max-width: 1024px) {
+        .support-shell { grid-template-columns: minmax(0, 1fr); }
+        .chat-panel { height: calc(100vh - 190px); min-height: 520px; }
+    }
+    @media (max-width: 640px) {
+        .chat-panel { height: calc(100vh - 150px); min-height: 480px; border-radius: 18px; }
+        .chat-body { padding: 18px 14px; }
+        .msg-bubble { max-width: 88%; }
+    }
+</style>
+<body class="antialiased">
+<?php include 'components/nav.php'; ?>
+
+<main class="dash-wrap" style="padding-bottom: 34px;">
+    <div class="shell shell-wide">
+        <div class="flex flex-wrap items-end justify-between gap-5" style="margin-bottom: 24px;" data-aos="fade-up">
+            <div>
+                <span class="eyebrow">Support desk</span>
+                <h1 class="dash-title" style="margin-top: 12px;">We're here to help.</h1>
+                <p style="font-size: 13.5px; color: var(--muted); margin-top: 6px;">A direct line to the Hypecrews team — replies usually land within a few minutes.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="badge badge-green"><span style="width:5px;height:5px;border-radius:99px;background:currentColor;display:inline-block;"></span> Team online</span>
+                <a href="/contact.php" class="btn btn-outline btn-sm"><i class="fas fa-envelope"></i> Email us</a>
+            </div>
+        </div>
+
+        <div class="support-shell">
+            <!-- Sidebar -->
+            <div style="display: none;" class="lg:block">
+                <?php
+                $current_user_page = 'support_chat';
+                include 'components/user_sidebar.php';
+                ?>
+            </div>
+
+            <!-- Chat Interface / New Session Form -->
+            <div class="chat-panel" data-aos="fade-up">
+
+                <?php if (!$active_session): ?>
+                    <!-- New Session Form -->
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(24px, 4vw, 48px); text-align: center; overflow-y: auto;">
+                        <div class="icon-tile icon-tile-lg" style="margin-bottom: 18px;"><i class="fas fa-headset"></i></div>
+                        <h2 style="font-size: clamp(1.5rem, 2.6vw, 2rem);">Start a new conversation.</h2>
+                        <p style="font-size: 13.5px; color: var(--muted); max-width: 430px; margin-top: 9px; line-height: 1.8;">Tell us what this is about so we can route you to the right specialist. No ticket forms, no waiting on hold.</p>
+
+                        <form method="POST" style="width: 100%; max-width: 480px; margin-top: 26px; text-align: left; background: #fbfdff; border: 1px solid var(--line); border-radius: 20px; padding: clamp(20px, 3vw, 28px);">
+                            <input type="hidden" name="create_session" value="1">
+
+                            <div class="field">
+                                <label class="label" for="topic">What is this regarding?</label>
+                                <select name="topic" id="topic" required class="topic-select">
+                                    <option value="" disabled selected>Select a topic…</option>
+                                    <option value="Copyright Protection">Copyright Protection</option>
+                                    <option value="Social Media">Social Media</option>
+                                    <option value="Digital Marketing">Digital Marketing</option>
+                                    <option value="Web & Development">Web &amp; Development</option>
+                                    <option value="Recovery & Support">Recovery &amp; Support</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="field" style="margin-bottom: 22px;">
+                                <label class="label">Urgency level</label>
+                                <div class="grid grid-cols-3 gap-2.5">
+                                    <label class="urgency-opt">
+                                        <input type="radio" name="urgency" value="low">
+                                        <span>Low</span>
+                                    </label>
+                                    <label class="urgency-opt">
+                                        <input type="radio" name="urgency" value="normal" checked>
+                                        <span>Normal</span>
+                                    </label>
+                                    <label class="urgency-opt">
+                                        <input type="radio" name="urgency" value="urgent">
+                                        <span>Urgent</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Start conversation <i class="fas fa-arrow-right"></i></button>
+
+                            <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2" style="margin-top: 16px; font-size: 10.5px; color: var(--muted-2);">
+                                <span><i class="fas fa-lock" style="margin-right: 4px;"></i> Private &amp; secure</span>
+                                <span><i class="fas fa-bolt" style="margin-right: 4px;"></i> Avg. reply 4 min</span>
+                                <span><i class="fas fa-clock" style="margin-right: 4px;"></i> 24/7 coverage</span>
+                            </div>
+                        </form>
+                    </div>
+
+                <?php else: ?>
+                    <!-- Chat Header -->
+                    <div class="chat-panel-head">
+                        <div class="flex items-center gap-3" style="min-width: 0;">
+                            <div class="side-avatar" style="width: 44px; height: 44px; font-size: 16px; background: linear-gradient(140deg, var(--navy), var(--blue)); color: #fff; flex-shrink: 0;"><i class="fas fa-headset"></i></div>
+                            <div style="min-width: 0;">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 style="font-size: 15px; margin: 0;">Hypecrews Support</h3>
+                                    <span class="chip" style="font-size: 10px; padding: 3px 8px;">#<?php echo $active_session['id']; ?></span>
+                                    <?php if ($active_session['assigned_admin_name']): ?>
+                                        <span class="badge badge-sky" style="font-size: 9.5px;"><i class="fas fa-user-shield" style="margin-right: 3px;"></i><?php echo htmlspecialchars($active_session['assigned_admin_name']); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <p class="flex flex-wrap items-center gap-x-2 gap-y-1" style="font-size: 11px; color: var(--muted); margin-top: 4px;">
+                                    <span class="flex items-center gap-1.5"><span style="width:6px;height:6px;border-radius:99px;background:#16a06a;display:inline-block;"></span> Live</span>
+                                    <span style="color:var(--line);">•</span>
+                                    <span><?php echo htmlspecialchars($active_session['topic']); ?></span>
+                                    <span style="color:var(--line);">•</span>
+                                    <span style="font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: <?php echo $active_session['urgency'] === 'urgent' ? '#b4453f' : ($active_session['urgency'] === 'normal' ? '#15805a' : 'var(--blue)'); ?>;"><?php echo htmlspecialchars(ucfirst($active_session['urgency'])); ?></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hidden sm:flex items-center gap-2">
+                            <span class="badge <?php echo $active_session['status'] === 'open' ? 'badge-green' : 'badge-slate'; ?>"><?php echo ucfirst($active_session['status']); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Area -->
+                    <div id="chatMessages" class="chat-body" data-session-id="<?php echo $active_session['id']; ?>">
+                        <div style="text-align: center; padding: 40px 0; color: var(--muted-2);">
+                            <div class="typing-dots" style="justify-content: center; margin-bottom: 14px;"><span></span><span></span><span></span></div>
+                            <p style="font-size: 12px; font-weight: 700;">Loading your conversation…</p>
+                        </div>
+                    </div>
+
+                    <?php if($active_session['status'] === 'open'): ?>
+                    <!-- Chat Input -->
+                    <div class="chat-foot">
+                        <form id="chatForm" class="flex items-end gap-3">
+                            <input type="hidden" id="sessionId" value="<?php echo $active_session['id']; ?>">
+                            <div style="position: relative; flex: 1;">
+                                <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message…" class="chat-input">
+                                <label style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted-2);padding:7px;" title="Attach an image">
+                                    <i class="fas fa-paperclip"></i>
+                                    <input type="file" id="attachmentInput" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
+                                </label>
+                            </div>
+                            <button type="submit" class="chat-send" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                        <div id="attachmentPreview" class="hidden" style="margin-top: 12px; font-size: 12px; color: var(--blue); font-weight: 700; align-items: center; gap: 8px;">
+                            <span class="chip" style="font-size: 10.5px;"><i class="fas fa-image"></i> <span id="attachmentName"></span></span>
+                            <button type="button" id="removeAttachment" aria-label="Remove attachment" style="color: #b4453f; background: transparent; border: 0; padding: 4px;"><i class="fas fa-times"></i></button>
+                        </div>
+                        <p style="font-size: 10.5px; color: var(--muted-2); margin-top: 10px; text-align: center;">Press Enter to send · Images up to 2MB · <span style="font-weight: 800;">End-to-end private</span></p>
+                    </div>
+                    <?php else: ?>
+                    <!-- Export Area -->
+                    <div class="chat-foot" style="padding: clamp(24px, 3vw, 38px); text-align: center;">
+                        <div class="icon-tile" style="margin: 0 auto 16px; background: #eaf8fd; border-color: #cdeef9; color: var(--blue);"><i class="fas fa-circle-check"></i></div>
+                        <h4 style="font-size: 17px;">This conversation has been resolved.</h4>
+
+                        <?php if ($active_session['user_exported'] != 1): ?>
+                            <p style="font-size: 12.5px; color: var(--muted); margin-top: 7px; max-width: 440px; margin-inline: auto; line-height: 1.75;">Export the full chat history as a PDF for your records. After exporting, it will be permanently deleted after 1 hour.</p>
+                            <button id="exportPdfBtn" class="btn btn-primary" style="margin-top: 18px;">
+                                <i class="fas fa-file-pdf"></i> Export chat to PDF
+                            </button>
+                        <?php endif; ?>
+
+                        <?php if ($time_remaining >= 0): ?>
+                            <div style="margin-top: 20px; padding: 16px; border: 1px solid #f5dede; background: #fdf6f6; border-radius: 14px; max-width: 360px; margin-inline: auto;">
+                                <p style="font-size: 11.5px; color: #b4453f; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fas fa-triangle-exclamation"></i> Chat deletes permanently in
+                                </p>
+                                <div id="countdownTimer" style="font-family: var(--font-head); font-size: 30px; font-weight: 800; color: var(--navy); letter-spacing: .12em; margin-top: 6px;">--:--</div>
+                            </div>
+                            <script>
+                                let timeRemaining = <?php echo $time_remaining; ?>;
+                                const timerEl = document.getElementById('countdownTimer');
+                                const countdownInterval = setInterval(() => {
+                                    if (timeRemaining <= 0) {
+                                        clearInterval(countdownInterval);
+                                        timerEl.innerText = "00:00";
+                                        window.location.reload();
+                                    } else {
+                                        let m = Math.floor(timeRemaining / 60);
+                                        let s = timeRemaining % 60;
+                                        timerEl.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                                        timeRemaining--;
+                                    }
+                                }, 1000);
+                            </script>
+                        <?php endif; ?>
+
+                        <div class="flex flex-wrap items-center justify-center gap-3" style="margin-top: 20px;">
+                            <button onclick="reopenSession()" class="btn btn-outline btn-sm"><i class="fas fa-rotate-left"></i> Reopen chat</button>
+                            <button onclick="startNewChat()" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Start new chat</button>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Image Lightbox -->
+<div id="imageLightbox" class="lightbox" onclick="if(event.target === this) closeLightbox()">
+    <button onclick="closeLightbox()" aria-label="Close preview" style="position: absolute; top: 20px; right: 24px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); color: #fff; width: 42px; height: 42px; border-radius: 999px; cursor: pointer; font-size: 16px;">
+        <i class="fas fa-times"></i>
+    </button>
+    <img id="lightboxImage" src="" alt="Zoomed attachment">
+</div>
+
+<script>
+    function openLightbox(url) {
+        const lb = document.getElementById('imageLightbox');
+        const img = document.getElementById('lightboxImage');
+        if (!lb || !img) return;
+        img.src = url;
+        lb.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        const lb = document.getElementById('imageLightbox');
+        const img = document.getElementById('lightboxImage');
+        if (!lb) return;
+        lb.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const messagesDiv = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const attachmentInput = document.getElementById('attachmentInput');
+        const attachmentPreview = document.getElementById('attachmentPreview');
+        const attachmentName = document.getElementById('attachmentName');
+        const removeAttachment = document.getElementById('removeAttachment');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+
+        let currentMessages = [];
+        let isScrolledToBottom = true;
+        let currentSessionStatus = '<?php echo $active_session ? htmlspecialchars($active_session['status']) : ''; ?>';
+
+        if(messagesDiv) {
+            messagesDiv.addEventListener('scroll', () => {
+                isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
+            });
+        }
+
+        function fetchMessages() {
+            const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
+            const url = sessionId ? `api_support_chat.php?session_id=${sessionId}` : 'api_support_chat.php';
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        if (data.session && data.session.status && data.session.status !== currentSessionStatus && currentSessionStatus !== '') {
+                            window.location.reload();
+                            return;
+                        }
+                        renderMessages(data.data);
                     }
+                })
+                .catch(err => console.error("Error fetching messages:", err));
+        }
+
+        function formatMessage(text) {
+            if(!text) return '';
+            let html = escapeHtml(text);
+            html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#005A9C;font-weight:700;text-decoration:underline;word-break:break-all;">$1</a>');
+            return html;
+        }
+
+        function renderMessages(messages) {
+            currentMessages = messages;
+            if(!messagesDiv) return;
+            if (messages.length === 0) {
+                messagesDiv.innerHTML = '<div style="text-align:center;padding:40px 16px;color:var(--muted);"><div class="icon-tile" style="margin:0 auto 14px;"><i class="fas fa-comment-dots"></i></div><p style="font-size:13px;font-weight:700;color:var(--navy);">No messages yet</p><p style="font-size:12px;margin-top:4px;">Send a message below to start the conversation.</p></div>';
+                return;
+            }
+
+            const currentHashes = messages.map(m => m.id).join(',');
+            if (messagesDiv.dataset.lastHash !== currentHashes) {
+                messagesDiv.dataset.lastHash = currentHashes;
+                let html = '';
+
+                messages.forEach(msg => {
+                    let attachmentHtml = '';
+                    if (msg.attachment) {
+                        attachmentHtml = `<div class="msg-attach"><img src="${msg.attachment}" alt="Attachment" onclick="openLightbox('${msg.attachment}')"></div>`;
+                    }
+
+                    if (msg.sender_type === 'system') {
+                        html += `
+                        <div class="msg-row is-system">
+                            <div class="msg-bubble is-system"><i class="fas fa-circle-info" style="margin-right:6px;"></i>${formatMessage(msg.message)}</div>
+                        </div>`;
+                    } else if (msg.is_mine) {
+                        html += `
+                        <div class="msg-row is-mine">
+                            <div style="max-width: 78%; display: flex; flex-direction: column; align-items: flex-end;">
+                                <div class="msg-meta is-right">${msg.time} · You</div>
+                                <div class="msg-bubble is-mine">${formatMessage(msg.message)}${attachmentHtml}</div>
+                            </div>
+                        </div>`;
+                    } else {
+                        const avatarHtml = msg.sender_avatar
+                            ? `<img src="${msg.sender_avatar}" alt="">`
+                            : `<i class="fas fa-user-shield"></i>`;
+
+                        html += `
+                        <div class="msg-row">
+                            <div class="msg-avatar">${avatarHtml}</div>
+                            <div style="max-width: 78%; min-width: 0;">
+                                <div class="msg-meta">${escapeHtml(msg.sender_name)} (Admin) · ${msg.time}</div>
+                                <div class="msg-bubble is-admin">${formatMessage(msg.message)}${attachmentHtml}</div>
+                            </div>
+                        </div>`;
+                    }
+                });
+
+                messagesDiv.innerHTML = html;
+
+                if (isScrolledToBottom) {
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 }
             }
         }
-    </script>
-    <style>
-        body { background-color: #0B0F19; color: #f8fafc; overflow-x: hidden; height: 100vh; display: flex; flex-direction: column; }
-        .ambient-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.05), transparent 25%),
-                        radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05), transparent 25%);
-            pointer-events: none;
+
+        if (attachmentInput) {
+            attachmentInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    if(this.files[0].size > 2 * 1024 * 1024) {
+                        alert('Image size must be less than 2MB');
+                        this.value = '';
+                        return;
+                    }
+                    attachmentName.textContent = this.files[0].name;
+                    attachmentPreview.classList.remove('hidden');
+                    attachmentPreview.style.display = 'flex';
+                }
+            });
         }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+        if (removeAttachment) {
+            removeAttachment.addEventListener('click', function() {
+                attachmentInput.value = '';
+                attachmentPreview.classList.add('hidden');
+                attachmentPreview.style.display = 'none';
+            });
         }
-        
-        /* Chat scrollbar */
-        .chat-scroll::-webkit-scrollbar { width: 6px; }
-        .chat-scroll::-webkit-scrollbar-track { background: transparent; }
-        .chat-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .chat-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-        
-        .chat-input {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .chat-input:focus {
-            background: rgba(0, 0, 0, 0.2);
-            border-color: #8b5cf6;
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-            outline: none;
-        }
-    </style>
-    <?php include 'components/google_analytics.php'; ?>
-</head>
-<body class="antialiased selection:bg-secondary selection:text-white">
-    <div class="ambient-bg"></div>
-    <?php include 'components/nav.php'; ?>
-    
-    <div class="pt-28 pb-8 flex-1 relative z-10 flex flex-col h-full overflow-hidden">
-        <div class="container mx-auto px-4 lg:px-8 max-w-6xl h-full flex flex-col">
-            
-            <div class="flex justify-between items-end mb-6 shrink-0">
-                <div>
-                    <h1 class="font-heading text-3xl md:text-4xl font-black mb-1 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Support Desk</h1>
-                    <p class="text-gray-400 font-light text-sm">Direct line to the Peak Experience team.</p>
-                </div>
-            </div>
-            
-            <div class="flex flex-col lg:flex-row gap-6 flex-1 overflow-hidden min-h-[500px]">
-                
-                <!-- Sidebar Menu -->
-                <div class="w-full lg:w-1/4 xl:w-1/5 shrink-0 hidden lg:flex flex-col h-full">
-                    <?php 
-                    $current_user_page = 'support_chat';
-                    include 'components/user_sidebar.php'; 
-                    ?>
-                </div>
-                
-                <!-- Chat Interface / New Session Form -->
-                <div class="w-full lg:w-3/4 xl:w-4/5 flex-1 flex flex-col glass-card rounded-3xl overflow-hidden relative">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[60px] pointer-events-none"></div>
-                    
-                    <?php if (!$active_session): ?>
-                        <!-- New Session Form -->
-                        <div class="flex-1 flex flex-col items-center justify-center p-8 z-10 text-center">
-                            <div class="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mb-6 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
-                                <i class="fas fa-ticket-alt text-3xl"></i>
-                            </div>
-                            <h2 class="text-2xl font-bold text-white mb-2 font-heading">Start a New Conversation</h2>
-                            <p class="text-gray-400 mb-8 max-w-md">Please provide some details about your inquiry so we can route you to the right expert.</p>
-                            
-                            <form method="POST" class="w-full max-w-md bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm text-left">
-                                <input type="hidden" name="create_session" value="1">
-                                
-                                <div class="mb-5">
-                                    <label class="block text-sm font-semibold text-gray-300 mb-2">What is this regarding?</label>
-                                    <select name="topic" required class="w-full chat-input rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-secondary/50 appearance-none bg-[#151b2b]">
-                                        <option value="" disabled selected>Select a topic...</option>
-                                        <option value="Copyright Protection">Copyright Protection</option>
-                                        <option value="Social Media">Social Media</option>
-                                        <option value="Digital Marketing">Digital Marketing</option>
-                                        <option value="Web & Development">Web & Development</option>
-                                        <option value="Recovery & Support">Recovery & Support</option>
-                                        <option value="General Inquiry">General Inquiry</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Urgency Level</label>
-                                    <div class="grid grid-cols-3 gap-3">
-                                        <label class="cursor-pointer relative">
-                                            <input type="radio" name="urgency" value="low" class="peer sr-only">
-                                            <div class="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/5 text-gray-400 text-xs font-bold transition-all peer-checked:bg-blue-500/20 peer-checked:text-blue-400 peer-checked:border-blue-500/50 hover:bg-white/10">Low</div>
-                                        </label>
-                                        <label class="cursor-pointer relative">
-                                            <input type="radio" name="urgency" value="normal" checked class="peer sr-only">
-                                            <div class="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/5 text-gray-400 text-xs font-bold transition-all peer-checked:bg-emerald-500/20 peer-checked:text-emerald-400 peer-checked:border-emerald-500/50 hover:bg-white/10">Normal</div>
-                                        </label>
-                                        <label class="cursor-pointer relative">
-                                            <input type="radio" name="urgency" value="urgent" class="peer sr-only">
-                                            <div class="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/5 text-gray-400 text-xs font-bold transition-all peer-checked:bg-red-500/20 peer-checked:text-red-400 peer-checked:border-red-500/50 hover:bg-white/10">Urgent</div>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:scale-[1.02] transition-all">
-                                    Initiate Chat <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                                </button>
-                            </form>
+
+        if (chatForm) {
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const msg = messageInput.value.trim();
+                const hasAttachment = attachmentInput.files && attachmentInput.files.length > 0;
+
+                if (!msg && !hasAttachment) return;
+
+                if (msg) {
+                    const tempHtml = `
+                    <div class="msg-row is-mine" style="opacity:.55;">
+                        <div style="max-width: 78%; display: flex; flex-direction: column; align-items: flex-end;">
+                            <div class="msg-meta is-right">Sending…</div>
+                            <div class="msg-bubble is-mine">${escapeHtml(msg)}</div>
                         </div>
-                        
-                    <?php else: ?>
-                        <!-- Chat Header -->
-                        <div class="p-5 border-b border-white/5 flex items-center justify-between bg-black/20 shrink-0 z-10">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary shadow-[0_0_15px_rgba(139,92,246,0.2)]">
-                                    <i class="fas fa-headset text-xl"></i>
-                                </div>
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <h3 class="font-bold text-white text-lg">Admin Support <span class="text-xs bg-white/10 px-2 py-0.5 rounded text-gray-300">#<?php echo $active_session['id']; ?></span></h3>
-                                        <?php if ($active_session['assigned_admin_name']): ?>
-                                            <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1"><i class="fas fa-user-shield"></i> <?php echo htmlspecialchars($active_session['assigned_admin_name']); ?></span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <p class="text-xs text-green-400 font-medium flex items-center gap-1.5 mt-0.5">
-                                        <i class="fas fa-circle text-[8px]"></i> 
-                                        <?php echo htmlspecialchars($active_session['topic']); ?> • 
-                                        <span class="uppercase <?php echo $active_session['urgency'] === 'urgent' ? 'text-red-400' : ($active_session['urgency'] === 'normal' ? 'text-emerald-400' : 'text-blue-400'); ?>">
-                                            <?php echo htmlspecialchars(ucfirst($active_session['urgency'])); ?>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Chat Messages Area -->
-                        <div id="chatMessages" class="flex-1 overflow-y-auto chat-scroll p-6 space-y-6 z-10" data-session-id="<?php echo $active_session['id']; ?>">
-                            <div class="text-center text-gray-500 font-medium text-sm mt-10">
-                                <i class="fas fa-circle-notch fa-spin text-secondary text-2xl mb-3"></i><br>
-                                Loading messages...
-                            </div>
-                        </div>
-                        
-                        <?php if($active_session['status'] === 'open'): ?>
-                        <!-- Chat Input -->
-                        <div class="p-5 border-t border-white/5 bg-black/20 shrink-0 z-10">
-                            <form id="chatForm" class="flex gap-3">
-                                <input type="hidden" id="sessionId" value="<?php echo $active_session['id']; ?>">
-                                <div class="relative flex-1">
-                                    <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message here..." class="w-full chat-input rounded-full pl-6 pr-12 py-3.5 text-sm font-medium">
-                                    <label class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-secondary transition-colors p-2">
-                                        <i class="fas fa-paperclip"></i>
-                                        <input type="file" id="attachmentInput" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
-                                    </label>
-                                </div>
-                                <button type="submit" class="bg-secondary hover:bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-transform hover:scale-105 shrink-0">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </form>
-                            <div id="attachmentPreview" class="hidden mt-3 text-sm text-green-400 font-medium items-center gap-2">
-                                <i class="fas fa-image"></i> <span id="attachmentName"></span>
-                                <button type="button" id="removeAttachment" class="text-red-400 hover:text-red-300 ml-2"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <?php else: ?>
-                        <!-- Export Area -->
-                        <div class="p-8 border-t border-white/5 bg-black/20 shrink-0 z-10 text-center">
-                            <h4 class="text-lg font-bold text-white mb-2">This session has been resolved.</h4>
-                            
-                            <?php if ($active_session['user_exported'] != 1): ?>
-                                <p class="text-gray-400 text-sm mb-6">You can export the chat history as a PDF. After exporting, the history will be permanently deleted after 1 hour.</p>
-                                <button id="exportPdfBtn" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-transform hover:scale-[1.02] mb-6">
-                                    <i class="fas fa-file-pdf mr-2"></i> Export Chat to PDF
-                                </button>
-                            <?php endif; ?>
+                    </div>`;
+                    messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
 
-                            <?php if ($time_remaining >= 0): ?>
-                                <p class="text-red-400 text-sm mb-4 font-bold flex items-center justify-center gap-2">
-                                    <i class="fas fa-check-circle text-emerald-400"></i> Chat will be permanently deleted in:
-                                </p>
-                                <div class="text-4xl font-black font-heading text-white tracking-widest mb-6" id="countdownTimer">
-                                    --:--
-                                </div>
-                                <script>
-                                    let timeRemaining = <?php echo $time_remaining; ?>;
-                                    const timerEl = document.getElementById('countdownTimer');
-                                    const countdownInterval = setInterval(() => {
-                                        if (timeRemaining <= 0) {
-                                            clearInterval(countdownInterval);
-                                            timerEl.innerText = "00:00";
-                                            window.location.reload();
-                                        } else {
-                                            let m = Math.floor(timeRemaining / 60);
-                                            let s = timeRemaining % 60;
-                                            timerEl.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-                                            timeRemaining--;
-                                        }
-                                    }, 1000);
-                                </script>
-                            <?php endif; ?>
-                            
-                            <div class="flex items-center justify-center gap-4 mt-2">
-                                <button onclick="reopenSession()" class="bg-indigo-500/20 hover:bg-indigo-500 text-indigo-400 hover:text-white font-bold py-3 px-6 rounded-xl transition-all border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
-                                    <i class="fas fa-undo-alt mr-2"></i> Reopen Chat
-                                </button>
-                                <button onclick="startNewChat()" class="bg-primary hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-transform hover:scale-105">
-                                    <i class="fas fa-plus-circle mr-2"></i> Start New Chat
-                                </button>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-    
-    <!-- Image Lightbox -->
-    <div id="imageLightbox" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
-        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/50 hover:text-white text-3xl transition-colors focus:outline-none">
-            <i class="fas fa-times"></i>
-        </button>
-        <img id="lightboxImage" src="" alt="Zoomed Attachment" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl scale-95 transition-transform duration-300">
-    </div>
+                const formData = new FormData();
+                formData.append('message', msg);
+                if (hasAttachment) {
+                    formData.append('attachment', attachmentInput.files[0]);
+                }
 
-    <script>
-        function openLightbox(url) {
-            const lb = document.getElementById('imageLightbox');
-            const img = document.getElementById('lightboxImage');
-            img.src = url;
-            lb.classList.remove('hidden');
-            setTimeout(() => {
-                lb.classList.add('opacity-100');
-                img.classList.remove('scale-95');
-                img.classList.add('scale-100');
-            }, 10);
-        }
+                messageInput.value = '';
+                if (removeAttachment) removeAttachment.click();
 
-        function closeLightbox() {
-            const lb = document.getElementById('imageLightbox');
-            const img = document.getElementById('lightboxImage');
-            lb.classList.remove('opacity-100');
-            img.classList.remove('scale-100');
-            img.classList.add('scale-95');
-            setTimeout(() => {
-                lb.classList.add('hidden');
-            }, 300);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const messagesDiv = document.getElementById('chatMessages');
-            const chatForm = document.getElementById('chatForm');
-            const messageInput = document.getElementById('messageInput');
-            const attachmentInput = document.getElementById('attachmentInput');
-            const attachmentPreview = document.getElementById('attachmentPreview');
-            const attachmentName = document.getElementById('attachmentName');
-            const removeAttachment = document.getElementById('removeAttachment');
-            const exportPdfBtn = document.getElementById('exportPdfBtn');
-            
-            let currentMessages = [];
-            let isScrolledToBottom = true;
-            let currentSessionStatus = '<?php echo $active_session ? htmlspecialchars($active_session['status']) : ''; ?>';
-
-            if(messagesDiv) {
-                messagesDiv.addEventListener('scroll', () => {
-                    isScrolledToBottom = messagesDiv.scrollHeight - messagesDiv.clientHeight <= messagesDiv.scrollTop + 20;
-                });
-            }
-
-            function fetchMessages() {
-                const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
-                const url = sessionId ? `api_support_chat.php?session_id=${sessionId}` : 'api_support_chat.php';
-                
-                fetch(url)
+                fetch('api_support_chat.php', {
+                        method: 'POST',
+                        body: formData
+                    })
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            if (data.session && data.session.status && data.session.status !== currentSessionStatus && currentSessionStatus !== '') {
-                                window.location.reload();
-                                return;
-                            }
-                            renderMessages(data.data);
-                        }
-                    })
-                    .catch(err => console.error("Error fetching messages:", err));
-            }
-
-            function formatMessage(text) {
-                if(!text) return '';
-                // Escape HTML first
-                let html = escapeHtml(text);
-                // Make links clickable
-                html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline break-all">$1</a>');
-                return html;
-            }
-
-            function renderMessages(messages) {
-                currentMessages = messages;
-                if(!messagesDiv) return;
-                if (messages.length === 0) {
-                    messagesDiv.innerHTML = '<div class="text-center text-gray-500 font-medium text-sm mt-10"><i class="fas fa-hand-sparkles text-3xl mb-3 opacity-50"></i><br>No messages yet. Send a message to start chatting!</div>';
-                    return;
-                }
-                
-                const currentHashes = messages.map(m => m.id).join(',');
-                if (messagesDiv.dataset.lastHash !== currentHashes) {
-                    messagesDiv.dataset.lastHash = currentHashes;
-                    let html = '';
-                    
-                    messages.forEach(msg => {
-                        let attachmentHtml = '';
-                        if (msg.attachment) {
-                            attachmentHtml = `<div class="mt-2 rounded-lg overflow-hidden border border-white/10"><img src="${msg.attachment}" alt="Attachment" class="max-w-full max-h-60 object-contain cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox('${msg.attachment}')"></div>`;
-                        }
-                        
-                        if (msg.sender_type === 'system') {
-                            html += `
-                            <div class="flex justify-center my-6">
-                                <div class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-5 py-2.5 rounded-xl text-xs font-bold text-center shadow-sm">
-                                    <i class="fas fa-info-circle mr-1.5"></i> ${formatMessage(msg.message)}
-                                </div>
-                            </div>`;
-                        } else if (msg.is_mine) {
-                            html += `
-                            <div class="flex justify-end mb-4 group">
-                                <div class="max-w-[80%]">
-                                    <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">${msg.time}</div>
-                                    <div class="bg-primary/20 border border-primary/30 text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words">
-                                        ${formatMessage(msg.message)}
-                                        ${attachmentHtml}
-                                    </div>
-                                </div>
-                            </div>`;
+                            isScrolledToBottom = true;
+                            fetchMessages();
                         } else {
-                            const avatarHtml = msg.sender_avatar 
-                                ? `<img src="${msg.sender_avatar}" class="w-full h-full object-cover">`
-                                : `<i class="fas fa-user-shield"></i>`;
-                                
-                            html += `
-                            <div class="flex justify-start mb-4 group">
-                                <div class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center shrink-0 mr-3 mt-auto mb-1 overflow-hidden">
-                                    ${avatarHtml}
-                                </div>
-                                <div class="max-w-[80%]">
-                                    <div class="text-[10px] text-gray-500 mb-1.5 ml-2">${msg.sender_name} (Admin), ${msg.time}</div>
-                                    <div class="bg-white/5 border border-white/10 text-gray-200 px-5 py-3 rounded-2xl rounded-tl-sm shadow-sm break-words">
-                                        ${formatMessage(msg.message)}
-                                        ${attachmentHtml}
-                                    </div>
-                                </div>
-                            </div>`;
+                            alert(data.message || 'Error sending message');
                         }
                     });
-                    
-                    messagesDiv.innerHTML = html;
-                    
-                    if (isScrolledToBottom) {
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                    }
-                }
-            }
+            });
+        }
 
-            if (attachmentInput) {
-                attachmentInput.addEventListener('change', function() {
-                    if (this.files && this.files[0]) {
-                        if(this.files[0].size > 2 * 1024 * 1024) {
-                            alert('Image size must be less than 2MB');
-                            this.value = '';
-                            return;
-                        }
-                        attachmentName.textContent = this.files[0].name;
-                        attachmentPreview.classList.remove('hidden');
-                        attachmentPreview.classList.add('flex');
-                    }
-                });
-            }
+        if (exportPdfBtn) {
+            exportPdfBtn.addEventListener('click', () => {
+                const sessionId = messagesDiv.dataset.sessionId;
 
-            if (removeAttachment) {
-                removeAttachment.addEventListener('click', function() {
-                    attachmentInput.value = '';
-                    attachmentPreview.classList.add('hidden');
-                    attachmentPreview.classList.remove('flex');
-                });
-            }
+                exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF…';
+                exportPdfBtn.disabled = true;
 
-            if (chatForm) {
-                chatForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const msg = messageInput.value.trim();
-                    const hasAttachment = attachmentInput.files && attachmentInput.files.length > 0;
-                    
-                    if (!msg && !hasAttachment) return;
-                    
-                    // Optimistic update (text only)
-                    if (msg) {
-                        const tempHtml = `
-                        <div class="flex justify-end mb-4 group opacity-50">
-                            <div class="max-w-[85%]">
-                                <div class="text-[10px] text-gray-500 mb-1.5 mr-2 text-right">Sending...</div>
-                                <div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm break-words border border-primary/20">
-                                    ${escapeHtml(msg)}
-                                </div>
+                const printContainer = document.createElement('div');
+                printContainer.style.backgroundColor = '#ffffff';
+                printContainer.style.color = '#000000';
+                printContainer.style.fontFamily = 'Arial, sans-serif';
+                printContainer.style.padding = '40px';
+                printContainer.style.width = '100%';
+                printContainer.style.maxWidth = '800px';
+                printContainer.style.margin = '0 auto';
+
+                let html = `
+                    <div style="border-bottom: 2px solid #1B365D; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="background-color: #1B365D; border-radius: 50%; padding: 10px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                <img src="/graphics/logos/hypecrews%20logo%20white.png" style="max-width: 100%; height: auto;">
                             </div>
-                        </div>`;
-                        messagesDiv.insertAdjacentHTML('beforeend', tempHtml);
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                    }
-                    
-                    const formData = new FormData();
-                    formData.append('message', msg);
-                    if (hasAttachment) {
-                        formData.append('attachment', attachmentInput.files[0]);
-                    }
-                    
-                    messageInput.value = '';
-                    if (removeAttachment) removeAttachment.click();
-                    
-                    fetch('api_support_chat.php', {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                isScrolledToBottom = true;
-                                fetchMessages();
-                            } else {
-                                alert(data.message || 'Error sending message');
-                            }
-                        });
-                });
-            }
-            
-            if (exportPdfBtn) {
-                exportPdfBtn.addEventListener('click', () => {
-                    const sessionId = messagesDiv.dataset.sessionId;
-                    
-                    exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating PDF...';
-                    exportPdfBtn.disabled = true;
-                    
-                    // Create print container
-                    const printContainer = document.createElement('div');
-                    printContainer.style.backgroundColor = '#ffffff';
-                    printContainer.style.color = '#000000';
-                    printContainer.style.fontFamily = 'Arial, sans-serif';
-                    printContainer.style.padding = '40px';
-                    printContainer.style.width = '100%';
-                    printContainer.style.maxWidth = '800px';
-                    printContainer.style.margin = '0 auto';
-                    
-                    let html = `
-                        <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <div style="background-color: #000; border-radius: 50%; padding: 10px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                                    <img src="/graphics/logos/hypecrews%20logo%20white.png" style="max-width: 100%; height: auto;">
-                                </div>
-                                <div>
-                                    <h2 style="margin: 0; font-size: 24px; color: #000;">Hypecrews Support</h2>
-                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #555;">support@hypecrews.com | hypecrews.com</p>
-                                </div>
-                            </div>
-                            <div style="text-align: right; font-size: 14px; color: #555;">
-                                <p style="margin: 0;"><strong>Session ID:</strong> #${sessionId}</p>
-                                <p style="margin: 5px 0 0 0;"><strong>Exported:</strong> ${new Date().toLocaleString()}</p>
+                            <div>
+                                <h2 style="margin: 0; font-size: 24px; color: #1B365D;">Hypecrews Support</h2>
+                                <p style="margin: 5px 0 0 0; font-size: 14px; color: #555;">support@hypecrews.com | hypecrews.com</p>
                             </div>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 20px;">
-                    `;
-                    
-                    currentMessages.forEach(msg => {
-                        const isUser = msg.is_mine;
-                        const senderName = isUser ? 'You' : msg.sender_name + ' (Admin)';
-                        const bgColor = isUser ? '#f0f0f0' : '#e0e7ff';
-                        const align = isUser ? 'flex-end' : 'flex-start';
-                        const textAlign = isUser ? 'right' : 'left';
-                        
-                        let attachmentHtml = '';
-                        if (msg.attachment) {
-                            attachmentHtml = `<div style="margin-top: 10px;"><img src="${msg.attachment}" style="max-width: 300px; max-height: 300px; border: 1px solid #ccc; border-radius: 4px;"></div>`;
-                        }
-                        
-                        // We use a simple replacement for formatMessage that avoids adding tailwind classes to links
-                        let cleanMsg = escapeHtml(msg.message).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #0000EE; text-decoration: underline; word-break: break-all;">$1</a>');
-                        
-                        html += `
-                            <div style="display: flex; flex-direction: column; align-items: ${align}; width: 100%;">
-                                <div style="font-size: 12px; color: #666; margin-bottom: 5px; text-align: ${textAlign}; width: 100%;">${escapeHtml(senderName)} • ${msg.time}</div>
-                                <div style="background-color: ${bgColor}; padding: 15px; border-radius: 8px; max-width: 80%; border: 1px solid #ddd; color: #000; font-size: 14px; line-height: 1.5;">
-                                    ${cleanMsg}
-                                    ${attachmentHtml}
-                                </div>
+                        <div style="text-align: right; font-size: 14px; color: #555;">
+                            <p style="margin: 0;"><strong>Session ID:</strong> #${sessionId}</p>
+                            <p style="margin: 5px 0 0 0;"><strong>Exported:</strong> ${new Date().toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                `;
+
+                currentMessages.forEach(msg => {
+                    const isUser = msg.is_mine;
+                    const senderName = isUser ? 'You' : msg.sender_name + ' (Admin)';
+                    const bgColor = isUser ? '#eaf4fb' : '#f4f9fc';
+                    const align = isUser ? 'flex-end' : 'flex-start';
+                    const textAlign = isUser ? 'right' : 'left';
+
+                    let attachmentHtml = '';
+                    if (msg.attachment) {
+                        attachmentHtml = `<div style="margin-top: 10px;"><img src="${msg.attachment}" style="max-width: 300px; max-height: 300px; border: 1px solid #ccc; border-radius: 4px;"></div>`;
+                    }
+
+                    let cleanMsg = escapeHtml(msg.message).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #005A9C; text-decoration: underline; word-break: break-all;">$1</a>');
+
+                    html += `
+                        <div style="display: flex; flex-direction: column; align-items: ${align}; width: 100%;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px; text-align: ${textAlign}; width: 100%;">${escapeHtml(senderName)} • ${msg.time}</div>
+                            <div style="background-color: ${bgColor}; padding: 15px; border-radius: 8px; max-width: 80%; border: 1px solid #dde8ef; color: #000; font-size: 14px; line-height: 1.5;">
+                                ${cleanMsg}
+                                ${attachmentHtml}
                             </div>
-                        `;
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                printContainer.innerHTML = html;
+
+                const opt = {
+                  margin:       10,
+                  filename:     'Support_Chat_History_' + sessionId + '.pdf',
+                  image:        { type: 'jpeg', quality: 0.98 },
+                  html2canvas:  { scale: 2, useCORS: true, logging: false },
+                  jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(printContainer).save().then(() => {
+                    exportPdfBtn.innerHTML = '<i class="fas fa-check"></i> Downloaded';
+
+                    const formData = new FormData();
+                    formData.append('action', 'export_session');
+                    formData.append('session_id', sessionId);
+                    fetch('api_support_chat.php', {
+                        method: 'POST',
+                        body: formData
+                    }).then(() => {
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 3000);
                     });
-                    
-                    html += `</div>`;
-                    printContainer.innerHTML = html;
-                    
-                    const opt = {
-                      margin:       10,
-                      filename:     'Support_Chat_History_' + sessionId + '.pdf',
-                      image:        { type: 'jpeg', quality: 0.98 },
-                      html2canvas:  { scale: 2, useCORS: true, logging: false },
-                      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                    };
-                    
-                    html2pdf().set(opt).from(printContainer).save().then(() => {
-                        exportPdfBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Downloaded';
-                        
-                        // Tell server it was exported
-                        const formData = new FormData();
-                        formData.append('action', 'export_session');
-                        formData.append('session_id', sessionId);
-                        fetch('api_support_chat.php', {
-                            method: 'POST',
-                            body: formData
-                        }).then(() => {
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 3000);
-                        });
-                    });
                 });
-            }
-
-            window.startNewChat = function() {
-                const messagesDiv = document.getElementById('chatMessages');
-                const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
-                if (!sessionId) return;
-                
-                const formData = new FormData();
-                formData.append('action', 'dismiss_session');
-                formData.append('session_id', sessionId);
-                
-                fetch('api_support_chat.php', {
-                    method: 'POST',
-                    body: formData
-                }).then(() => {
-                    window.location.reload();
-                });
-            }
-            
-            window.reopenSession = function() {
-                const messagesDiv = document.getElementById('chatMessages');
-                const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
-                if (!sessionId) return;
-                
-                const formData = new FormData();
-                formData.append('action', 'reopen_session');
-                formData.append('session_id', sessionId);
-                
-                fetch('api_support_chat.php', {
-                    method: 'POST',
-                    body: formData
-                }).then(() => {
-                    window.location.reload();
-                });
-            }
-
-            function escapeHtml(unsafe) {
-                return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-            }
-
-            // Initial fetch and interval
-            fetchMessages();
-            setInterval(fetchMessages, 3000);
-        });
-
-        function openLightbox(src) {
-            const lightbox = document.getElementById('imageLightbox');
-            const img = document.getElementById('lightboxImage');
-            img.src = src;
-            lightbox.classList.remove('hidden');
-            setTimeout(() => {
-                lightbox.classList.remove('opacity-0');
-                img.classList.remove('scale-95');
-                img.classList.add('scale-100');
-            }, 10);
+            });
         }
 
-        function closeLightbox() {
-            const lightbox = document.getElementById('imageLightbox');
-            const img = document.getElementById('lightboxImage');
-            lightbox.classList.add('opacity-0');
-            img.classList.remove('scale-100');
-            img.classList.add('scale-95');
-            setTimeout(() => {
-                lightbox.classList.add('hidden');
-            }, 300);
+        window.startNewChat = function() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
+            if (!sessionId) return;
+
+            const formData = new FormData();
+            formData.append('action', 'dismiss_session');
+            formData.append('session_id', sessionId);
+
+            fetch('api_support_chat.php', {
+                method: 'POST',
+                body: formData
+            }).then(() => {
+                window.location.reload();
+            });
         }
-    </script>
+
+        window.reopenSession = function() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const sessionId = messagesDiv ? messagesDiv.dataset.sessionId : '';
+            if (!sessionId) return;
+
+            const formData = new FormData();
+            formData.append('action', 'reopen_session');
+            formData.append('session_id', sessionId);
+
+            fetch('api_support_chat.php', {
+                method: 'POST',
+                body: formData
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+
+        function escapeHtml(unsafe) {
+            return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        fetchMessages();
+        setInterval(fetchMessages, 3000);
+    });
+</script>
 </body>
 </html>
-

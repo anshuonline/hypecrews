@@ -2,7 +2,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
 <!-- Cinematic Intro Overlay -->
-<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#000000]/90 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<div id="hc-intro-overlay" class="fixed inset-0 z-[9998] bg-[#12263F]/95 backdrop-blur-[40px] flex flex-col items-center justify-center opacity-0 pointer-events-none hidden" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <button id="hc-skip-intro" class="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/40 hover:text-white/90 text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 opacity-0 pointer-events-auto cursor-pointer z-[10000]">Skip Intro ⇥</button>
     
     <div id="hc-intro-text-1" class="absolute text-5xl md:text-8xl font-medium text-white tracking-tight opacity-0 drop-shadow-2xl">नमस्ते 🙏</div>
@@ -24,13 +24,13 @@
         </button>
         <div class="flex items-center gap-2 mb-0.5">
             <div class="w-1.5 h-1.5 rounded-full bg-[#34c759] animate-pulse shrink-0"></div>
-            <span class="font-bold text-[#007aff] text-[11px] uppercase tracking-wider">Support</span>
+            <span class="font-bold text-[#005A9C] text-[11px] uppercase tracking-wider">Support</span>
         </div>
         <span id="hc-bubble-text" class="transition-opacity duration-300">Hey, need help for your business? 👋</span>
     </div>
 
     <!-- Chat Button -->
-    <button id="hc-chat-btn" onclick="toggleHcChat()" class="w-14 h-14 bg-[#007aff] hover:bg-[#005bb5] text-white rounded-full shadow-2xl shadow-[#007aff]/30 flex items-center justify-center transition-transform hover:scale-110 relative group">
+    <button id="hc-chat-btn" onclick="toggleHcChat()" class="w-14 h-14 bg-[#005A9C] hover:bg-[#1B365D] text-white rounded-full shadow-2xl shadow-[#005A9C]/30 flex items-center justify-center transition-transform hover:scale-110 relative group">
         <i id="hc-chat-icon" class="fas fa-comment-dots text-2xl transition-transform duration-300"></i>
         <i id="hc-close-icon" class="fas fa-times text-2xl absolute opacity-0 scale-50 transition-all duration-300"></i>
         <span class="absolute -top-1 -right-1 flex h-4 w-4 hidden" id="hc-chat-badge">
@@ -65,19 +65,19 @@
             <form id="hc-init-form" onsubmit="startHcChat(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Full Name <span class="text-[#ff3b30]">*</span></label>
-                    <input type="text" id="hc-input-name" required class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
+                    <input type="text" id="hc-input-name" required class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#005A9C]/20 focus:border-[#005A9C] transition-colors shadow-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Email Address <span class="text-[#ff3b30]">*</span></label>
-                    <input type="email" id="hc-input-email" required class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
+                    <input type="email" id="hc-input-email" required class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#005A9C]/20 focus:border-[#005A9C] transition-colors shadow-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">Phone Number</label>
-                    <input type="tel" id="hc-input-phone" class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm">
+                    <input type="tel" id="hc-input-phone" class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#005A9C]/20 focus:border-[#005A9C] transition-colors shadow-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5 pl-1">How can we help?</label>
-                    <select id="hc-input-topic" class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#007aff]/20 focus:border-[#007aff] transition-colors shadow-sm appearance-none">
+                    <select id="hc-input-topic" class="w-full bg-white text-gray-900 border border-gray-200 rounded-xl px-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#005A9C]/20 focus:border-[#005A9C] transition-colors shadow-sm appearance-none">
                         <option value="General Inquiry">General Inquiry</option>
                         <option value="Sales & Pricing">Sales & Pricing</option>
                         <option value="Technical Support">Technical Support</option>
@@ -85,7 +85,7 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <button type="submit" id="hc-start-btn" class="w-full bg-[#007aff] hover:bg-[#005bb5] text-white font-semibold py-3.5 rounded-xl text-[15px] transition-colors shadow-sm mt-4">
+                <button type="submit" id="hc-start-btn" class="w-full bg-[#005A9C] hover:bg-[#1B365D] text-white font-semibold py-3.5 rounded-xl text-[15px] transition-colors shadow-sm mt-4">
                     Start Chat
                 </button>
             </form>
@@ -101,7 +101,7 @@
             <div id="hc-chat-input-area" class="p-3 bg-white/90 backdrop-blur-xl border-t border-gray-100 shrink-0">
                 <form id="hc-message-form" onsubmit="sendHcMessage(event)" class="relative flex items-center">
                     <input type="text" id="hc-message-input" placeholder="Type a message..." autocomplete="off" class="w-full bg-[#f2f2f7] border border-transparent text-gray-900 focus:bg-white rounded-full pl-4 pr-10 py-2.5 text-[14px] focus:outline-none focus:border-gray-300 transition-colors placeholder-[#8e8e93]">
-                    <button type="submit" class="absolute right-1.5 w-7 h-7 bg-[#007aff] hover:bg-[#005bb5] text-white rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                    <button type="submit" class="absolute right-1.5 w-7 h-7 bg-[#005A9C] hover:bg-[#1B365D] text-white rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
                         <i class="fas fa-arrow-up text-[12px]"></i>
                     </button>
                 </form>
@@ -111,7 +111,7 @@
             <div id="hc-chat-resolved-area" class="p-4 bg-[#f2f2f7] border-t border-gray-200 hidden text-center shrink-0">
                 <p class="text-[14px] font-semibold text-gray-900 mb-0.5">Chat Resolved</p>
                 <p class="text-[12px] text-gray-500 mb-3">This conversation has been closed.</p>
-                <button onclick="startNewChat()" class="text-[13px] font-semibold text-[#007aff] hover:text-[#005bb5] transition-colors">Start New Chat</button>
+                <button onclick="startNewChat()" class="text-[13px] font-semibold text-[#005A9C] hover:text-[#1B365D] transition-colors">Start New Chat</button>
             </div>
         </div>
         
@@ -376,7 +376,7 @@
         // Optimistic UI Append
         const msgHtml = `
             <div class="flex justify-end mb-1 animate-fade-in-up">
-                <div class="max-w-[75%] bg-[#007aff] text-white rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
+                <div class="max-w-[75%] bg-[#005A9C] text-white rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
                     ${escapeHtmlHc(message)}
                 </div>
             </div>
@@ -442,7 +442,7 @@
                         } else if (m.is_mine) {
                             html += `
                                 <div class="flex justify-end mb-1">
-                                    <div class="max-w-[75%] bg-[#007aff] text-white rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
+                                    <div class="max-w-[75%] bg-[#005A9C] text-white rounded-[20px] px-4 py-2 text-[15px] leading-relaxed">
                                         ${escapeHtmlHc(m.message)}
                                     </div>
                                 </div>

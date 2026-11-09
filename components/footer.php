@@ -1,191 +1,173 @@
-<?php
-// Footer component
-$currentPage = basename($_SERVER['PHP_SELF']);
-?>
-<footer class="bg-[#0f172a] text-white pt-16 pb-8">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
-            <div>
-                <img src="graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews" class="h-12 w-auto mb-6">
-                <p class="text-gray-400 mb-6">Empowering businesses with innovative digital solutions to thrive in the modern marketplace.</p>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
+<?php $currentPage = basename($_SERVER['PHP_SELF']); ?>
+
+<footer class="site-footer">
+    <div class="shell" style="padding-top: 76px; padding-bottom: 0;">
+
+        <!-- CTA band -->
+        <div class="card-dark" style="border-radius: 28px; padding: clamp(28px, 4vw, 52px); margin-bottom: 64px; position: relative; overflow: hidden;" data-aos="fade-up">
+            <div class="arc-lines"></div>
+            <div style="position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px;">
+                <div style="max-width: 620px;">
+                    <span class="eyebrow eyebrow-light">Let’s build something remarkable</span>
+                    <h2 style="font-size: clamp(1.9rem, 3.4vw, 2.9rem); margin: 14px 0 12px;">Your next chapter starts with a conversation.</h2>
+                    <p style="font-size: 14.5px; color: rgba(255,255,255,.66); max-width: 54ch;">Tell us where you want to go. We’ll map the brand, product and growth strategy to get you there.</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <a href="/contact.php" class="btn btn-sky">Start a Project <i class="fas fa-arrow-right"></i></a>
+                    <a href="/services.php" class="btn btn-outline-light">Explore Services</a>
                 </div>
             </div>
-            
+        </div>
+
+        <div class="footer-grid">
             <div>
-                <h4 class="text-lg font-bold mb-6">Quick Links</h4>
-                <ul class="space-y-3">
-                    <li><a href="index.php" class="text-gray-400 hover:text-white transition">Home</a></li>
-                    <li><a href="index.php#services" class="text-gray-400 hover:text-white transition">Services</a></li>
-                    <li><a href="about.php" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                    <li><a href="careers.php" class="text-gray-400 hover:text-white transition">Careers</a></li>
-                    <li><a href="contact.php" class="text-gray-400 hover:text-white transition">Contact</a></li>
-                </ul>
+                <img src="/graphics/logos/hypecrews%20logo%20white.png" alt="Hypecrews" style="height: 42px; width: auto; margin-bottom: 20px;">
+                <p style="font-size: 13px; line-height: 1.8; max-width: 300px; color: rgba(255,255,255,.56);">
+                    A premium digital brand company building identity, product and growth systems for ambitious businesses across India and beyond.
+                </p>
+                <div class="footer-social" style="margin-top: 22px;">
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
             </div>
-            
+
             <div>
-                <h4 class="text-lg font-bold mb-6">Our Services</h4>
-                <ul class="space-y-3">
-                    <li><a href="services.php#copyright" class="text-gray-400 hover:text-white transition">Copyright Protection</a></li>
-                    <li><a href="services.php#social" class="text-gray-400 hover:text-white transition">Social Media Management</a></li>
-                    <li><a href="services.php#digital" class="text-gray-400 hover:text-white transition">Digital Marketing</a></li>
-                    <li><a href="services.php#web" class="text-gray-400 hover:text-white transition">Web Development</a></li>
-                    <li><a href="https://music.hypecrews.com" target="_blank" class="text-gray-400 hover:text-white transition">Music Distribution</a></li>
-                </ul>
+                <h4>Company</h4>
+                <div class="footer-links">
+                    <a href="/about.php">About us</a>
+                    <a href="/careers.php">Careers</a>
+                    <a href="/softwares.php">Softwares</a>
+                    <a href="/contact.php">Contact</a>
+                    <a href="/track_orders.php">Track order</a>
+                </div>
             </div>
-            
+
             <div>
-                <h4 class="text-lg font-bold mb-6">Legal</h4>
-                <ul class="space-y-3">
-                    <li><a href="refund-policy.php" class="text-gray-400 hover:text-white transition">Refund Policy</a></li>
-                    <li><a href="terms-conditions.php" class="text-gray-400 hover:text-white transition">Terms & Conditions</a></li>
-                    <li><a href="privacy-policy.php" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                </ul>
+                <h4>Services</h4>
+                <div class="footer-links">
+                    <a href="/services.php#copyright">Copyright protection</a>
+                    <a href="/services.php#social">Social media</a>
+                    <a href="/services.php#digital">Digital marketing</a>
+                    <a href="/services.php#web">Web development</a>
+                    <a href="/services.php#creative">Creative & brand</a>
+                </div>
             </div>
-            
+
             <div>
-                <h4 class="text-lg font-bold mb-6">Newsletter</h4>
-                <p class="text-gray-400 mb-4">Subscribe to our newsletter for the latest updates and offers.</p>
-                <form id="newsletterForm" class="flex">
-                    <input type="email" id="newsletterEmail" placeholder="Your email" class="px-4 py-2 w-full rounded-l-lg focus:outline-none bg-dark text-white border border-gray-700" required>
-                    <button type="submit" class="bg-primary hover:bg-indigo-700 px-4 rounded-r-lg text-white">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                <h4>Resources</h4>
+                <div class="footer-links">
+                    <a href="/privacy-policy.php">Privacy policy</a>
+                    <a href="/terms-conditions.php">Terms & conditions</a>
+                    <a href="/refund-policy.php">Refund policy</a>
+                    <a href="/support_chat.php">Support desk</a>
+                    <a href="/sitemap.php">Sitemap</a>
+                </div>
+            </div>
+
+            <div>
+                <h4>Newsletter</h4>
+                <p style="font-size: 12.5px; line-height: 1.7; color: rgba(255,255,255,.52); margin-bottom: 15px;">Monthly notes on brand, product and growth. No noise.</p>
+                <form id="newsletterForm" class="footer-news" novalidate>
+                    <input type="email" id="newsletterEmail" placeholder="you@company.com" aria-label="Email address" required>
+                    <button type="submit" aria-label="Subscribe"><i class="fas fa-paper-plane"></i></button>
                 </form>
                 <div id="newsletterMessage" class="mt-2 text-sm hidden"></div>
+                <div style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,.5);">
+                    <p><i class="fas fa-location-dot" style="color: var(--sky); margin-right: 7px;"></i>Golaghat, Assam 785621</p>
+                    <p style="margin-top: 7px;"><i class="fas fa-envelope" style="color: var(--sky); margin-right: 7px;"></i><a href="mailto:info@hypecrews.com">info@hypecrews.com</a></p>
+                </div>
             </div>
         </div>
-        
-        <div class="border-t border-gray-800 pt-8 text-center">
-            <p class="text-gray-400">&copy; 2024-<?php echo date("Y"); ?> Hypecrews. All rights reserved.</p>
+
+        <div class="footer-watermark" aria-hidden="true">HYPECREWS</div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024–<?php echo date('Y'); ?> Hypecrews Software Private Limited. All rights reserved.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 18px;">
+                <a href="/privacy-policy.php">Privacy</a>
+                <a href="/terms-conditions.php">Terms</a>
+                <a href="/refund-policy.php">Refunds</a>
+                <a href="/sitemap.php">Sitemap</a>
+            </div>
         </div>
     </div>
-    
-    <!-- Newsletter Thank You Popup -->
-    <div id="newsletterPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 text-center">
-            <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
-            <h3 class="text-2xl font-bold mb-2">Thank You!</h3>
-            <p class="text-gray-600 mb-6" id="popupMessage">Thank you for subscribing to our newsletter!</p>
-            <button id="closePopup" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Close</button>
+
+    <!-- Newsletter thank-you dialog -->
+    <div id="newsletterPopup" class="fixed inset-0 hidden items-center justify-center p-4" style="z-index: 1000; background: rgba(11, 28, 47, 0.55); backdrop-filter: blur(6px);">
+        <div style="background: #fff; border-radius: 24px; padding: 40px 32px; max-width: 420px; width: 100%; text-align: center; box-shadow: var(--shadow-lg);">
+            <div class="icon-tile icon-tile-lg" style="margin: 0 auto 18px; background: #eafaf3; border-color: #c9f0df; color: #15805a;">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 style="font-size: 24px; margin-bottom: 8px;">You’re on the list</h3>
+            <p id="popupMessage" style="color: var(--muted); font-size: 13.5px; margin-bottom: 22px;">Thank you for subscribing to our newsletter.</p>
+            <button id="closePopup" class="btn btn-primary btn-block">Close</button>
         </div>
     </div>
-    
-    <script>
-        // Newsletter form submission
-        document.addEventListener('DOMContentLoaded', function() {
-            const newsletterForm = document.getElementById('newsletterForm');
-            const newsletterEmail = document.getElementById('newsletterEmail');
-            const newsletterMessage = document.getElementById('newsletterMessage');
-            const newsletterPopup = document.getElementById('newsletterPopup');
-            const popupMessage = document.getElementById('popupMessage');
-            const closePopup = document.getElementById('closePopup');
-            
-            if (newsletterForm) {
-                newsletterForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const email = newsletterEmail.value.trim();
-                    
-                    // Basic validation
-                    if (!email) {
-                        showMessage('Please enter your email address.', 'error');
-                        return;
-                    }
-                    
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        showMessage('Please enter a valid email address.', 'error');
-                        return;
-                    }
-                    
-                    // Send AJAX request
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/newsletter_subscribe.php', true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4) {
-                            if (xhr.status === 200) {
-                                try {
-                                    const response = JSON.parse(xhr.responseText);
-                                    
-                                    if (response.status === 'success') {
-                                        // Show thank you popup
-                                        popupMessage.textContent = response.message;
-                                        newsletterPopup.classList.remove('hidden');
-                                        
-                                        // Hide form
-                                        newsletterForm.classList.add('hidden');
-                                    } else {
-                                        showMessage(response.message, 'error');
-                                    }
-                                } catch (e) {
-                                    showMessage('An error occurred. Please try again. (Parse Error)', 'error');
-                                    console.error('Parse error:', e);
-                                    console.error('Response text:', xhr.responseText);
-                                }
-                            } else {
-                                showMessage('An error occurred. Please try again. (Server Error)', 'error');
-                                console.error('Server error:', xhr.status, xhr.statusText);
-                                console.error('Response text:', xhr.responseText);
-                            }
-                        }
-                    };
-                    
-                    xhr.onerror = function() {
-                        showMessage('Network error. Please check your connection and try again.', 'error');
-                        console.error('Network error');
-                    };
-                    
-                    xhr.send('email=' + encodeURIComponent(email));
-                });
-            }
-            
-            // Close popup
-            if (closePopup) {
-                closePopup.addEventListener('click', function() {
-                    newsletterPopup.classList.add('hidden');
-                });
-            }
-            
-            // Close popup when clicking outside
-            if (newsletterPopup) {
-                newsletterPopup.addEventListener('click', function(e) {
-                    if (e.target === newsletterPopup) {
-                        newsletterPopup.classList.add('hidden');
-                    }
-                });
-            }
-            
-            function showMessage(text, type) {
-                if (newsletterMessage) {
-                    const alertClass = type === 'error' ? 
-                        'text-red-500' : 
-                        'text-green-500';
-                    
-                    newsletterMessage.textContent = text;
-                    newsletterMessage.className = 'mt-2 text-sm ' + alertClass;
-                    newsletterMessage.classList.remove('hidden');
-                    
-                    // Hide message after 5 seconds
-                    setTimeout(() => {
-                        newsletterMessage.classList.add('hidden');
-                    }, 5000);
-                }
-            }
-        });
-    </script>
 </footer>
+
+<a href="#" class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('newsletterForm');
+    const emailInput = document.getElementById('newsletterEmail');
+    const message = document.getElementById('newsletterMessage');
+    const popup = document.getElementById('newsletterPopup');
+    const popupMessage = document.getElementById('popupMessage');
+    const closePopup = document.getElementById('closePopup');
+
+    function showMessage(text, type) {
+        if (!message) return;
+        message.textContent = text;
+        message.style.color = type === 'error' ? '#ff9b8f' : '#7ee2b8';
+        message.classList.remove('hidden');
+        setTimeout(() => message.classList.add('hidden'), 5000);
+    }
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/newsletter_subscribe.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.status === 'success') {
+                            if (popupMessage) popupMessage.textContent = response.message;
+                            if (popup) { popup.classList.remove('hidden'); popup.classList.add('flex'); }
+                            form.classList.add('hidden');
+                        } else {
+                            showMessage(response.message || 'Something went wrong.', 'error');
+                        }
+                    } catch (err) {
+                        showMessage('An error occurred. Please try again.', 'error');
+                    }
+                } else {
+                    showMessage('An error occurred. Please try again.', 'error');
+                }
+            };
+            xhr.onerror = function () { showMessage('Network error. Please try again.', 'error'); };
+            xhr.send('email=' + encodeURIComponent(email));
+        });
+    }
+
+    function hidePopup() {
+        if (!popup) return;
+        popup.classList.add('hidden');
+        popup.classList.remove('flex');
+    }
+    if (closePopup) closePopup.addEventListener('click', hidePopup);
+    if (popup) popup.addEventListener('click', (e) => { if (e.target === popup) hidePopup(); });
+});
+</script>
