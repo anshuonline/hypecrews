@@ -73,11 +73,13 @@ include 'components/head.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
     .support-shell { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 26px; align-items: start; }
+    .support-sidebar { display: block; }
     .chat-panel {
         background: #fff; border: 1px solid var(--line); border-radius: 24px;
         display: flex; flex-direction: column; overflow: hidden;
         height: calc(100vh - 220px); min-height: 580px;
         box-shadow: var(--shadow-sm);
+        width: 100%;
     }
     .chat-panel-head {
         padding: 18px 22px; border-bottom: 1px solid var(--line);
@@ -168,6 +170,7 @@ include 'components/head.php';
     .typing-dots span:nth-child(3) { animation-delay: .36s; }
     @keyframes chatPulse { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
     @media (max-width: 1024px) {
+        .support-sidebar { display: none; }
         .support-shell { grid-template-columns: minmax(0, 1fr); }
         .chat-panel { height: calc(100vh - 190px); min-height: 520px; }
     }
@@ -196,7 +199,7 @@ include 'components/head.php';
 
         <div class="support-shell">
             <!-- Sidebar -->
-            <div style="display: none;" class="lg:block">
+            <div class="support-sidebar">
                 <?php
                 $current_user_page = 'support_chat';
                 include 'components/user_sidebar.php';
