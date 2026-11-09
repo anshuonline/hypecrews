@@ -1,620 +1,279 @@
 <?php
 session_start();
-$pageTitle = "Our Services - Hypecrews";
+$pageTitle = "Our Services — Hypecrews";
+$pageDescription = "Explore Hypecrews' premium digital services: copyright protection, social media management, digital marketing, web development, video production, SEO, artist management and more.";
+$pageKeywords = "copyright protection, social media management, digital marketing, web development, video production, SEO services, artist management, media distribution, Hypecrews services";
+$canonical = "https://hypecrews.com/services.php";
+$jsonLd = '{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Digital Services",
+  "provider": { "@type": "Organization", "name": "Hypecrews", "url": "https://hypecrews.com", "logo": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png", "address": { "@type": "PostalAddress", "addressLocality": "Golaghat", "addressRegion": "Assam", "addressCountry": "IN" } },
+  "url": "https://hypecrews.com/services.php",
+  "name": "Hypecrews Digital Services",
+  "description": "Premium digital services including copyright protection, social media management, digital marketing, web development, video production, SEO, artist management and media distribution."
+}';
+
+$services = [
+    ['id' => 'copyright', 'icon' => 'fa-copyright', 'title' => 'Copyright Protection', 'query' => 'Copyright Protection',
+     'desc' => 'We protect your intellectual property across every digital platform — proactive monitoring for unauthorised use of your music, video, images and text, swift DMCA takedowns, and persistent follow-up to ensure permanent removal.',
+     'tags' => ['DMCA takedowns', 'Asset monitoring', 'Platform removal']],
+    ['id' => 'social', 'icon' => 'fa-hashtag', 'title' => 'Social Media Management', 'query' => 'Social Media Management',
+     'desc' => 'Strategic content planning, daily publishing, audience engagement and performance analysis. We build a strong brand voice and turn followers into a loyal community.',
+     'tags' => ['Content calendar', 'Community', 'Reporting']],
+    ['id' => 'digital', 'icon' => 'fa-bullhorn', 'title' => 'Digital Marketing', 'query' => 'Digital Marketing',
+     'desc' => 'A data-driven approach across SEO, PPC, content and email. We analyse market trends to craft targeted, high-converting strategies that increase leads and ROI.',
+     'tags' => ['Paid media', 'Funnels', 'Analytics']],
+    ['id' => 'web', 'icon' => 'fa-laptop-code', 'title' => 'Web & Development', 'query' => 'Web & Development',
+     'desc' => 'From informational websites to complex e-commerce platforms. We deliver visually stunning, responsive and secure digital products tailored to your business.',
+     'tags' => ['Websites', 'E-commerce', 'Apps & APIs']],
+    ['id' => 'recovery', 'icon' => 'fa-arrows-rotate', 'title' => 'Recovery & Support', 'query' => 'Recovery & Support',
+     'desc' => 'Digital crisis assistance for compromised accounts, platform suspensions and reputation damage. Our team implements strategic recovery protocols to restore your assets.',
+     'tags' => ['Account recovery', 'Reputation', 'Crisis response']],
+    ['id' => 'video', 'icon' => 'fa-clapperboard', 'title' => 'Video Production', 'query' => 'Video Production',
+     'desc' => 'The full creative process — concept development, scriptwriting, filming, post-production and final delivery — tailored to captivate your audience.',
+     'tags' => ['Brand films', 'Social video', 'Post-production']],
+    ['id' => 'marketing', 'icon' => 'fa-chart-line', 'title' => 'Marketing & SEO', 'query' => 'Marketing & SEO',
+     'desc' => 'Drive organic growth with proven white-hat SEO. We optimise your presence to rank higher, attract targeted traffic and convert visitors into loyal customers.',
+     'tags' => ['Technical SEO', 'Content', 'Link building']],
+    ['id' => 'creative', 'icon' => 'fa-pen-nib', 'title' => 'Creative & Production', 'query' => 'Creative & Production',
+     'desc' => 'Premium design, branding and visual storytelling. From logo design and UI/UX to complete identity guidelines, we make your brand feel as good as it is.',
+     'tags' => ['Brand identity', 'UI/UX', 'Design systems']],
+    ['id' => 'business-support', 'icon' => 'fa-briefcase', 'title' => 'Business Support', 'query' => 'Business Support',
+     'desc' => 'Administrative, financial and strategic support — virtual assistants, documentation management and process optimisation for your back office.',
+     'tags' => ['Virtual assistants', 'Operations', 'Process design']],
+    ['id' => 'company-registration', 'icon' => 'fa-file-signature', 'title' => 'Company Registration', 'query' => 'Company Registration',
+     'desc' => 'End-to-end guidance through choosing a legal structure, filing documentation with authorities and securing the licences your venture needs.',
+     'tags' => ['Incorporation', 'Compliance', 'Licensing']],
+    ['id' => 'movie-pr', 'icon' => 'fa-film', 'title' => 'Movie PR', 'query' => 'Movie PR',
+     'desc' => 'Strategic public relations for films — media outreach, press release distribution, red-carpet events and crisis communication that builds real buzz.',
+     'tags' => ['Press & media', 'Launch events', 'Crisis PR']],
+    ['id' => 'media-distribution', 'icon' => 'fa-broadcast-tower', 'title' => 'Media Distribution', 'query' => 'Media Distribution', 'external' => 'https://music.hypecrews.com',
+     'desc' => 'Efficient delivery of your music and video to a global audience. We manage formatting, delivery to major streaming platforms, metadata and royalty collection.',
+     'tags' => ['Spotify & Apple', 'YouTube', 'Royalties']],
+    ['id' => 'artist-management', 'icon' => 'fa-microphone-lines', 'title' => 'Artist Management', 'query' => 'Artist Management',
+     'desc' => 'End-to-end management for emerging and established artists — bookings, contract negotiations, brand partnerships, tour logistics and career strategy.',
+     'tags' => ['Bookings', 'Contracts', 'Career strategy']],
+];
+
+$faqs = [
+    ['How quickly can Hypecrews start?', 'Most engagements begin within 5–7 business days of the kick-off call. Urgent copyright takedowns and account recovery cases can be prioritised within 24–48 hours.'],
+    ['Do you work with clients outside India?', 'Yes. We work with brands, labels and creators across India, the UK, US, UAE and Southeast Asia. All communication and delivery is fully remote-friendly.'],
+    ['Can I combine multiple services?', 'Absolutely. Most clients combine brand, web and growth services. We build a single roadmap and one accountable team rather than selling disconnected deliverables.'],
+    ['How is pricing decided?', 'After a discovery call we scope the work and quote a fixed project fee or a monthly retainer. You always get a clear breakdown before anything starts.'],
+];
+include 'components/head.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
+<body class="antialiased">
+<?php include 'components/nav.php'; ?>
 
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Explore Hypecrews' premium digital services: copyright protection, social media management, digital marketing, web development, video production, SEO & more.">
-    <meta name="keywords" content="copyright protection, social media management, digital marketing, web development, video production, SEO services, artist management, media distribution, hypecrews services">
-    <link rel="canonical" href="https://hypecrews.com/services.php">
+<!-- ============================================================ HERO -->
+<section class="page-hero">
+    <div class="hero-mesh"></div>
+    <div class="grid-lines"></div>
+    <div class="orb orb-1" style="width: 300px; height: 300px; top: 2%; right: -6%;"></div>
+    <div class="orb orb-2" style="width: 220px; height: 220px; bottom: -4%; left: 4%;"></div>
 
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Our Services - Hypecrews | Premium Digital Solutions">
-    <meta property="og:description" content="Explore Hypecrews' premium digital services: copyright protection, social media management, digital marketing, web development, video production, SEO & more.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://hypecrews.com/services.php">
-    <meta property="og:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
-    <meta property="og:site_name" content="Hypecrews">
-
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Our Services - Hypecrews | Premium Digital Solutions">
-    <meta name="twitter:description" content="Explore Hypecrews' premium digital services: copyright protection, social media management, digital marketing, web development, video production, SEO & more.">
-    <meta name="twitter:image" content="https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png">
-
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Service",
-        "serviceType": "Digital Services",
-        "provider": {
-            "@type": "Organization",
-            "name": "Hypecrews",
-            "url": "https://hypecrews.com",
-            "logo": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png",
-            "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Golaghat",
-                "addressRegion": "Assam",
-                "addressCountry": "IN"
-            }
-        },
-        "url": "https://hypecrews.com/services.php",
-        "name": "Hypecrews Digital Services",
-        "description": "Premium digital services including copyright protection, social media management, digital marketing, web development, video production, SEO, artist management, and media distribution.",
-        "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Hypecrews Services",
-            "itemListElement": [
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Copyright Protection",
-                        "description": "Proactive monitoring and DMCA takedown services to protect your intellectual property across all digital platforms."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Social Media Management",
-                        "description": "Strategic content planning, daily posting, audience engagement, and performance analysis to build your brand presence."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Digital Marketing",
-                        "description": "Data-driven SEO, PPC advertising, content marketing, and email campaigns to maximize online visibility and ROI."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Web & Development",
-                        "description": "Comprehensive web and application development from informational websites to complex e-commerce platforms."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Recovery & Support",
-                        "description": "Digital crisis assistance for compromised accounts, platform suspensions, and reputation damage recovery."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Video Production",
-                        "description": "Full creative process from concept development and scriptwriting to filming, post-production, and final delivery."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Marketing & SEO",
-                        "description": "Specialized strategies to rank higher on search engines, drive targeted traffic, and convert visitors into customers."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Creative & Production",
-                        "description": "Premium design, branding, logo design, UI/UX, and comprehensive brand identity guidelines."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Business Support",
-                        "description": "Administrative, financial, and strategic support including virtual assistant services and process optimization."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Company Registration",
-                        "description": "Complete guidance through business registration, legal structure, documentation filing, and licensing."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Movie PR",
-                        "description": "Strategic public relations campaigns for films including media outreach, press releases, and crisis communication."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Media Distribution",
-                        "description": "Music and video content delivery to major streaming platforms with metadata management and royalty collection."
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Artist Management",
-                        "description": "End-to-end management for artists including bookings, contract negotiations, brand partnerships, and career strategy."
-                    }
-                }
-            ]
-        }
-    }
-    </script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        dark: '#0B0F19', // Deep formal dark
-                        light: '#1e293b'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #0B0F19;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.05) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%);
-            color: #f8fafc;
-        }
-
-        .glass-card {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:hover {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.15);
-            transform: translateY(-8px);
-        }
-
-        .icon-box {
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
-        
-        .icon-box::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.2) 100%);
-            z-index: -1;
-            transition: opacity 0.5s ease;
-            opacity: 0.5;
-        }
-
-        .glass-card:hover .icon-box::before {
-            opacity: 1;
-        }
-
-        .reveal-up {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-
-        .reveal-up.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .service-link {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            font-weight: 600;
-            color: #cbd5e1;
-            transition: color 0.3s ease;
-        }
-        
-        .service-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -2px;
-            left: 0;
-            background-color: #6366f1;
-            transition: width 0.3s ease;
-        }
-        
-        .service-link:hover {
-            color: #fff;
-        }
-        
-        .service-link:hover::after {
-            width: 100%;
-        }
-
-        .service-link i {
-            transition: transform 0.3s ease;
-        }
-
-        .service-link:hover i {
-            transform: translateX(5px);
-        }
-    </style>
-    <link rel="icon" type="image/png" href="/graphics/logos/hypecrews%20logo%20white.png">
-    <?php include 'components/google_analytics.php'; ?>
-</head>
-<body class="text-white antialiased selection:bg-primary selection:text-white">
-    <?php include 'components/nav.php'; ?>
-
-    <!-- Services Hero Section -->
-    <section class="pt-32 pb-20 relative overflow-hidden">
-        <!-- Elegant subtle animated background -->
-        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-[120px] animate-[pulse_8s_infinite_alternate]"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-900/20 rounded-full blur-[120px] animate-[pulse_10s_infinite_alternate-reverse]"></div>
-        </div>
-        
-        <div class="container mx-auto px-6 lg:px-8 text-center relative z-10 reveal-up">
-            <div class="inline-flex items-center justify-center mb-8 px-4 py-2 border border-white/10 rounded-full bg-white/5 backdrop-blur-sm">
-                <span class="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-                <span class="text-sm font-medium tracking-wider uppercase text-gray-300">Expert Solutions</span>
-            </div>
-            
-            <h1 class="font-heading text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">
-                Premium Services for <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Digital Excellence</span>
-            </h1>
-            
-            <p class="text-xl max-w-3xl mx-auto text-slate-400 mb-12 font-light leading-relaxed">
-                Discover how our specialized team can help elevate your brand, protect your assets, and accelerate your business growth through meticulous digital execution.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#services" class="px-8 py-4 bg-white text-dark font-semibold rounded-full transition-all duration-300 hover:bg-gray-200 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                    Explore Offerings
-                </a>
-                <a href="index.php#contact" class="px-8 py-4 bg-transparent border border-white/20 text-white font-semibold rounded-full transition-all duration-300 hover:bg-white/10">
-                    Consult With Us
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Details Section -->
-    <section id="services" class="py-24 relative z-10">
-        <div class="container mx-auto px-6 lg:px-8">
-            <div class="text-center mb-20 reveal-up">
-                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6">Core <span class="text-gray-400">Capabilities</span></h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <!-- Copyright Protection & Removal -->
-                <div id="copyright" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-copyright text-indigo-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Copyright Protection</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            We specialize in protecting your intellectual property across all digital platforms. Our service includes proactive monitoring for unauthorized use of your copyrighted content (music, videos, images, text), swift issuance of DMCA takedown notices, and persistent follow-up to ensure permanent removal from websites, social media, and file-sharing platforms.
-                        </p>
-                        <a href="service_query.php?service=Copyright Protection" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
+    <div class="shell shell-wide relative z-1">
+        <div class="grid lg:grid-cols-[1.12fr_.88fr] gap-14 items-center">
+            <div>
+                <div class="chip" data-aos="fade-up"><i class="fas fa-layer-group" style="color: var(--blue);"></i> 13 specialised capabilities</div>
+                <h1 class="display-1 text-balance" style="margin-top: 22px;" data-aos="fade-up" data-aos-delay="60">
+                    Premium services for<br><span class="gradient-text">digital excellence.</span>
+                </h1>
+                <p class="lead" style="margin-top: 20px;" data-aos="fade-up" data-aos-delay="120">
+                    One senior team covering brand, product, protection and growth. Explore how we help ambitious businesses build a presence that performs as well as it looks.
+                </p>
+                <div class="flex flex-wrap gap-3" style="margin-top: 30px;" data-aos="fade-up" data-aos-delay="180">
+                    <a href="#capabilities" class="btn btn-primary btn-lg">Explore services <i class="fas fa-arrow-down"></i></a>
+                    <a href="/contact.php" class="btn btn-outline btn-lg">Book a strategy call</a>
                 </div>
-
-                <!-- Social Media Management -->
-                <div id="social" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 100ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-hashtag text-purple-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Social Media Management</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Our expert team handles all aspects of your social media presence, from strategic content planning and creation to daily posting, audience engagement, and performance analysis. We focus on building a strong brand voice, increasing follower count, driving traffic, and fostering a loyal community across platforms.
-                        </p>
-                        <a href="service_query.php?service=Social Media Management" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Digital Marketing -->
-                <div id="digital" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 200ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-bullhorn text-blue-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Digital Marketing</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Designed to maximize your online visibility and drive measurable results. We employ a data-driven approach encompassing SEO, PPC advertising, content marketing, and email campaigns. We analyze market trends to craft targeted, high-converting strategies that increase leads and ROI.
-                        </p>
-                        <a href="service_query.php?service=Digital Marketing" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Web & Development -->
-                <div id="web" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 300ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-laptop-code text-cyan-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Web & Development</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Comprehensive web and application development services, covering everything from simple informational websites to complex e-commerce platforms. Our developers utilize the latest technologies to deliver visually stunning, responsive, and highly secure digital solutions tailored to your business needs.
-                        </p>
-                        <a href="service_query.php?service=Web & Development" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
+                <div class="flex flex-wrap items-center gap-8" style="margin-top: 38px;" data-aos="fade-up" data-aos-delay="240">
+                    <div class="hero-stat"><strong>1,000+</strong><small>Projects delivered</small></div>
+                    <div class="hero-stat"><strong>98%</strong><small>Client success rate</small></div>
+                    <div class="hero-stat"><strong>4.9/5</strong><small>Average rating</small></div>
                 </div>
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <!-- Recovery & Support -->
-                <div id="recovery" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-sync-alt text-emerald-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Recovery & Support</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Essential assistance for digital crises, focusing on regaining control of compromised accounts and repairing reputation damage. Whether dealing with platform suspensions, hacked accounts, or negative press, our dedicated team implements strategic recovery protocols to restore your digital assets.
-                        </p>
-                        <a href="service_query.php?service=Recovery & Support" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
 
-                <!-- Video Production -->
-                <div id="video" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 100ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-video text-rose-400 text-2xl"></i>
+            <div data-aos="fade-left" data-aos-delay="120">
+                <div class="card-dark" style="border-radius: 28px; padding: 30px; position: relative; overflow: hidden;">
+                    <div class="arc-lines"></div>
+                    <div class="relative z-1">
+                        <div class="flex items-center justify-between" style="margin-bottom: 22px;">
+                            <div class="flex items-center gap-3">
+                                <div class="icon-tile icon-tile-sm" style="background: rgba(96,193,229,.14); border-color: rgba(96,193,229,.3); color: var(--sky);"><i class="fas fa-compass"></i></div>
+                                <div><p style="font-size: 12px; font-weight: 800; color: #fff;">Service snapshot</p><p style="font-size: 10px; color: rgba(255,255,255,.5);">What clients ask for most</p></div>
                             </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Video Production</h3>
+                            <span class="badge" style="background: rgba(96,193,229,.16); color: var(--ice); border-color: rgba(96,193,229,.3);">2026</span>
                         </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Covering the entire creative process, from initial concept development and scriptwriting to filming, post-production editing, and final delivery. We specialize in producing high-quality, engaging visual content tailored to captivate your audience and effectively convey your message.
-                        </p>
-                        <a href="service_query.php?service=Video Production" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
 
-                <!-- Marketing & SEO -->
-                <div id="marketing" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 200ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-chart-line text-teal-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Marketing & SEO</h3>
+                        <?php $bars = [['Brand & identity', '88%'], ['Social & content', '76%'], ['Web & product', '82%'], ['Protection & recovery', '94%']];
+                        foreach ($bars as $b): ?>
+                        <div style="margin-bottom: 15px;">
+                            <div class="flex items-center justify-between" style="margin-bottom: 6px;"><span style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,.72);"><?php echo $b[0]; ?></span><span style="font-size: 10px; font-weight: 800; color: var(--ice);"><?php echo $b[1]; ?></span></div>
+                            <div style="height: 7px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden;"><div style="width: <?php echo $b[1]; ?>; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--sky), var(--ice));"></div></div>
                         </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Drive organic growth and scale your business with our specialized Marketing and SEO strategies. We optimize your digital presence to rank higher on search engines, drive targeted traffic, and convert visitors into long-term loyal customers using proven white-hat methodologies.
-                        </p>
-                        <a href="service_query.php?service=Marketing & SEO" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
+                        <?php endforeach; ?>
 
-                <!-- Creative & Production -->
-                <div id="creative" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 300ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-paint-brush text-pink-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Creative & Production</h3>
+                        <div style="margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                            <p style="font-size: 10.5px; color: rgba(255,255,255,.55); max-width: 180px;">Not sure what you need? We’ll map it in 30 minutes.</p>
+                            <a href="/contact.php" class="btn btn-sky btn-sm">Talk to us</a>
                         </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Our creative studio delivers premium design, branding, and visual storytelling that resonates with your target demographic. From logo design and UI/UX to comprehensive brand identity guidelines, we ensure your aesthetic reflects the high quality of your brand.
-                        </p>
-                        <a href="service_query.php?service=Creative & Production" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Extended Services Section -->
-    <section class="py-24 relative z-10 border-t border-white/5">
-        <div class="container mx-auto px-6 lg:px-8">
-            <div class="text-center mb-20 reveal-up">
-                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-6">Extended <span class="text-gray-400">Offerings</span></h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-purple-400 to-indigo-400 mx-auto rounded-full"></div>
+<!-- ======================================================= QUICK NAV -->
+<section style="background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px 0;">
+    <div class="shell shell-wide">
+        <div class="flex items-center gap-2" style="overflow-x: auto; scrollbar-width: none;" data-aos="fade-up">
+            <span style="font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--muted-2); white-space: nowrap; margin-right: 10px;">Jump to</span>
+            <?php foreach ($services as $svc): ?>
+            <a href="#<?php echo $svc['id']; ?>" class="chip" style="white-space: nowrap; font-size: 11px;"><?php echo $svc['title']; ?></a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- ===================================================== CAPABILITIES -->
+<section class="section" id="capabilities" style="background: var(--mist);">
+    <div class="shell shell-wide">
+        <div class="section-head section-head-center" data-aos="fade-up">
+            <span class="eyebrow eyebrow-center">Core capabilities</span>
+            <h2 class="display-2">Everything your brand needs, under one roof.</h2>
+            <p class="lead">Thirteen focused services, one accountable team. Pick a single engagement or combine them into a complete brand and growth system.</p>
+        </div>
+
+        <!-- Featured -->
+        <article id="copyright" class="card" style="padding: clamp(26px, 4vw, 46px); background: linear-gradient(135deg, #fff 30%, #eef8fd); margin-bottom: 22px;" data-aos="fade-up">
+            <div class="grid lg:grid-cols-[1.25fr_.75fr] gap-10 items-center">
+                <div>
+                    <div class="flex items-center gap-4">
+                        <div class="icon-tile icon-tile-lg"><i class="fas fa-copyright"></i></div>
+                        <div><span class="badge badge-sky">Most requested</span><h3 style="font-size: clamp(24px, 3vw, 34px); margin-top: 8px;">Copyright Protection</h3></div>
+                    </div>
+                    <p style="font-size: 14.5px; color: var(--muted); line-height: 1.85; margin-top: 18px; max-width: 62ch;"><?php echo $services[0]['desc']; ?></p>
+                    <div class="flex flex-wrap gap-2" style="margin-top: 18px;">
+                        <?php foreach ($services[0]['tags'] as $tag): ?><span class="chip" style="font-size: 11px;"><i class="fas fa-check" style="color: #15805a; font-size: 9px;"></i><?php echo $tag; ?></span><?php endforeach; ?>
+                    </div>
+                    <a href="service_query.php?service=<?php echo urlencode($services[0]['query']); ?>" class="btn btn-primary" style="margin-top: 24px;">Protect your work <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card" style="padding: 22px; border-radius: 18px; box-shadow: var(--shadow-sm);">
+                    <div class="flex items-center justify-between" style="margin-bottom: 16px;"><span class="badge badge-sky"><span style="width:6px;height:6px;border-radius:99px;background:#15805a;display:inline-block;"></span> Live scan</span><i class="fas fa-shield-halved" style="color: var(--sky);"></i></div>
+                    <div style="height: 9px; border-radius: 99px; background: #e9f3f9; overflow: hidden; margin-bottom: 9px;"><div style="width: 86%; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--sky));"></div></div>
+                    <p style="font-size: 10.5px; color: var(--muted-2); font-weight: 700;">340 assets monitored · 98% cleared</p>
+                    <div style="height: 1px; background: var(--line); margin: 16px 0;"></div>
+                    <div class="flex items-center justify-between" style="font-size: 10.5px; color: var(--muted);"><span>Takedowns issued</span><strong style="color: var(--navy);">1,240+</strong></div>
+                    <div class="flex items-center justify-between" style="font-size: 10.5px; color: var(--muted); margin-top: 8px;"><span>Avg. removal time</span><strong style="color: var(--navy);">48 hours</strong></div>
+                    <div class="flex items-center gap-2" style="margin-top: 16px;"><span style="width: 7px; height: 7px; border-radius: 99px; background: #1a9f6e;"></span><span style="font-size: 10px; font-weight: 800; color: #15805a;">All systems protected</span></div>
+                </div>
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Business Support -->
-                <div id="business-support" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-briefcase text-yellow-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Business Support</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Designed to streamline your operations and foster sustainable growth. We offer specialized administrative, financial, and strategic support, including virtual assistant services, documentation management, and process optimization to handle your essential back-office functions.
-                        </p>
-                        <a href="service_query.php?service=Business Support" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
+        </article>
 
-                <!-- Company Registration -->
-                <div id="company-registration" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 100ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-file-signature text-orange-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Company Registration</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            We guide you through the entire registration process, including choosing the appropriate legal structure, preparing and filing required documentation with relevant government authorities, and securing necessary licenses to ensure a seamless setup for your venture.
-                        </p>
-                        <a href="service_query.php?service=Company Registration" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
+        <!-- Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <?php foreach (array_slice($services, 1) as $i => $svc): ?>
+            <article id="<?php echo $svc['id']; ?>" class="card card-hover card-pad" style="display: flex; flex-direction: column;" data-aos="fade-up" data-aos-delay="<?php echo ($i % 3) * 60; ?>">
+                <div class="flex items-start justify-between">
+                    <div class="icon-tile"><i class="fas <?php echo $svc['icon']; ?>"></i></div>
+                    <span style="font-family: var(--font-head); font-size: 12px; font-weight: 800; color: var(--muted-2);"><?php echo str_pad($i + 2, 2, '0', STR_PAD_LEFT); ?></span>
                 </div>
-
-                <!-- Movie PR -->
-                <div id="movie-pr" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 200ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-ticket-alt text-red-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Movie PR</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Crafting and executing strategic Public Relations campaigns specifically for films. We handle media outreach, press release distribution, red carpet events, and crisis communication to generate positive buzz and secure high-impact reviews across platforms.
-                        </p>
-                        <a href="service_query.php?service=Movie PR" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
+                <h3 style="font-size: 19px; margin-top: 20px;"><?php echo $svc['title']; ?></h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.75; margin-top: 9px; flex-grow: 1;"><?php echo $svc['desc']; ?></p>
+                <div class="flex flex-wrap gap-2" style="margin-top: 16px;">
+                    <?php foreach ($svc['tags'] as $tag): ?><span style="font-size: 10px; font-weight: 700; color: var(--blue); background: #eef7fd; border: 1px solid #d9edf8; border-radius: 99px; padding: 4px 9px;"><?php echo $tag; ?></span><?php endforeach; ?>
                 </div>
+                <?php if (!empty($svc['external'])): ?>
+                <a href="<?php echo $svc['external']; ?>" target="_blank" rel="noopener" class="link-arrow" style="margin-top: 20px; font-size: 11px;">Explore platform <i class="fas fa-arrow-up-right-from-square"></i></a>
+                <?php else: ?>
+                <a href="service_query.php?service=<?php echo urlencode($svc['query']); ?>" class="link-arrow" style="margin-top: 20px; font-size: 11px;">Learn more <i class="fas fa-arrow-right"></i></a>
+                <?php endif; ?>
+            </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
 
-                <!-- Media Distribution -->
-                <div id="media-distribution" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32" style="transition-delay: 300ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-broadcast-tower text-green-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Media Distribution</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            Efficiently delivering your music and video content to a global audience. We manage the entire pipeline, ensuring proper formatting and delivery to major streaming platforms (Spotify, Apple Music, YouTube) while handling metadata and royalty collection.
-                        </p>
-                        <a href="https://music.hypecrews.com" target="_blank" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Explore Platform <i class="fas fa-external-link-alt ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Artist Management -->
-                <div id="artist-management" class="glass-card rounded-3xl p-8 lg:p-10 reveal-up group scroll-mt-32 lg:col-span-2 mx-auto max-w-4xl w-full" style="transition-delay: 400ms;">
-                    <div class="flex flex-col h-full">
-                        <div class="flex items-center mb-8">
-                            <div class="icon-box w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 mr-6 shadow-inner">
-                                <i class="fas fa-microphone-alt text-sky-400 text-2xl"></i>
-                            </div>
-                            <h3 class="font-heading text-2xl font-bold tracking-tight">Artist Management</h3>
-                        </div>
-                        <p class="text-slate-400 mb-8 flex-grow leading-relaxed font-light">
-                            End-to-end management services for emerging and established artists. We handle bookings, contract negotiations, brand partnerships, tour logistics, and overall career strategy so you can focus entirely on your craft and performance.
-                        </p>
-                        <a href="service_query.php?service=Artist Management" class="service-link text-sm uppercase tracking-widest mt-auto">
-                            Learn More <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
-                    </div>
+<!-- ======================================================== STATS -->
+<section class="section-dark stat-band" style="padding: 58px 0;">
+    <div class="arc-lines"></div>
+    <div class="shell shell-wide relative z-1">
+        <div class="grid lg:grid-cols-4 gap-8 items-end">
+            <div data-aos="fade-right">
+                <span class="eyebrow eyebrow-light">Measured results</span>
+                <h2 style="font-size: clamp(1.6rem, 2.5vw, 2.2rem); margin-top: 12px;">Quiet confidence.<br><span class="gradient-text-light">Real outcomes.</span></h2>
+            </div>
+            <div class="lg:col-span-3" data-aos="fade-left">
+                <div class="stat-grid">
+                    <div class="stat-cell"><div class="num"><span data-count="1000" data-suffix="+">0+</span></div><p>Projects delivered</p></div>
+                    <div class="stat-cell"><div class="num"><span data-count="750" data-suffix="+">0+</span></div><p>Brands served</p></div>
+                    <div class="stat-cell"><div class="num"><span data-count="98" data-suffix="%">0%</span></div><p>Success rate</p></div>
+                    <div class="stat-cell"><div class="num"><span data-count="4.9" data-decimals="1" data-suffix="/5">0/5</span></div><p>Client rating</p></div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Formal CTA Section -->
-    <section class="py-24 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-indigo-900/10 pointer-events-none"></div>
-        <div class="container mx-auto px-6 lg:px-8 text-center relative z-10 reveal-up">
-            <h2 class="font-heading text-3xl md:text-5xl font-bold mb-6 tracking-tight">Initiate Your Transformation</h2>
-            <p class="text-xl mb-10 max-w-2xl mx-auto text-slate-400 font-light">Consult with our specialists to construct a tailored strategy for your digital objectives.</p>
-            <a href="index.php#contact" class="inline-flex items-center justify-center px-10 py-4 bg-white text-dark font-semibold rounded-full transition-all duration-300 hover:bg-gray-200 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                Schedule Consultation
-            </a>
+<!-- ======================================================= PROCESS -->
+<section class="section" style="background: #fff;">
+    <div class="shell shell-wide">
+        <div class="section-head section-head-center" data-aos="fade-up">
+            <span class="eyebrow eyebrow-center">How engagements work</span>
+            <h2 class="display-2">Simple to start. Clear to run.</h2>
+            <p class="lead">Whether it’s a single takedown or a full rebrand, the same calm, predictable process applies.</p>
         </div>
-    </section>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 steps">
+            <div class="step" data-aos="fade-up"><div class="step-num">01</div><h3>Discover</h3><p>We audit your brand, assets and goals, then agree on the sharpest opportunity to chase.</p></div>
+            <div class="step" data-aos="fade-up" data-aos-delay="80"><div class="step-num">02</div><h3>Scope</h3><p>You receive a clear roadmap, fixed quote and timeline — no vague retainers.</p></div>
+            <div class="step" data-aos="fade-up" data-aos-delay="160"><div class="step-num">03</div><h3>Deliver</h3><p>Our senior team executes in focused sprints with weekly visibility and review points.</p></div>
+            <div class="step" data-aos="fade-up" data-aos-delay="240"><div class="step-num">04</div><h3>Compound</h3><p>Measure, optimise and protect. The work keeps paying back long after launch.</p></div>
+        </div>
+    </div>
+</section>
 
-    <?php include 'components/footer.php'; ?>
-    
-    <script src="js/main.js"></script>
-    
-    <!-- Intersection Observer for smooth reveal animations -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.15
-            };
+<!-- ========================================================== FAQ -->
+<section class="section" style="background: var(--mist);">
+    <div class="shell shell-wide">
+        <div class="grid lg:grid-cols-[.85fr_1.15fr] gap-14 items-start">
+            <div data-aos="fade-right">
+                <span class="eyebrow">Questions</span>
+                <h2 class="display-2" style="margin-top: 16px;">Good to know<br><span class="gradient-text">before we start.</span></h2>
+                <p class="lead" style="margin-top: 18px;">Still unsure which service fits? Send us a note and we’ll point you in the right direction — even if it’s not us.</p>
+                <a href="/contact.php" class="btn btn-primary" style="margin-top: 24px;">Ask a question <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div data-aos="fade-left">
+                <?php foreach ($faqs as $i => $faq): ?>
+                <div class="accordion" data-open="<?php echo $i === 0 ? 'true' : 'false'; ?>">
+                    <button type="button" class="accordion-trigger"><?php echo $faq[0]; ?><i class="fas fa-plus"></i></button>
+                    <div class="accordion-panel"><div class="accordion-panel-inner"><?php echo $faq[1]; ?></div></div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        // Optional: stop observing once animated
-                        // observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
+<!-- ===================================================== FINAL CTA -->
+<section class="section-dark" style="padding: 92px 0; position: relative; overflow: hidden;">
+    <div class="hero-mesh-dark"></div>
+    <div class="orb orb-1" style="width: 260px; height: 260px; top: -10%; right: 8%; opacity: .18;"></div>
+    <div class="shell shell-wide relative z-1 text-center" data-aos="zoom-in">
+        <span class="eyebrow eyebrow-light eyebrow-center">Your move</span>
+        <h2 class="display-2" style="margin-top: 16px; color: #fff;">Let’s build the brand<br><span class="gradient-text-light">you keep imagining.</span></h2>
+        <p class="lead lead-light" style="margin: 20px auto 32px; text-align: center;">Book a free strategy call. We’ll review your current presence and show you the three highest-impact moves for the next quarter.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="/contact.php" class="btn btn-sky btn-lg">Book a strategy call <i class="fas fa-arrow-right"></i></a>
+            <a href="/softwares.php" class="btn btn-outline-light btn-lg">Explore softwares</a>
+        </div>
+        <p style="margin-top: 22px; font-size: 11.5px; color: rgba(255,255,255,.45);"><i class="fas fa-lock" style="margin-right: 6px;"></i>No pressure, no obligation. Just useful clarity.</p>
+    </div>
+</section>
 
-            const revealElements = document.querySelectorAll('.reveal-up');
-            revealElements.forEach(el => observer.observe(el));
-        });
-    </script>
+<?php include 'components/footer.php'; ?>
+<?php include 'components/guest_chat.php'; ?>
 </body>
 </html>
