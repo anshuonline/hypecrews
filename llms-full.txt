@@ -1,0 +1,93 @@
+# Hypecrews — Full LLM Briefing & Agent Reference
+
+> Hypecrews Software Private Limited is a full-service digital agency and software enterprise delivering web engineering, brand identity, copyright defense, social media management, and performance marketing across India and global markets.
+
+---
+
+## 1. Company Overview
+
+- **Legal Entity**: Hypecrews Software Private Limited
+- **Brand Name**: Hypecrews
+- **Founding Location**: Golaghat, Assam, India (PIN 785621)
+- **Primary Domain**: https://hypecrews.com
+- **Core Positioning**: "We build brands worth following." We unite identity, digital engineering, and multi-channel distribution into a cohesive, high-impact growth machine.
+- **Client Base**: Over 750 brands and businesses across India and internationally.
+
+---
+
+## 2. Contact Details & Official Profiles
+
+### Primary Contact Channels
+- **Telephone**: [+91 361 324 3276](tel:+913613243276)
+- **General Inquiries**: [info@hypecrews.com](mailto:info@hypecrews.com)
+- **Customer Support**: [support@hypecrews.com](mailto:support@hypecrews.com)
+- **Physical Address**: Golaghat, Assam 785621, India
+- **Operating Hours**: Monday – Friday, 09:00 AM – 06:00 PM IST (UTC+05:30)
+
+### Verified External Profiles (sameAs)
+- **LinkedIn**: https://www.linkedin.com/company/hypecrews
+- **Instagram**: https://www.instagram.com/hypecrews
+- **X (Twitter)**: https://x.com/hypecrews
+- **Facebook**: https://www.facebook.com/hypecrews
+- **YouTube**: https://www.youtube.com/@hypecrews
+- **GitHub**: https://github.com/anshuonline/hypecrews
+
+---
+
+## 3. Detailed Service Offerings
+
+### A. Web Development & Custom Software Engineering
+- **Custom Web Platforms**: Responsive, ultra-fast web architectures built on modern stacks (PHP, Node.js, Python, modern UI systems).
+- **Web Applications & SaaS**: Scalable cloud architectures, bespoke dashboards, authentication systems, payment gateway integration (Razorpay, Stripe).
+- **E-Commerce Solutions**: High-conversion storefronts, inventory management, seamless checkout flows.
+- **API Design & Integration**: RESTful and GraphQL APIs, third-party CRM, ERP, and automation webhooks.
+
+### B. Copyright & Digital Rights Protection
+- **Content Monitoring**: 24/7 scanning of video platforms, streaming hubs, and social networks for unauthorized usage of creator or brand assets.
+- **Enforcement & DMCA Takedowns**: Swift legally compliant takedown notices, counter-notice defense, and anti-piracy deterrence.
+- **Asset Monetization & Claiming**: Enforcing rights holder claims on YouTube Content ID, Meta Rights Manager, and music distribution networks.
+
+### C. Social Media Management & Brand Distribution
+- **Strategy & Creative Direction**: Tone-of-voice definition, audience profiling, visual moodboards, and narrative planning.
+- **Content Production**: High-retention short-form video (Reels, Shorts, TikTok), carousel design, infographics, and copywriting.
+- **Account Operations**: End-to-end publishing, scheduling, hashtag research, community management, and comment moderation.
+
+### D. Brand Identity & Creative Systems
+- **Visual Identity**: Primary and secondary logos, brand marks, typographic hierarchies, color palettes, and brand guidelines.
+- **Collateral & Packaging**: Digital and physical marketing collateral, stationery, packaging design, and UI kits.
+
+### E. Digital Marketing & Performance Growth
+- **Search Engine Optimization (SEO)**: Technical SEO, semantic schema modeling, on-page optimization, content cluster strategy, and authoritative backlink building.
+- **Paid Advertising**: Meta Ads, Google Ads (Search, Display, Performance Max), and YouTube ad funnels with strict CAC/ROAS targets.
+- **Conversion Rate Optimization (CRO)**: Heatmap analysis, A/B testing, user journey audits, and funnel friction removal.
+
+---
+
+## 4. Machine-Readable Interfaces & Specifications
+
+- **Content Signals**: `Content-Signal: search=yes, ai-train=no` declared in `robots.txt` and HTTP headers. Content may be searched, indexed, and cited by agents, but bulk scraping for foundation model training without agreement is prohibited.
+- **LLM Summary**: https://hypecrews.com/llms.txt
+- **LLM Full Briefing**: https://hypecrews.com/llms-full.txt
+- **SEP-1649 MCP Server Card**: https://hypecrews.com/.well-known/mcp/server-card.json
+- **Markdown Negotiation**: Requesting `Accept: text/markdown` or querying `?format=md` returns a clean markdown representation of core pages.
+- **WebMCP Browser Tools**: Embedded browser tools for agent interaction: `submitContactInquiry`, `trackOrder`, `subscribeNewsletter`.
+- **Structured Data**: Rich JSON-LD `@graph` including `Organization`, `LocalBusiness`, `ProfessionalService`, `WebSite`, `WebPage`, `Service`, and `FAQPage`.
+
+---
+
+## 5. Frequently Asked Questions (FAQ)
+
+### What services does Hypecrews provide?
+Hypecrews offers end-to-end digital solutions spanning custom web application development, copyright and digital rights protection, social media management, brand identity design, and performance marketing.
+
+### Where is Hypecrews located?
+Hypecrews is headquartered in Golaghat, Assam 785621, India, and serves clients throughout India and internationally.
+
+### How do I contact the Hypecrews team?
+You can call [+91 361 324 3276](tel:+913613243276), email [info@hypecrews.com](mailto:info@hypecrews.com), or submit an inquiry at https://hypecrews.com/contact.php.
+
+### Can an automated agent track order status?
+Yes. Agents can use the `track_order` tool defined in the MCP server card (`/.well-known/mcp/server-card.json`) or navigate to https://hypecrews.com/track_orders.php.
+
+### How can a new client start a project?
+Visit https://hypecrews.com/contact.php to fill out the project inquiry form, or email project briefs directly to [info@hypecrews.com](mailto:info@hypecrews.com).

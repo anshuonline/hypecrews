@@ -1,0 +1,54 @@
+# Hypecrews
+
+> Hypecrews Software Private Limited is a premium digital brand, web development, copyright protection, and social media growth company based in Assam, India.
+
+Hypecrews builds digital brands worth following. We integrate brand identity, web applications, copyright defense, and systematic growth into one cohesive architecture for ambitious founders and enterprises.
+
+## Core Services
+
+- **Web Development & Custom Software**: High-performance responsive websites, web applications, custom CRM/dashboards, e-commerce platforms, and API integrations.
+- **Copyright & Brand Protection**: Anti-piracy monitoring, DMCA takedowns, digital rights management, and brand asset defense across major platforms and social media.
+- **Social Media Management**: Strategic content production, audience growth, account management, community engagement, and multi-channel campaigns.
+- **Brand Identity & Creative**: Design systems, logo design, typography, style guides, brand narrative, and premium visual assets.
+- **Digital Growth & Performance**: Search engine optimization (SEO), conversion rate optimization (CRO), paid media, and digital marketing strategy.
+
+## Key Information
+
+- **Legal Entity**: Hypecrews Software Private Limited
+- **Headquarters**: Golaghat, Assam 785621, India
+- **Phone**: [+91 361 324 3276](tel:+913613243276)
+- **General Inquiries**: [info@hypecrews.com](mailto:info@hypecrews.com)
+- **Customer Support**: [support@hypecrews.com](mailto:support@hypecrews.com)
+- **Website**: https://hypecrews.com
+- **Hours**: Monday - Friday, 09:00 - 18:00 IST
+
+## Official Profiles
+
+- LinkedIn: https://www.linkedin.com/company/hypecrews
+- Instagram: https://www.instagram.com/hypecrews
+- X / Twitter: https://x.com/hypecrews
+- Facebook: https://www.facebook.com/hypecrews
+- YouTube: https://www.youtube.com/@hypecrews
+- GitHub: https://github.com/anshuonline/hypecrews
+
+## Agent & Machine-Readable Interfaces
+
+- [Full LLM Documentation](/llms-full.txt): Comprehensive deep-dive briefing for LLMs and automated agents.
+- [MCP Server Card](/.well-known/mcp/server-card.json): Machine Context Protocol (SEP-1649) capabilities and tool definitions.
+- [XML Sitemap](/sitemap.xml): Machine-readable index of canonical pages.
+- [Markdown Homepage](/?format=md): Content-negotiated markdown representation of the home page.
+- [Robots Policy](/robots.txt): Machine crawler directives and content usage signals (`Content-Signal: search=yes, ai-train=no`).
+
+## Navigation & Core Pages
+
+- [Home](https://hypecrews.com/): Official homepage.
+- [About Us](https://hypecrews.com/about.php): Company history, mission, leadership, and team.
+- [Services](https://hypecrews.com/services.php): Detailed service tiers and deliverables.
+- [Softwares](https://hypecrews.com/softwares.php): Proprietary tools and software solutions.
+- [Track Order](https://hypecrews.com/track_orders.php): Project and order status tracking.
+- [Careers](https://hypecrews.com/careers.php): Current openings and career opportunities.
+- [Contact](https://hypecrews.com/contact.php): Consultation booking and direct inquiry forms.
+- [Support Desk](https://hypecrews.com/support_chat.php): Live support and client assistance.
+- [Privacy Policy](https://hypecrews.com/privacy-policy.php): Privacy practices and data governance.
+- [Terms & Conditions](https://hypecrews.com/terms-conditions.php): Terms of service.
+- [Refund Policy](https://hypecrews.com/refund-policy.php): Project refund and billing policies.

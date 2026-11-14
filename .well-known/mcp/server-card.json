@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "mcpVersion": "2024-11-05",
+  "name": "Hypecrews Agent Services",
+  "description": "Official MCP server for Hypecrews — digital brand, web development, copyright protection, and social media solutions.",
+  "version": "1.0.0",
+  "homepage": "https://hypecrews.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anshuonline/hypecrews"
+  },
+  "contact": {
+    "name": "Hypecrews Support",
+    "email": "support@hypecrews.com",
+    "url": "https://hypecrews.com/contact.php"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    },
+    "resources": {
+      "subscribe": false,
+      "listChanged": false
+    },
+    "prompts": {
+      "listChanged": false
+    }
+  },
+  "endpoints": [
+    {
+      "type": "sse",
+      "url": "https://hypecrews.com/api/mcp/sse",
+      "description": "Server-Sent Events endpoint for real-time agent sessions"
+    },
+    {
+      "type": "http",
+      "url": "https://hypecrews.com/api/mcp",
+      "description": "HTTP JSON-RPC MCP endpoint"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_services",
+      "description": "List all active Hypecrews service packages, features, and capabilities.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["all", "web", "copyright", "social", "creative", "growth"],
+            "description": "Filter services by domain category"
+          }
+        }
+      }
+    },
+    {
+      "name": "track_order",
+      "description": "Check the delivery and processing status of an existing Hypecrews order.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "Unique order tracking identifier"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Billing or contact email associated with the order"
+          }
+        },
+        "required": ["order_id"]
+      }
+    },
+    {
+      "name": "submit_inquiry",
+      "description": "Submit a business project inquiry or quote request to the Hypecrews team.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Client full name or company representative"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Client contact email"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone number"
+          },
+          "service": {
+            "type": "string",
+            "description": "Target service category (e.g. Web Development, Copyright Protection)"
+          },
+          "message": {
+            "type": "string",
+            "description": "Brief description of the project requirements and timeline"
+          }
+        },
+        "required": ["name", "email", "message"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "hypecrews://services/catalog",
+      "name": "Service Catalog",
+      "mimeType": "application/json",
+      "description": "Machine-readable catalog of all Hypecrews agency services"
+    },
+    {
+      "uri": "hypecrews://company/profile",
+      "name": "Company Profile",
+      "mimeType": "text/markdown",
+      "description": "Executive summary of Hypecrews Software Private Limited"
+    }
+  ]
+}

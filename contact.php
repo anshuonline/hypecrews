@@ -37,7 +37,7 @@ include 'components/head.php';
                 <h2 style="font-size: clamp(24px, 3vw, 32px); margin-top: 14px;">Tell us about your project.</h2>
                 <p style="font-size: 13px; color: var(--muted); margin-top: 8px;">Fields marked <span style="color:#b14537;">*</span> are required.</p>
 
-                <form id="contactForm" novalidate style="margin-top: 26px;">
+                <form id="contactForm" novalidate style="margin-top: 26px;" toolname="submitContactInquiry" tooldescription="Submit a business inquiry or project request to Hypecrews" data-tool-name="submitContactInquiry" data-tool-description="Submit a business inquiry or project request to Hypecrews">
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div class="field" style="margin-bottom: 0;">
                             <label for="name" class="label">Full name <span style="color:#b14537;">*</span></label>

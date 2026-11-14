@@ -77,7 +77,7 @@ include 'components/head.php';
 
         <!-- Search -->
         <div class="card" style="padding: 18px; margin-bottom: 22px;" data-aos="fade-up">
-            <form method="GET" class="flex flex-wrap gap-3 items-center">
+            <form method="GET" class="flex flex-wrap gap-3 items-center" toolname="trackOrder" tooldescription="Search and track orders by tracking ID" data-tool-name="trackOrder" data-tool-description="Search and track orders by tracking ID">
                 <div class="flex items-center gap-2" style="flex: 1; min-width: 240px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 6px 4px 16px; background: #fbfdff;">
                     <i class="fas fa-magnifying-glass" style="color: var(--muted-2); font-size: 13px;"></i>
                     <input type="text" name="search" placeholder="Enter tracking ID…" value="<?php echo htmlspecialchars($search); ?>" style="border: 0; outline: 0; background: transparent; flex: 1; font-size: 13px; color: var(--ink); padding: 9px 4px;">

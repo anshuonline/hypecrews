@@ -20,6 +20,11 @@ $jsonLd = $jsonLd ?? '';
     <meta name="robots" content="<?php echo htmlspecialchars($robots); ?>">
     <?php if (!empty($canonical)): ?><link rel="canonical" href="<?php echo htmlspecialchars($canonical); ?>"><?php endif; ?>
 
+    <!-- Agent Discovery & Machine-Readable Interfaces -->
+    <link rel="describedby" type="text/markdown" href="/llms.txt">
+    <link rel="alternate" type="text/markdown" href="/?format=md" title="Markdown Content">
+    <link rel="service-desc" type="application/json" href="/.well-known/mcp/server-card.json" title="MCP Server Card">
+
     <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
     <meta property="og:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
     <meta property="og:type" content="website">
@@ -79,4 +84,70 @@ $jsonLd = $jsonLd ?? '';
     <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script defer src="/js/brand.js"></script>
+    <!-- WebMCP Tool Registration -->
+    <script>
+      (function() {
+        if (typeof window !== 'undefined' && window.navigator && window.navigator.modelContext && typeof window.navigator.modelContext.registerTool === 'function') {
+          try {
+            window.navigator.modelContext.registerTool({
+              name: 'submitContactInquiry',
+              description: 'Submit a business inquiry or project request to Hypecrews.',
+              parameters: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', description: 'Name of contact person' },
+                  email: { type: 'string', description: 'Contact email' },
+                  phone: { type: 'string', description: 'Contact phone number' },
+                  service: { type: 'string', description: 'Service requested' },
+                  message: { type: 'string', description: 'Message or project details' }
+                },
+                required: ['name', 'email', 'message']
+              },
+              handler: async function(args) {
+                const formData = new FormData();
+                for (const key in args) formData.append(key, args[key]);
+                const res = await fetch('/api/contact_handler.php', { method: 'POST', body: formData });
+                return await res.json();
+              }
+            });
+
+            window.navigator.modelContext.registerTool({
+              name: 'trackOrder',
+              description: 'Check the live status of an order or project.',
+              parameters: {
+                type: 'object',
+                properties: {
+                  order_id: { type: 'string', description: 'Tracking ID of the order' }
+                },
+                required: ['order_id']
+              },
+              handler: async function(args) {
+                const res = await fetch('/track_orders.php?order_id=' + encodeURIComponent(args.order_id));
+                return { status: res.status, url: res.url };
+              }
+            });
+
+            window.navigator.modelContext.registerTool({
+              name: 'subscribeNewsletter',
+              description: 'Subscribe to the monthly Hypecrews insights newsletter.',
+              parameters: {
+                type: 'object',
+                properties: {
+                  email: { type: 'string', description: 'Email address to subscribe' }
+                },
+                required: ['email']
+              },
+              handler: async function(args) {
+                const formData = new FormData();
+                formData.append('email', args.email);
+                const res = await fetch('/api/newsletter_subscribe.php', { method: 'POST', body: formData });
+                return await res.json();
+              }
+            });
+          } catch (e) {
+            console.debug('WebMCP registration error:', e);
+          }
+        }
+      })();
+    </script>
 </head>

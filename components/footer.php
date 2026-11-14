@@ -26,11 +26,12 @@
                     A premium digital brand company building identity, product and growth systems for ambitious businesses across India and beyond.
                 </p>
                 <div class="footer-social" style="margin-top: 22px;">
-                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/company/hypecrews" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.instagram.com/hypecrews" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/hypecrews" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.facebook.com/hypecrews" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.youtube.com/@hypecrews" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://github.com/anshuonline/hypecrews" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
                 </div>
             </div>
 
@@ -70,14 +71,25 @@
             <div>
                 <h4>Newsletter</h4>
                 <p style="font-size: 12.5px; line-height: 1.7; color: rgba(255,255,255,.52); margin-bottom: 15px;">Monthly notes on brand, product and growth. No noise.</p>
-                <form id="newsletterForm" class="footer-news" novalidate>
+                <form id="newsletterForm" class="footer-news" novalidate toolname="subscribeNewsletter" tooldescription="Subscribe your email to the monthly Hypecrews insights newsletter" data-tool-name="subscribeNewsletter" data-tool-description="Subscribe your email to the monthly Hypecrews insights newsletter">
                     <input type="email" id="newsletterEmail" placeholder="you@company.com" aria-label="Email address" required>
                     <button type="submit" aria-label="Subscribe"><i class="fas fa-paper-plane"></i></button>
                 </form>
                 <div id="newsletterMessage" class="mt-2 text-sm hidden"></div>
-                <div style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,.5);">
-                    <p><i class="fas fa-location-dot" style="color: var(--sky); margin-right: 7px;"></i>Golaghat, Assam 785621</p>
-                    <p style="margin-top: 7px;"><i class="fas fa-envelope" style="color: var(--sky); margin-right: 7px;"></i><a href="mailto:info@hypecrews.com">info@hypecrews.com</a></p>
+                <div style="margin-top: 20px; font-size: 12px; color: rgba(255,255,255,.5);" itemscope itemtype="https://schema.org/LocalBusiness">
+                    <meta itemprop="name" content="Hypecrews Software Private Limited">
+                    <p itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                        <i class="fas fa-location-dot" style="color: var(--sky); margin-right: 7px;"></i>
+                        <span itemprop="streetAddress">Golaghat</span>, <span itemprop="addressRegion">Assam</span> <span itemprop="postalCode">785621</span>, <span itemprop="addressCountry">India</span>
+                    </p>
+                    <p style="margin-top: 7px;">
+                        <i class="fas fa-phone" style="color: var(--sky); margin-right: 7px;"></i>
+                        <a href="tel:+913613243276" itemprop="telephone">+91 361 324 3276</a>
+                    </p>
+                    <p style="margin-top: 7px;">
+                        <i class="fas fa-envelope" style="color: var(--sky); margin-right: 7px;"></i>
+                        <a href="mailto:info@hypecrews.com" itemprop="email">info@hypecrews.com</a>
+                    </p>
                 </div>
             </div>
         </div>

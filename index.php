@@ -1,19 +1,220 @@
 <?php
 session_start();
+
+// Machine & Agent Readiness Headers (RFC 8288 & Content-Signal)
+header('Content-Signal: search=yes, ai-train=no');
+header('Link: </llms.txt>; rel="describedby"; type="text/markdown", </?format=md>; rel="alternate"; type="text/markdown", </.well-known/mcp/server-card.json>; rel="service-desc"; type="application/json"', false);
+
+// Serve Markdown on Demand
+$acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
+$formatQuery = $_GET['format'] ?? '';
+$isMarkdownRequested = ($formatQuery === 'md' || $formatQuery === 'markdown') ||
+    (stripos($acceptHeader, 'text/markdown') !== false || stripos($acceptHeader, 'text/x-markdown') !== false);
+
+if ($isMarkdownRequested) {
+    header('Content-Type: text/markdown; charset=utf-8');
+    echo <<<MARKDOWN
+# Hypecrews — Peak Digital Excellence
+
+> Hypecrews is a premium digital brand company delivering web development, copyright protection, social media management, and creative growth solutions.
+
+We combine identity, product, and growth into one sharp system — built to make ambitious businesses impossible to ignore. Trusted by 750+ brands across India and beyond.
+
+## Contact Information
+- **Legal Name**: Hypecrews Software Private Limited
+- **Phone**: [+91 361 324 3276](tel:+913613243276)
+- **Email**: [info@hypecrews.com](mailto:info@hypecrews.com)
+- **Support**: [support@hypecrews.com](mailto:support@hypecrews.com)
+- **Headquarters**: Golaghat, Assam 785621, India
+- **Website**: https://hypecrews.com
+- **Hours**: Monday – Friday, 09:00 – 18:00 IST
+
+## Core Services
+1. **Web Development & Custom Software**: Modern responsive websites, web applications, SaaS dashboards, e-commerce, and high-performance API integrations.
+2. **Copyright Protection & Rights Defense**: 24/7 web-scale anti-piracy monitoring, DMCA enforcement, rights management, and social media asset reclamation.
+3. **Social Media Management**: Strategic content direction, high-retention video production, organic audience expansion, and community operations.
+4. **Brand Identity & Creative Systems**: Typography, color theory, comprehensive logo systems, design tokens, and corporate design language.
+5. **Digital Growth & Performance**: Search engine optimization (SEO), conversion rate optimization (CRO), paid advertising funnels, and data analytics.
+
+## Official Verified Profiles
+- LinkedIn: https://www.linkedin.com/company/hypecrews
+- Instagram: https://www.instagram.com/hypecrews
+- X: https://x.com/hypecrews
+- Facebook: https://www.facebook.com/hypecrews
+- YouTube: https://www.youtube.com/@hypecrews
+- GitHub: https://github.com/anshuonline/hypecrews
+
+## Agent & Machine-Readable Interfaces
+- LLM Briefing: https://hypecrews.com/llms.txt
+- LLM Full Reference: https://hypecrews.com/llms-full.txt
+- MCP Server Card: https://hypecrews.com/.well-known/mcp/server-card.json
+- Track Order Status: https://hypecrews.com/track_orders.php
+- Start a Project: https://hypecrews.com/contact.php
+MARKDOWN;
+    exit;
+}
+
 $pageTitle = "Hypecrews — Peak Digital Excellence";
 $pageDescription = "Hypecrews is a premium digital brand company delivering web development, copyright protection, social media management and creative growth solutions.";
 $pageKeywords = "digital brand company, web development, copyright protection, social media management, creative agency, Hypecrews";
 $canonical = "https://hypecrews.com/";
-$jsonLd = '{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Hypecrews",
-  "legalName": "Hypecrews Software Private Limited",
-  "url": "https://hypecrews.com",
-  "logo": "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png",
-  "description": "Premium digital brand company offering web development, copyright protection, social media management and creative growth solutions.",
-  "address": { "@type": "PostalAddress", "addressLocality": "Golaghat", "addressRegion": "Assam", "addressCountry": "IN" }
-}';
+
+$jsonLd = json_encode([
+    "@context" => "https://schema.org",
+    "@graph" => [
+        [
+            "@type" => ["Organization", "LocalBusiness", "ProfessionalService"],
+            "@id" => "https://hypecrews.com/#organization",
+            "name" => "Hypecrews",
+            "legalName" => "Hypecrews Software Private Limited",
+            "url" => "https://hypecrews.com",
+            "logo" => [
+                "@type" => "ImageObject",
+                "url" => "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png"
+            ],
+            "image" => "https://hypecrews.com/graphics/logos/hypecrews%20logo%20white.png",
+            "description" => "Premium digital brand company delivering web development, copyright protection, social media management and creative growth solutions.",
+            "telephone" => "+91 361 324 3276",
+            "email" => "info@hypecrews.com",
+            "priceRange" => "$$",
+            "currenciesAccepted" => "INR, USD, EUR",
+            "paymentAccepted" => "Cash, Credit Card, UPI, Bank Transfer",
+            "foundingDate" => "2024",
+            "address" => [
+                "@type" => "PostalAddress",
+                "streetAddress" => "Golaghat",
+                "addressLocality" => "Golaghat",
+                "addressRegion" => "Assam",
+                "postalCode" => "785621",
+                "addressCountry" => "IN"
+            ],
+            "contactPoint" => [
+                [
+                    "@type" => "ContactPoint",
+                    "telephone" => "+91 361 324 3276",
+                    "contactType" => "customer service",
+                    "email" => "info@hypecrews.com",
+                    "areaServed" => ["IN", "US", "GB", "AE"],
+                    "availableLanguage" => ["English", "Hindi", "Assamese"]
+                ],
+                [
+                    "@type" => "ContactPoint",
+                    "telephone" => "+91 361 324 3276",
+                    "contactType" => "technical support",
+                    "email" => "support@hypecrews.com",
+                    "areaServed" => "Worldwide",
+                    "availableLanguage" => ["English", "Hindi"]
+                ]
+            ],
+            "openingHoursSpecification" => [
+                "@type" => "OpeningHoursSpecification",
+                "dayOfWeek" => ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens" => "09:00",
+                "closes" => "18:00"
+            ],
+            "sameAs" => [
+                "https://www.linkedin.com/company/hypecrews",
+                "https://www.instagram.com/hypecrews",
+                "https://x.com/hypecrews",
+                "https://www.facebook.com/hypecrews",
+                "https://www.youtube.com/@hypecrews",
+                "https://github.com/anshuonline/hypecrews"
+            ]
+        ],
+        [
+            "@type" => "WebSite",
+            "@id" => "https://hypecrews.com/#website",
+            "url" => "https://hypecrews.com",
+            "name" => "Hypecrews",
+            "publisher" => ["@id" => "https://hypecrews.com/#organization"],
+            "potentialAction" => [
+                "@type" => "SearchAction",
+                "target" => "https://hypecrews.com/services.php?q={search_term_string}",
+                "query-input" => "required name=search_term_string"
+            ]
+        ],
+        [
+            "@type" => "WebPage",
+            "@id" => "https://hypecrews.com/#webpage",
+            "url" => "https://hypecrews.com",
+            "name" => "Hypecrews — Peak Digital Excellence",
+            "isPartOf" => ["@id" => "https://hypecrews.com/#website"],
+            "about" => ["@id" => "https://hypecrews.com/#organization"],
+            "description" => "Hypecrews is a premium digital brand company delivering web development, copyright protection, social media management and creative growth solutions."
+        ],
+        [
+            "@type" => "Service",
+            "@id" => "https://hypecrews.com/services.php#web",
+            "name" => "Web Development & Custom Software",
+            "provider" => ["@id" => "https://hypecrews.com/#organization"],
+            "serviceType" => "Web Development",
+            "description" => "Custom high-performance web applications, portals, and cloud solutions engineered for brand authority."
+        ],
+        [
+            "@type" => "Service",
+            "@id" => "https://hypecrews.com/services.php#copyright",
+            "name" => "Copyright Protection & Enforcement",
+            "provider" => ["@id" => "https://hypecrews.com/#organization"],
+            "serviceType" => "Copyright Protection",
+            "description" => "Anti-piracy monitoring, DMCA takedown enforcement, and brand asset legal defense."
+        ],
+        [
+            "@type" => "Service",
+            "@id" => "https://hypecrews.com/services.php#social",
+            "name" => "Social Media Management & Strategy",
+            "provider" => ["@id" => "https://hypecrews.com/#organization"],
+            "serviceType" => "Social Media Management",
+            "description" => "End-to-end social media operations, content creation, audience scaling, and brand positioning."
+        ],
+        [
+            "@type" => "Service",
+            "@id" => "https://hypecrews.com/services.php#creative",
+            "name" => "Brand Identity & Creative Systems",
+            "provider" => ["@id" => "https://hypecrews.com/#organization"],
+            "serviceType" => "Brand Design",
+            "description" => "Comprehensive visual systems, logo design, design guidelines, and creative assets."
+        ],
+        [
+            "@type" => "FAQPage",
+            "@id" => "https://hypecrews.com/#faq",
+            "mainEntity" => [
+                [
+                    "@type" => "Question",
+                    "name" => "What services does Hypecrews provide?",
+                    "acceptedAnswer" => [
+                        "@type" => "Answer",
+                        "text" => "Hypecrews specializes in custom web development, copyright protection and DMCA enforcement, social media management, brand identity design, and digital performance growth."
+                    ]
+                ],
+                [
+                    "@type" => "Question",
+                    "name" => "Where is Hypecrews located and how can I contact the team?",
+                    "acceptedAnswer" => [
+                        "@type" => "Answer",
+                        "text" => "Hypecrews is headquartered in Golaghat, Assam 785621, India. You can contact us by phone at +91 361 324 3276, by email at info@hypecrews.com, or through our website contact form."
+                    ]
+                ],
+                [
+                    "@type" => "Question",
+                    "name" => "How does Hypecrews protect digital assets and copyrights?",
+                    "acceptedAnswer" => [
+                        "@type" => "Answer",
+                        "text" => "We provide continuous automated scanning across major video and social platforms, swift DMCA takedowns, rights claim dispute handling, and proactive digital rights management."
+                    ]
+                ],
+                [
+                    "@type" => "Question",
+                    "name" => "Can clients track the status of active projects and orders?",
+                    "acceptedAnswer" => [
+                        "@type" => "Answer",
+                        "text" => "Yes, active clients can track real-time delivery status using our Track Orders portal at https://hypecrews.com/track_orders.php."
+                    ]
+                ]
+            ]
+        ]
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
 include 'components/head.php';
 ?>
 <body class="antialiased">
@@ -59,6 +260,19 @@ include 'components/head.php';
                         <div style="color: #F0A92E; font-size: 12px; letter-spacing: 2px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                         <p style="font-size: 12px; color: var(--muted); font-weight: 700;">Trusted by 750+ brands across India</p>
                     </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-6" style="margin-top: 24px; font-size: 13px; color: var(--navy); font-weight: 600;" itemscope itemtype="https://schema.org/LocalBusiness" data-aos="fade-up" data-aos-delay="280">
+                    <meta itemprop="name" content="Hypecrews Software Private Limited">
+                    <a href="tel:+913613243276" class="inline-flex items-center gap-2 text-inherit hover:opacity-80 transition" itemprop="telephone">
+                        <i class="fas fa-phone-alt" style="color: var(--blue);"></i>
+                        <span>+91 361 324 3276</span>
+                    </a>
+                    <span style="color: var(--line);">|</span>
+                    <a href="mailto:info@hypecrews.com" class="inline-flex items-center gap-2 text-inherit hover:opacity-80 transition" itemprop="email">
+                        <i class="fas fa-envelope" style="color: var(--blue);"></i>
+                        <span>info@hypecrews.com</span>
+                    </a>
                 </div>
             </div>
 
